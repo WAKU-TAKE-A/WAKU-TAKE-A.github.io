@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+<head><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-80755908-2"></script><script>  window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-80755908-2');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6163695023100481" crossorigin="anonymous"></script>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="generator" content="TiddlyWiki" />
+<meta name="tiddlywiki-version" content="5.2.5" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="format-detection" content="telephone=no">
+<link id="faviconLink" rel="shortcut icon" href="favicon.ico">
+<link rel="stylesheet" href="static.css">
+<title>ImageJをソースからビルドする方法: WAKU-TAKE-A  PROGRAM</title>
+</head>
+<body class="tc-body">
+
+<section class="tc-story-river tc-static-story-river">
+<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists  tc-tagged-ImageJ" data-tags="ImageJ" data-tiddler-title="ImageJをソースからビルドする方法" role="article"><div class="tc-tiddler-title"><div class="tc-titlebar"><span class="tc-tiddler-controls"><button aria-expanded="false" aria-label="more" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fmore-tiddler-actions" title="More actions"></button><div class=" tc-reveal" hidden="true"></div><button aria-label="edit" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fedit" title="Edit this tiddler"></button><button aria-label="close" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fclose" title="Close this tiddler"></button></span><span><h2 class="tc-title">ImageJをソースからビルドする方法</h2></span></div><div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div></div><div class="tc-reveal"></div><div class=" tc-reveal"><div class="tc-subtitle"><a class="tc-tiddlylink tc-tiddlylink-missing" href=".html"></a> 13th May 2019 at 10:27pm</div></div><div class=" tc-reveal"><div class="tc-tags-wrapper"><span class="tc-tag-list-item" data-tag-title="ImageJ"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">ImageJ</span><span class="tc-drop-down tc-reveal" hidden="true"></span></span></div></div><div class="tc-tiddler-body tc-reveal"><p>ImageJをソースからビルドしてみます。ソースを改変して自分専用のImageJを作ったり、今は無き32ビット版ImageJを作成することができます。</p><p>ちなみに、ImageJの<a class="tc-tiddlylink-external" href="https://imagej.nih.gov/ij/download.html" rel="noopener noreferrer" target="_blank">ダウンロード</a>から「Version 1.52a」以降、Windows用の32ビット版が無くなってしまいました。現状、<a class="tc-tiddlylink-external" href="https://imagej.nih.gov/ij/download/win32/" rel="noopener noreferrer" target="_blank">こちら</a>でダウンロードすることができる「Version 1.49v」が32ビット版の最新になっています。</p><p>本記事では、32ビット版ImageJをソースから作成してみます。NetBeansなどを使わない非常に簡易な方法で行います。</p><h2 class=""><u>必要なファイルの準備</u></h2><p>(1) 2019年5月において、ImageJの64ビット版はJava SE Development Kit（JDK） 8u112を使っています。今回は同じバージョンの32bit版のJDKをダウンロードし利用します。</p><ul><li><a class="tc-tiddlylink tc-tiddlylink-resolves" href="NetBeans%25E3%2581%25AE%25E3%2582%25A4%25E3%2583%25B3%25E3%2582%25B9%25E3%2583%2588%25E3%2583%25BC%25E3%2583%25AB%25E3%2581%25AB%25E3%2581%25A4%25E3%2581%2584%25E3%2581%25A6.html">NetBeansのインストールについて</a>の「JDKのインストール」を参考にしてください。</li><li>「jdk 8u112」でGoogle検索してください。</li><li>「jdk-8u112-windows-i586.exe」をダウンロードしてください。</li></ul><p>(2) ImageJの<a class="tc-tiddlylink-external" href="http://rsb.info.nih.gov/ij/download.html" rel="noopener noreferrer" target="_blank">ダウンロード</a>の「Source Code」の「zip archives」から「ij152o-src.zip」をダウンロードしてください。</p><p>(3) <a class="tc-tiddlylink-external" href="http://rsb.info.nih.gov/ij/download/tools/ant/" rel="noopener noreferrer" target="_blank">こちら</a>から「ant.zip」をダウンロード します。</p><h2 class=""><u>JDKのインストールとファイルの配置</u></h2><p>(1) 「jdk-8u112-windows-i586.exe」を実行します。JREはインストールしなくも良いです。<br><br>
+(2) 「c:\tmp\ImageJ」フォルダを作成します。（今回の例ではこのフォルダでビルドを行います）<br><br>
+(3) 「ij152o-src.zip」を展開し、「c:\tmp\ImageJ\source」フォルダにコピーします。<br><br>
+(4) 「ant.zip」を展開し、「c:\tmp\ImageJ\ant」フォルダにコピーします。<br><br></p><p>フォルダ構造<br>
+<img class=" tc-image-loading" src="img/build_source_with_ant.jpg"></p><h2 class=""><u>ファイルの編集とビルド</u></h2><p>(1) 「c:\tmp\ImageJ\source」フォルダの「build.xml」の9行目を以下のように編集します。「fork="yes"」にしないと、環境変数「JAVA_HOME」が有効にならないようです。</p><pre><code>&lt;javac srcdir="./ij" destdir="build" optimize="on" source="1.6" target="1.6" debug="on" includeantruntime="false" encoding="utf-8"&gt;</code></pre><p><svg class="tc-image-down-arrow tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M64.177 100.069a7.889 7.889 0 01-5.6-2.316l-55.98-55.98a7.92 7.92 0 010-11.196c3.086-3.085 8.105-3.092 11.196 0l50.382 50.382 50.382-50.382a7.92 7.92 0 0111.195 0c3.086 3.086 3.092 8.104 0 11.196l-55.98 55.98a7.892 7.892 0 01-5.595 2.316z"></path></svg></p><pre><code>&lt;javac srcdir="./ij" destdir="build" optimize="on" source="1.8" target="1.8" debug="on" includeantruntime="false" fork="yes" encoding="utf-8"&gt;</code></pre><ul><li>「c:\tmp\ImageJ\ant\bin」フォルダの「ant.bat」の3～4行目を編集します。「PROGRA~2」は「Program Files (x86)」の短い名前です。私の環境では「PROGRA~2」でしたが、PC環境によって異なるので<code>dir c:\ /x</code>で確認すると良いと思います。</li></ul><pre><code>set ANT_HOME=C:\ImageJ\ant
+set JAVA_HOME=C:\ImageJ\jre</code></pre><p><svg class="tc-image-down-arrow tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M64.177 100.069a7.889 7.889 0 01-5.6-2.316l-55.98-55.98a7.92 7.92 0 010-11.196c3.086-3.085 8.105-3.092 11.196 0l50.382 50.382 50.382-50.382a7.92 7.92 0 0111.195 0c3.086 3.086 3.092 8.104 0 11.196l-55.98 55.98a7.892 7.892 0 01-5.595 2.316z"></path></svg></p><pre><code>set ANT_HOME=C:\tmp\ImageJ\ant
+set JAVA_HOME=C:\PROGRA~2\Java\jdk1.8.0_112</code></pre><p>(2) コマンド プロンプトを起動、以下のようにコマンドを実行します。注意が表示されますが、ビルドは成功します。</p><pre><code>&gt; cd C:\tmp\ImageJ\source
+
+&gt; C:\tmp\ImageJ\ant\bin\ant.bat
+Buildfile: build.xml
+
+compile:
+    [javac] Compiling 346 source files to C:\tmp\ImageJ\source\build
+    [javac] 注意:一部の入力ファイルは非推奨のAPIを使用またはオーバーライドしています。
+    [javac] 注意:詳細は、-Xlint:deprecationオプションを指定して再コンパイルしてください。
+    [javac] 注意:入力ファイルの操作のうち、未チェックまたは安全ではないものがあります。
+    [javac] 注意:詳細は、-Xlint:uncheckedオプションを指定して再コンパイルしてください。
+
+build:
+      [jar] Building jar: C:\tmp\ImageJ\source\ij.jar
+
+run:
+     [copy] Copying 1 file to C:\tmp\ImageJ
+
+BUILD SUCCESSFUL
+
+Total time: 12 seconds</code></pre><p><img class=" tc-image-loading" src="img/ij_152o_32bit.jpg"></p><p>ビルドは一応成功しましたが、全ての機能が問題なく機能するかは試してはいませんので注意してください。</p><hr><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="index.html"><svg class="tc-image-home-button tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M112.985 119.502c.01-.165.015-.331.015-.499V67.568c3.137 2.948 8.076 2.884 11.134-.174a7.999 7.999 0 00-.002-11.316L70.396 2.343A7.978 7.978 0 0064.734 0a7.957 7.957 0 00-5.656 2.343L33 28.42V8.007C33 3.585 29.41 0 25 0c-4.418 0-8 3.59-8 8.007V44.42L5.342 56.078c-3.125 3.125-3.12 8.198-.002 11.316a7.999 7.999 0 0011.316-.003l.344-.343v52.945a8.11 8.11 0 000 .007c0 4.418 3.588 8 8 8h80c4.419 0 8-3.59 8-8a8.11 8.11 0 00-.015-.498zM97 112V51.574L64.737 19.31 33 51.048V112h64z" fill-rule="evenodd"></path></svg>Homeへ</a><svg class="tc-image-blank tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"></svg><a class="tc-tiddlylink tc-tiddlylink-resolves" href="ImageJ.html"><svg class="tc-image-up-arrow tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M63.892.281c2.027 0 4.054.77 5.6 2.316l55.98 55.98a7.92 7.92 0 010 11.196c-3.086 3.085-8.104 3.092-11.196 0L63.894 19.393 13.513 69.774a7.92 7.92 0 01-11.196 0c-3.085-3.086-3.092-8.105 0-11.196l55.98-55.98A7.892 7.892 0 0163.893.28z"></path></svg>ImageJの記事Topへ</a></p></div>
+</div></p>
+</section>
+</body>
+</html>
+

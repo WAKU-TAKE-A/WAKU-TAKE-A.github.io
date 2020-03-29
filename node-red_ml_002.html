@@ -1,0 +1,177 @@
+<!doctype html>
+<html>
+<head><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-80755908-2"></script><script>  window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-80755908-2');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6163695023100481" crossorigin="anonymous"></script>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="generator" content="TiddlyWiki" />
+<meta name="tiddlywiki-version" content="5.2.5" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="format-detection" content="telephone=no">
+<link id="faviconLink" rel="shortcut icon" href="favicon.ico">
+<link rel="stylesheet" href="static.css">
+<title>Node-REDで機械学習 その2: WAKU-TAKE-A  PROGRAM</title>
+</head>
+<body class="tc-body">
+
+<section class="tc-story-river tc-static-story-river">
+<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists  tc-tagged-Node-RED" data-tags="Node-RED" data-tiddler-title="node-red_ml_002" role="article"><div class="tc-tiddler-title"><div class="tc-titlebar"><span class="tc-tiddler-controls"><button aria-expanded="false" aria-label="more" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fmore-tiddler-actions" title="More actions"></button><div class=" tc-reveal" hidden="true"></div><button aria-label="edit" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fedit" title="Edit this tiddler"></button><button aria-label="close" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fclose" title="Close this tiddler"></button></span><span><h2 class="tc-title">Node-REDで機械学習 その2</h2></span></div><div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div></div><div class="tc-reveal"></div><div class=" tc-reveal"><div class="tc-subtitle"><a class="tc-tiddlylink tc-tiddlylink-missing" href=".html"></a> 17th October 2021 at 8:35pm</div></div><div class=" tc-reveal"><div class="tc-tags-wrapper"><span class="tc-tag-list-item" data-tag-title="Node-RED"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">Node-RED</span><span class="tc-drop-down tc-reveal" hidden="true"></span></span></div></div><div class="tc-tiddler-body tc-reveal"><p>Node-REDで機械学習を行ってみます。</p><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="node-red_ml_001.html">前回</a>は「Microsoft Lobe」でモデルを作成する手順を説明しましたので、今回はNode-REDからモデルを利用する手順を説明します。</p><h2 class=""><u>Node-REDからモデルを利用する手順</u></h2><p>「node-red-contrib-image-output」と「node-red-node-base64」を使います。まだ追加していない場合は、以下のように「パレットの管理」を開いて追加してください。</p><p><img class=" tc-image-loading" src="img/node-red-mcprotocol-021.jpg"></p><p>以下のようにノードを配置します。</p><p><img class=" tc-image-loading" src="img/node-red_lobe_018.jpg"></p><dl><dt>①「inject」ノード</dt><dd>処理を実行するためのボタンとして使います。</dd><dt>②「file in」ノード</dt><dd>ファイルの内容を読み込みます。出力形式は、「バイナリバッファ」です。★★★の部分にファイルのフルパスを記入してください。</dd><dd><img class=" tc-image-loading" src="img/node-red_lobe_019.jpg"></dd><dt>③「base64」ノード</dt><dd>バッファーをbase64形式に変換します。</dd><dt>④ 「image」ノード</dt><dd>バイナリバッファ形式かbase64形式の画像を表示することができます。</dd><dt>⑤「template」ノード</dt><dd>リクエストボディを作成します。ポイントは<code>{{{payload}}}</code>の部分と、構文と出力形式を「JSON」にすることです。</dd><dd><img class=" tc-image-loading" src="img/node-red_lobe_020.jpg"></dd><dt>⑥「http request」ノード</dt><dd>URL欄に、<a class="tc-tiddlylink tc-tiddlylink-missing" href="Node-RED%25E3%2581%25A7%25E6%25A9%259F%25E6%25A2%25B0%25E5%25AD%25A6%25E7%25BF%2592%2520%25E3%2581%259D%25E3%2581%25AE1.html">前回</a>コピーしたURLをペーストします。</dd><dd><img class=" tc-image-loading" src="img/node-red_lobe_021.jpg"></dd><dt>⑦「debug」ノード</dt><dd>結果を表示します。</dd></dl><p>実行した結果の例は以下の通りです。Node-REDは入出力を自在に変更できますので、いろいろな使い道がありそうです。</p><p><img class=" tc-image-loading" src="img/node-red_lobe_022.jpg"></p><h2 class=""><u>書き出したノード</u></h2><p>以下は上記のノードを書き出したものです。コピーしてください。</p><p><style>
+  #wrapper {
+    height: 200px;
+    width: 500px;
+    overflow-y: scroll;
+  }
+
+  #contents {
+    background-color: white;
+  }
+</style></p><p><div id="wrapper">
+  <div id="contents">
+    <pre><code>[
+    {
+        "id": "30727d20eb9731bc",
+        "type": "inject",
+        "z": "bbc7170261bafbe4",
+        "name": "実行",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payloadType": "date",
+        "x": 150,
+        "y": 60,
+        "wires": [
+            [
+                "a1073781125e5843"
+            ]
+        ]
+    },
+    {
+        "id": "a1073781125e5843",
+        "type": "file in",
+        "z": "bbc7170261bafbe4",
+        "name": "",
+        "filename": "c:/tmp/019.png",
+        "format": "",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 320,
+        "y": 60,
+        "wires": [
+            [
+                "d175111c0641da56"
+            ]
+        ]
+    },
+    {
+        "id": "c5abd02ee5bbc6d3",
+        "type": "image",
+        "z": "bbc7170261bafbe4",
+        "name": "",
+        "width": 160,
+        "data": "payload",
+        "dataType": "msg",
+        "thumbnail": false,
+        "active": true,
+        "pass": false,
+        "outputs": 0,
+        "x": 480,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "92715ce9fe92b35f",
+        "type": "http request",
+        "z": "bbc7170261bafbe4",
+        "name": "",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://localhost:38101/v1/predict/4fb17929-da02-4232-a3d5-1e0023eaa27a",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 610,
+        "y": 120,
+        "wires": [
+            [
+                "c1f308c52b7531a4"
+            ]
+        ]
+    },
+    {
+        "id": "d175111c0641da56",
+        "type": "base64",
+        "z": "bbc7170261bafbe4",
+        "name": "",
+        "action": "",
+        "property": "payload",
+        "x": 300,
+        "y": 120,
+        "wires": [
+            [
+                "dcf8048a38dee8a2",
+                "c5abd02ee5bbc6d3"
+            ]
+        ]
+    },
+    {
+        "id": "c1f308c52b7531a4",
+        "type": "debug",
+        "z": "bbc7170261bafbe4",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 790,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "dcf8048a38dee8a2",
+        "type": "template",
+        "z": "bbc7170261bafbe4",
+        "name": "body",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "json",
+        "syntax": "mustache",
+        "template": "{\n    \"image\": \"{{{payload}}}\"\n}",
+        "output": "json",
+        "x": 450,
+        "y": 120,
+        "wires": [
+            [
+                "92715ce9fe92b35f"
+            ]
+        ]
+    }
+]</code></pre>
+  </div>
+</div></p><p>以下のようにして読み込みを実行し、ペーストしてください。</p><p><img class=" tc-image-loading" src="img/node-red-mcprotocol-025.jpg"></p><hr><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="index.html"><svg class="tc-image-home-button tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M112.985 119.502c.01-.165.015-.331.015-.499V67.568c3.137 2.948 8.076 2.884 11.134-.174a7.999 7.999 0 00-.002-11.316L70.396 2.343A7.978 7.978 0 0064.734 0a7.957 7.957 0 00-5.656 2.343L33 28.42V8.007C33 3.585 29.41 0 25 0c-4.418 0-8 3.59-8 8.007V44.42L5.342 56.078c-3.125 3.125-3.12 8.198-.002 11.316a7.999 7.999 0 0011.316-.003l.344-.343v52.945a8.11 8.11 0 000 .007c0 4.418 3.588 8 8 8h80c4.419 0 8-3.59 8-8a8.11 8.11 0 00-.015-.498zM97 112V51.574L64.737 19.31 33 51.048V112h64z" fill-rule="evenodd"></path></svg>Homeへ</a><svg class="tc-image-blank tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"></svg><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Node-RED.html"><svg class="tc-image-up-arrow tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M63.892.281c2.027 0 4.054.77 5.6 2.316l55.98 55.98a7.92 7.92 0 010 11.196c-3.086 3.085-8.104 3.092-11.196 0L63.894 19.393 13.513 69.774a7.92 7.92 0 01-11.196 0c-3.085-3.086-3.092-8.105 0-11.196l55.98-55.98A7.892 7.892 0 0163.893.28z"></path></svg>Node-REDの記事Topへ</a></p></div>
+</div></p>
+</section>
+</body>
+</html>
+

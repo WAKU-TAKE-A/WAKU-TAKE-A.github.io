@@ -1,0 +1,142 @@
+<!doctype html>
+<html>
+<head><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-80755908-2"></script><script>  window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-80755908-2');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6163695023100481" crossorigin="anonymous"></script>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="generator" content="TiddlyWiki" />
+<meta name="tiddlywiki-version" content="5.2.5" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="format-detection" content="telephone=no">
+<link id="faviconLink" rel="shortcut icon" href="favicon.ico">
+<link rel="stylesheet" href="static.css">
+<title>（04）C#から、C++の関数の実行（クラス）: WAKU-TAKE-A  PROGRAM</title>
+</head>
+<body class="tc-body">
+
+<section class="tc-story-river tc-static-story-river">
+<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists  tc-tagged-ClrWrapper tc-tagged-Programming" data-tags="ClrWrapper Programming" data-tiddler-title="（04）C#から、C++の関数の実行（クラス）" role="article"><div class="tc-tiddler-title"><div class="tc-titlebar"><span class="tc-tiddler-controls"><button aria-expanded="false" aria-label="more" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fmore-tiddler-actions" title="More actions"></button><div class=" tc-reveal" hidden="true"></div><button aria-label="edit" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fedit" title="Edit this tiddler"></button><button aria-label="close" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fclose" title="Close this tiddler"></button></span><span><h2 class="tc-title">（04）C#から、C++の関数の実行（クラス）</h2></span></div><div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div></div><div class="tc-reveal"></div><div class=" tc-reveal"><div class="tc-subtitle"><a class="tc-tiddlylink tc-tiddlylink-missing" href=".html"></a> 2nd January 2023 at 11:16am</div></div><div class=" tc-reveal"><div class="tc-tags-wrapper"><span class="tc-tag-list-item" data-tag-title="ClrWrapper"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">ClrWrapper</span><span class="tc-drop-down tc-reveal" hidden="true"></span></span><span class="tc-tag-list-item" data-tag-title="Programming"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">Programming</span><span class="tc-drop-down tc-reveal" hidden="true"></span></span></div></div><div class="tc-tiddler-body tc-reveal"><h2 class="">C++のクラスを、C#で利用します</h2><p>「num個のint配列srcから最大値のインデックスと最大値を探すメソッド」という機能のメソッドを含む、「FuncClass」というC++のクラスを、C#から利用します。</p><p>「マネージドコードのクラスが、そのメンバにアンマネージドコードのクラスを持つことは許されていない」というルールがあるので、それをどう解決するかがポイントとなります。</p><h3 class=""><u>1. 準備</u></h3><p>C#、C++/CLR（CLI）、C++の各プロジェクトは、<a class="tc-tiddlylink tc-tiddlylink-resolves" href="%25EF%25BC%258803%25EF%25BC%2589C%2523%25E3%2581%258B%25E3%2582%2589%25E3%2580%2581C%252B%252B%25E3%2581%25AE%25E9%2596%25A2%25E6%2595%25B0%25E3%2581%25AE%25E5%25AE%259F%25E8%25A1%258C%25EF%25BC%2588%25E9%2596%25A2%25E6%2595%25B0%25EF%25BC%2589.html">（03）C#から、C++の関数の実行（関数）</a>と同様に作ります。</p><p>C#のクラスを「test03」などとした場合は、「test02」の部分を「test03」としてください。</p><h3 class=""><u>2. C++のコード</u></h3><ul><li>NativeFunc.hの内容を、以下に置き換えます。</li></ul><pre class="hljs"><code class="cpp hljs"><span class="hljs-meta">#<span class="hljs-keyword">ifdef</span> NATIVEFUNC_EXPORTS</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> NATIVEFUNC_API __declspec(dllexport)</span>
+<span class="hljs-meta">#<span class="hljs-keyword">else</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> NATIVEFUNC_API __declspec(dllimport)</span>
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
+
+<span class="hljs-keyword">namespace</span> Native
+{
+	<span class="hljs-keyword">class</span> <span class="hljs-title class_">NATIVEFUNC_API</span> FuncClass
+	{
+	<span class="hljs-keyword">public</span>:
+		<span class="hljs-comment">// num個のint配列srcから、最大値とそのインデックスを探す関数です</span>
+		<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">Max</span><span class="hljs-params">(<span class="hljs-type">int</span>* src, <span class="hljs-type">int</span> num, <span class="hljs-type">int</span>* mx, <span class="hljs-type">int</span>* mxIndex)</span></span>;
+	};
+}</code></pre><ul><li>NativeFunc.cppの内容を、以下に置き換えます。</li></ul><pre class="hljs"><code class="cpp hljs"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;stdafx.h&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;NativeFunc.h&quot;</span></span>
+
+<span class="hljs-type">void</span> Native::FuncClass::<span class="hljs-built_in">Max</span>(<span class="hljs-type">int</span>* src, <span class="hljs-type">int</span> num, <span class="hljs-type">int</span>* mx, <span class="hljs-type">int</span>* mxIndex)
+{
+	*mx = src[<span class="hljs-number">0</span>];
+	*mxIndex = <span class="hljs-number">0</span>;
+
+	<span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; num; i++) {
+		<span class="hljs-keyword">if</span> (src[i] &gt; *mx) {
+			*mxIndex = i;
+			*mx = src[i];
+		}
+	}
+}</code></pre><ul><li>ポイントは特にありません。</li></ul><h3 class=""><u>3. C++/CLR(CLI)ラッパークラスのコード</u></h3><ul><li>WrapperClass.hの内容を、以下に置き換えます。</li></ul><pre class="hljs"><code class="cpp hljs"><span class="hljs-meta">#<span class="hljs-keyword">pragma</span> once</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;..\NativeFunc\NativeFunc.h&quot;</span></span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> System;
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> System::Runtime::InteropServices;
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> System::Collections::Generic;
+
+<span class="hljs-keyword">namespace</span> Wrapper
+{
+	<span class="hljs-keyword">public</span> ref <span class="hljs-keyword">class</span> <span class="hljs-title class_">WrapperClass</span>
+	{
+	<span class="hljs-keyword">private</span>:
+		Native::FuncClass* _na0; <span class="hljs-comment">//★ここがポイント</span>
+	<span class="hljs-keyword">public</span>:
+		<span class="hljs-built_in">WrapperClass</span>();
+		~<span class="hljs-built_in">WrapperClass</span>();
+		!<span class="hljs-built_in">WrapperClass</span>();
+		<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">Max</span><span class="hljs-params">(array&lt;<span class="hljs-type">int</span>&gt;^ src, <span class="hljs-type">int</span> num, <span class="hljs-type">int</span>% mx, <span class="hljs-type">int</span>% mxIndex)</span></span>;
+	}; <span class="hljs-comment">//end class</span>
+} <span class="hljs-comment">//end namespace</span></code></pre><ul><li>WrapperClass.cppの内容を、以下に置き換えます。</li></ul><pre class="hljs"><code class="cpp hljs"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;stdafx.h&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;WrapperClass.h&quot;</span></span>
+
+<span class="hljs-comment">//★ここがポイント</span>
+Wrapper::WrapperClass::<span class="hljs-built_in">WrapperClass</span>()
+{
+	_na0 = <span class="hljs-keyword">new</span> Native::<span class="hljs-built_in">FuncClass</span>();
+}
+
+<span class="hljs-comment">//★ここがポイント</span>
+Wrapper::WrapperClass::~<span class="hljs-built_in">WrapperClass</span>()
+{
+	<span class="hljs-keyword">delete</span> _na0; _na0 = <span class="hljs-literal">nullptr</span>;
+}
+
+<span class="hljs-comment">//★ここがポイント</span>
+Wrapper::WrapperClass::!<span class="hljs-built_in">WrapperClass</span>()
+{
+	<span class="hljs-keyword">this</span>-&gt;~<span class="hljs-built_in">WrapperClass</span>();
+}
+
+<span class="hljs-type">void</span> Wrapper::WrapperClass::<span class="hljs-built_in">Max</span>(array&lt;<span class="hljs-type">int</span>&gt;^ src, <span class="hljs-type">int</span> num, <span class="hljs-type">int</span>% mx, <span class="hljs-type">int</span>% mxIndex)
+{
+	<span class="hljs-comment">// 実行中、ガベージコレクションされないように、pin_ptrを使って固定する</span>
+	pin_ptr&lt;<span class="hljs-type">int</span>&gt; p_src = &amp;src[<span class="hljs-number">0</span>];
+	pin_ptr&lt;<span class="hljs-type">int</span>&gt; p_mx = &amp;mx;
+	pin_ptr&lt;<span class="hljs-type">int</span>&gt; p_mxIndex = &amp;mxIndex;
+
+	<span class="hljs-comment">// 自作関数実行</span>
+	_na0-&gt;<span class="hljs-built_in">Max</span>(p_src, num, p_mx, p_mxIndex);
+
+	<span class="hljs-comment">// 固定解除</span>
+	p_src = <span class="hljs-literal">nullptr</span>;
+	p_mx = <span class="hljs-literal">nullptr</span>;
+	p_mxIndex = <span class="hljs-literal">nullptr</span>;
+}</code></pre><ul style="color:red;font-weight:bold;"><li>ポイント<ul><li><code>Native::FuncClass* _na0</code>で、FuncClassクラスを呼び出します<ul><li>「マネージドコードのクラスが、そのメンバにアンマネージドコードのクラスを持つことは許されていない」というルールは、ポインタを利用して回避します</li></ul></li><li>コンストラクタ、デストラクタ、ファイナライザを定義します<ul><li>コンストラクタで、FuncClassクラスのインスタンスを作成します</li><li>デストラクタやファイナライザで、インスタンスを破棄します</li><li>ちなみに、.NETではデストラクタは必ず呼び出されるとは限りません</li></ul></li></ul></li></ul><h3 class=""><u>4. C#のコード</u></h3><ul><li>Form1.csの内容を、以下に置き換えます。</li></ul><pre class="hljs"><code class="cs hljs"><span class="hljs-keyword">using</span> System;
+<span class="hljs-keyword">using</span> System.ComponentModel;
+<span class="hljs-keyword">using</span> System.Data;
+<span class="hljs-keyword">using</span> System.Drawing;
+<span class="hljs-keyword">using</span> System.Linq;
+<span class="hljs-keyword">using</span> System.Text;
+<span class="hljs-keyword">using</span> System.Windows.Forms;
+<span class="hljs-keyword">using</span> Wrapper;
+
+<span class="hljs-keyword">namespace</span> <span class="hljs-title">test03</span>
+{
+    <span class="hljs-keyword">public</span> <span class="hljs-keyword">partial</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Form1</span> : <span class="hljs-title">Form</span>
+    {
+        WrapperClass wr = <span class="hljs-keyword">new</span> WrapperClass(); <span class="hljs-comment">//WrapperClassのインスタンスを作成</span>
+
+        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Form1</span>()</span>
+        {
+            InitializeComponent();
+
+            <span class="hljs-built_in">int</span>[] src = { <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>, <span class="hljs-number">5</span>, <span class="hljs-number">4</span>, <span class="hljs-number">3</span>, <span class="hljs-number">2</span> };
+            <span class="hljs-built_in">int</span> mx = <span class="hljs-number">0</span>;
+            <span class="hljs-built_in">int</span> mxIndex = <span class="hljs-number">0</span>;
+            <span class="hljs-built_in">int</span> num = <span class="hljs-number">10</span>;
+
+            MessageBox.Show(<span class="hljs-string">&quot;int[] a = { 1, 2, 3, 4, 5, 6, 5, 4, 3, 2 }&quot;</span>);
+
+            wr.Max(src, num, <span class="hljs-keyword">ref</span> mx, <span class="hljs-keyword">ref</span> mxIndex); <span class="hljs-comment">//処理実行</span>
+
+            MessageBox.Show(<span class="hljs-string">&quot;Max = &quot;</span> + mx.ToString() + <span class="hljs-string">&quot;, MaxIndex=&quot;</span> + mxIndex.ToString());
+
+            Environment.Exit(<span class="hljs-number">0</span>);
+        }
+    }
+}</code></pre><h2 class="">結果</h2><p>結果は、<a class="tc-tiddlylink tc-tiddlylink-resolves" href="%25EF%25BC%258803%25EF%25BC%2589C%2523%25E3%2581%258B%25E3%2582%2589%25E3%2580%2581C%252B%252B%25E3%2581%25AE%25E9%2596%25A2%25E6%2595%25B0%25E3%2581%25AE%25E5%25AE%259F%25E8%25A1%258C%25EF%25BC%2588%25E9%2596%25A2%25E6%2595%25B0%25EF%25BC%2589.html">（03）C#から、C++の関数の実行（関数）</a>と同じですので省略します。</p><p>上の手順で作成されたソリューションは、<a class="tc-tiddlylink-external" href="img/test03.zip" rel="noopener noreferrer" target="_blank">ここに</a>にあります（<a class="tc-tiddlylink tc-tiddlylink-resolves" href="%25E3%2582%25B5%25E3%2583%25B3%25E3%2583%2597%25E3%2583%25AB%25E3%2583%2597%25E3%2583%25AD%25E3%2582%25B0%25E3%2583%25A9%25E3%2583%25A0%25E3%2581%25AB%25E3%2581%258A%25E3%2581%2591%25E3%2582%258B%25E8%25AD%25A6%25E5%2591%258A%25E3%2581%25AB%25E3%2581%25A4%25E3%2581%2584%25E3%2581%25A6.html">サンプルプログラムにおける警告について</a>）。</p><hr><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="index.html"><svg class="tc-image-home-button tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M112.985 119.502c.01-.165.015-.331.015-.499V67.568c3.137 2.948 8.076 2.884 11.134-.174a7.999 7.999 0 00-.002-11.316L70.396 2.343A7.978 7.978 0 0064.734 0a7.957 7.957 0 00-5.656 2.343L33 28.42V8.007C33 3.585 29.41 0 25 0c-4.418 0-8 3.59-8 8.007V44.42L5.342 56.078c-3.125 3.125-3.12 8.198-.002 11.316a7.999 7.999 0 0011.316-.003l.344-.343v52.945a8.11 8.11 0 000 .007c0 4.418 3.588 8 8 8h80c4.419 0 8-3.59 8-8a8.11 8.11 0 00-.015-.498zM97 112V51.574L64.737 19.31 33 51.048V112h64z" fill-rule="evenodd"></path></svg>Homeへ</a><svg class="tc-image-blank tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"></svg><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Programming.html"><svg class="tc-image-up-arrow tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M63.892.281c2.027 0 4.054.77 5.6 2.316l55.98 55.98a7.92 7.92 0 010 11.196c-3.086 3.085-8.104 3.092-11.196 0L63.894 19.393 13.513 69.774a7.92 7.92 0 01-11.196 0c-3.085-3.086-3.092-8.105 0-11.196l55.98-55.98A7.892 7.892 0 0163.893.28z"></path></svg>プログラミングの記事Topへ</a></p></div>
+</div></p>
+</section>
+</body>
+</html>
+

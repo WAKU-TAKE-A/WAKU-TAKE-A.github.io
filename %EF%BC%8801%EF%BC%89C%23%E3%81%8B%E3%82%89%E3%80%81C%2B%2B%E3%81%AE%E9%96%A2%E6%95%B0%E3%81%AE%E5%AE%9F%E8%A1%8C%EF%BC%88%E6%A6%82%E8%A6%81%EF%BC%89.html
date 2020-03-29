@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+<head><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-80755908-2"></script><script>  window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-80755908-2');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6163695023100481" crossorigin="anonymous"></script>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="generator" content="TiddlyWiki" />
+<meta name="tiddlywiki-version" content="5.2.5" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="format-detection" content="telephone=no">
+<link id="faviconLink" rel="shortcut icon" href="favicon.ico">
+<link rel="stylesheet" href="static.css">
+<title>（01）C#から、C++の関数の実行（概要）: WAKU-TAKE-A  PROGRAM</title>
+</head>
+<body class="tc-body">
+
+<section class="tc-story-river tc-static-story-river">
+<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists  tc-tagged-ClrWrapper tc-tagged-Programming" data-tags="ClrWrapper Programming" data-tiddler-title="（01）C#から、C++の関数の実行（概要）" role="article"><div class="tc-tiddler-title"><div class="tc-titlebar"><span class="tc-tiddler-controls"><button aria-expanded="false" aria-label="more" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fmore-tiddler-actions" title="More actions"></button><div class=" tc-reveal" hidden="true"></div><button aria-label="edit" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fedit" title="Edit this tiddler"></button><button aria-label="close" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fclose" title="Close this tiddler"></button></span><span><h2 class="tc-title">（01）C#から、C++の関数の実行（概要）</h2></span></div><div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div></div><div class="tc-reveal"></div><div class=" tc-reveal"><div class="tc-subtitle"><a class="tc-tiddlylink tc-tiddlylink-missing" href=".html"></a> 2nd January 2023 at 11:16am</div></div><div class=" tc-reveal"><div class="tc-tags-wrapper"><span class="tc-tag-list-item" data-tag-title="ClrWrapper"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">ClrWrapper</span><span class="tc-drop-down tc-reveal" hidden="true"></span></span><span class="tc-tag-list-item" data-tag-title="Programming"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">Programming</span><span class="tc-drop-down tc-reveal" hidden="true"></span></span></div></div><div class="tc-tiddler-body tc-reveal"><p>C#は、GUIの作成や.NET Frameworkを利用したプログラミングにおいて、便利な言語です。しかし、処理速度の面でC++に劣ります。</p><p>C#からC++の関数を実行することで、この処理速度におけるデメリットを補うことができます。</p><ul><li>DllImport属性を使って実行する方法</li><li>C++/CLI（※1）でラッピングする方法</li></ul><p>などがあります。ここでは後者を試してみます。 </p><p>C++/CLIでラッピングする方法は、C++の基本型（プリミティブ型）だけでなくクラスや構造体（※2）も、C#で利用することができます。（DllImport属性では、C++のクラスをやりとりすることは出来ません）</p><p>やり方としては、C++/CLIのマネージ拡張機能を使って、C#とC++の橋渡し（マーシャリング※3）を行います。マネージ拡張機能とは、同じモジュール内でアンマネージ・コード（※4）とマネージ・コードを混在させることを可能にする機能です。</p><p>C#からC++を利用するのを前提として話を進めます。</p><h2 class="">アンマネージコードとマネージコードの違いとC++/CLIによる橋渡しについて</h2><p>C++/CLIは、先ほども述べたように同じモジュール内でアンマネージ・コードとマネージ・コードを混在させることが可能です。</p><p>C#側からは、クラスライブラリとして利用することができます。</p><p><img class=" tc-image-loading" src="img/Wrapper00_03.png"></p><p>しかしここで問題があります。C#（マネージ・コード）の変数とC++（アンマネージ・コード）の変数は、メモリへの配置が基本型以外異なっており、単純にC#からC++に渡すことができません。</p><p><img class=" tc-image-loading" src="img/Wrapper00_01.png"></p><p>そこで基本型以外の変数については、C++/CLIにおいて、「値をコピーする」もしくは「ポインタを駆使する」などの型変換なども同時に行う必要があります。</p><p>うまくC++/CLIの橋渡しができれば、通常の関数を使うようにC++の関数を、C#側から使うことが可能になります。</p><h2 class="">ポインタを駆使する方法の概要</h2><p>ヒープ領域の実体部分の構造が同じ変数なら、pin_ptrやGCHandleを利用して、ポインタを抽出してマーシャリングが可能になります。ポインタは、ヒープ領域に確保されたメモリの先頭アドレスです。</p><p>「値をコピーする」処理は遅いので、できるだけ「ポインタを駆使する」処理を利用してラッパーを作成します。</p><p><img class=" tc-image-loading" src="img/Wrapper00_02.png"></p><p>※1<br>
+C++/CLIの概要説明は以下を読んでください。<br>
+<a class="tc-tiddlylink-external" href="http://ja.wikipedia.org/wiki/C%2B%2B/CLI" rel="noopener noreferrer" target="_blank">http://ja.wikipedia.org/wiki/C%2B%2B/CLI</a><br>
+"C++マネージ拡張"と比較して易しいような表現がされていますが、、、</p><p>※2<br>
+基本型のみで構成される構造体は、比較的簡単に受け渡しできます。<br>
+配列やポインタなどがメンバにあると難しくなります。</p><p>※3<br>
+異なる2つのシステム間で、データを交換できるようにデータを操作する処理。<br>
+上記では、C++/CLIのクラスライブラリで利用していますが、C#のクラスライブラリを利用しなければ実現できない場合もあります。<br>
+配列を要素に持つ構造体をマーシャリングするには、C#のクラスライブラリで定義する必要があります。<br>
+<a class="tc-tiddlylink-external" href="http://social.msdn.microsoft.com/Forums/ja/vcgeneralja/thread/26516067-fb42-4939-9aeb-bcf6d62e68da" rel="noopener noreferrer" target="_blank">http://social.msdn.microsoft.com/Forums/ja/vcgeneralja/thread/26516067-fb42-4939-9aeb-bcf6d62e68da</a></p><p>※4<br>
+マネージ・コード（managed code）とは：<br>
+.NET Frameworkにおける共通言語基盤（CLI）に準拠した仮想機械上で実行される命令（コード）のこと。<br>
+これに対してマネージコード以外のコードはアンマネージ・コード（unmanaged code）やネイティブ・コード （native code）と呼ばれる。</p><hr><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="index.html"><svg class="tc-image-home-button tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M112.985 119.502c.01-.165.015-.331.015-.499V67.568c3.137 2.948 8.076 2.884 11.134-.174a7.999 7.999 0 00-.002-11.316L70.396 2.343A7.978 7.978 0 0064.734 0a7.957 7.957 0 00-5.656 2.343L33 28.42V8.007C33 3.585 29.41 0 25 0c-4.418 0-8 3.59-8 8.007V44.42L5.342 56.078c-3.125 3.125-3.12 8.198-.002 11.316a7.999 7.999 0 0011.316-.003l.344-.343v52.945a8.11 8.11 0 000 .007c0 4.418 3.588 8 8 8h80c4.419 0 8-3.59 8-8a8.11 8.11 0 00-.015-.498zM97 112V51.574L64.737 19.31 33 51.048V112h64z" fill-rule="evenodd"></path></svg>Homeへ</a><svg class="tc-image-blank tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"></svg><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Programming.html"><svg class="tc-image-up-arrow tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M63.892.281c2.027 0 4.054.77 5.6 2.316l55.98 55.98a7.92 7.92 0 010 11.196c-3.086 3.085-8.104 3.092-11.196 0L63.894 19.393 13.513 69.774a7.92 7.92 0 01-11.196 0c-3.085-3.086-3.092-8.105 0-11.196l55.98-55.98A7.892 7.892 0 0163.893.28z"></path></svg>プログラミングの記事Topへ</a></p></div>
+</div></p>
+</section>
+</body>
+</html>
+

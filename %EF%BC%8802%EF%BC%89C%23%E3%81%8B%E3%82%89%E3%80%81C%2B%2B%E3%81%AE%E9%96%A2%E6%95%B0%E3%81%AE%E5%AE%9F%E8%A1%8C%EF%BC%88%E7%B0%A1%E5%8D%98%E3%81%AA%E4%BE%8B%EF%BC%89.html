@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+<head><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-80755908-2"></script><script>  window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-80755908-2');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6163695023100481" crossorigin="anonymous"></script>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="generator" content="TiddlyWiki" />
+<meta name="tiddlywiki-version" content="5.2.5" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="format-detection" content="telephone=no">
+<link id="faviconLink" rel="shortcut icon" href="favicon.ico">
+<link rel="stylesheet" href="static.css">
+<title>（02）C#から、C++の関数の実行（簡単な例）: WAKU-TAKE-A  PROGRAM</title>
+</head>
+<body class="tc-body">
+
+<section class="tc-story-river tc-static-story-river">
+<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists  tc-tagged-ClrWrapper tc-tagged-Programming" data-tags="ClrWrapper Programming" data-tiddler-title="（02）C#から、C++の関数の実行（簡単な例）" role="article"><div class="tc-tiddler-title"><div class="tc-titlebar"><span class="tc-tiddler-controls"><button aria-expanded="false" aria-label="more" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fmore-tiddler-actions" title="More actions"></button><div class=" tc-reveal" hidden="true"></div><button aria-label="edit" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fedit" title="Edit this tiddler"></button><button aria-label="close" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fclose" title="Close this tiddler"></button></span><span><h2 class="tc-title">（02）C#から、C++の関数の実行（簡単な例）</h2></span></div><div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div></div><div class="tc-reveal"></div><div class=" tc-reveal"><div class="tc-subtitle"><a class="tc-tiddlylink tc-tiddlylink-missing" href=".html"></a> 2nd January 2023 at 11:16am</div></div><div class=" tc-reveal"><div class="tc-tags-wrapper"><span class="tc-tag-list-item" data-tag-title="ClrWrapper"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">ClrWrapper</span><span class="tc-drop-down tc-reveal" hidden="true"></span></span><span class="tc-tag-list-item" data-tag-title="Programming"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">Programming</span><span class="tc-drop-down tc-reveal" hidden="true"></span></span></div></div><div class="tc-tiddler-body tc-reveal"><p>Visual Studio Community 2015を使います。Visual Studio C++ 2015 を使えるようにしてください（※1）。</p><h2 class="">C#でC++のmemcpy</h2><p>C++のstring.hに定義されているmemcpyを利用するC++/CLIラッパーを作成します。C++のdllを作成しないので、プロジェクトの設定やプログラミングは簡単になります。</p><p>今回の一番のポイントは、マネージドな配列をマーシャリングする部分です。</p><p>サンプルソリューションを<a class="tc-tiddlylink-external" href="img/test01.zip" rel="noopener noreferrer" target="_blank">ここに</a>置いておきますので、参考にしてください（<a class="tc-tiddlylink tc-tiddlylink-resolves" href="%25E3%2582%25B5%25E3%2583%25B3%25E3%2583%2597%25E3%2583%25AB%25E3%2583%2597%25E3%2583%25AD%25E3%2582%25B0%25E3%2583%25A9%25E3%2583%25A0%25E3%2581%25AB%25E3%2581%258A%25E3%2581%2591%25E3%2582%258B%25E8%25AD%25A6%25E5%2591%258A%25E3%2581%25AB%25E3%2581%25A4%25E3%2581%2584%25E3%2581%25A6.html">サンプルプログラムにおける警告について</a>）。</p><h2 class="">手順</h2><h3 class=""><u>1. 準備</u></h3><ul><li><strong>C#プロジェクトの新規作成</strong><ol><li>ファイル → 新規作成 → プロジェクト → Visual C# → Windows → Windowsフォームアプリケーション<ul><li>例として名前は「test01」としてください<br><br></li></ul></li></ol></li><li><strong>C++/CLI(CLR)プロジェクトの新規作成</strong><ol><li>ソリューションエクスプローラーのソリューションを右クリック → 追加 → 新しいプロジェクト → Visual C++（※2） → CLR → クラスライブラリ<ul><li>例として名前は「WrapperClass」としてください<br><br></li></ul></li></ol></li><li><strong>依存関係の設定など</strong><ol><li>ソリューションエクスプローラーのソリューションを右クリック→ プロジェクトの依存関係<ul><li>コンボボックスの「test01」を選択 → 「WrapperClass」にチェック</li></ul></li><li>ソリューションエクスプローラーの「test01」の参照を右クリック → 参照の追加 → プロジェクト → ソリューション<ul><li>「WrapperClass」にチェック</li></ul></li><li>ビルド → 構成マネージャ<ul><li>すべてのプロジェクトにチェックがついていることを確認</li><li>DebugとReleaseの両方を確認すること</li></ul></li></ol></li></ul><h3 class=""><u>2. C++/CLI(CLR)ラッパークラスのコード</u></h3><ul><li>WrapperClass.hの内容を、以下に置き換えます。</li></ul><pre class="hljs"><code class="cpp hljs"><span class="hljs-meta">#<span class="hljs-keyword">pragma</span> once</span>
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> System;
+
+<span class="hljs-keyword">namespace</span> Wrapper
+{
+	<span class="hljs-keyword">public</span> ref <span class="hljs-keyword">class</span> <span class="hljs-title class_">WrapperClass</span>
+	{
+	<span class="hljs-keyword">public</span> :
+		<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">MemCopy</span><span class="hljs-params">(array&lt;<span class="hljs-type">int</span>&gt;^ src, array&lt;<span class="hljs-type">int</span>&gt;^ dst, <span class="hljs-type">int</span> size)</span></span>;
+	};
+}</code></pre><ul><li>WrapperClass.cppの内容を、以下に置き換えます。</li></ul><pre class="hljs"><code class="cpp hljs"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;stdafx.h&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;WrapperClass.h&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;string.h&gt;</span></span>
+
+<span class="hljs-type">int</span> Wrapper::WrapperClass::<span class="hljs-built_in">MemCopy</span>(array&lt;<span class="hljs-type">int</span>&gt;^ src, array&lt;<span class="hljs-type">int</span>&gt;^ dst, <span class="hljs-type">int</span> size)
+{
+	<span class="hljs-comment">// ★ここがポイント</span>
+	<span class="hljs-comment">// 実行中、ガベージコレクションされないように、pin_ptrを使って固定する</span>
+	pin_ptr&lt;<span class="hljs-type">int</span>&gt; srcPtr = &amp;src[<span class="hljs-number">0</span>];
+	pin_ptr&lt;<span class="hljs-type">int</span>&gt; dstPtr = &amp;dst[<span class="hljs-number">0</span>];
+
+	<span class="hljs-comment">// memcpy実行</span>
+	<span class="hljs-built_in">memcpy</span>(dstPtr, srcPtr, <span class="hljs-built_in">sizeof</span>(<span class="hljs-type">int</span>) * size);
+
+	<span class="hljs-comment">// ★ここがポイント</span>
+	<span class="hljs-comment">// 固定解除</span>
+	srcPtr = <span class="hljs-literal">nullptr</span>;
+	dstPtr = <span class="hljs-literal">nullptr</span>;
+
+	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
+}</code></pre><ul style="color:red;font-weight:bold;"><li>ポイント<ul><li>マネージドな変数<code>array&lt;int&gt;^</code>を、<code>pin_ptr</code>で固定して、<br>アンマネージドな変数を扱う関数（<code>memcpy</code>）にポインタを渡しています</li><li>固定した後は、解除します（必須！）</li></ul></li></ul><h3 class=""><u>2. C#のコード</u></h3><p>C#のForm1クラスで試します。Form1.csの内容を、以下に置き換えます。</p><pre class="hljs"><code class="cs hljs"><span class="hljs-keyword">using</span> System;
+<span class="hljs-keyword">using</span> System.ComponentModel;
+<span class="hljs-keyword">using</span> System.Data;
+<span class="hljs-keyword">using</span> System.Drawing;
+<span class="hljs-keyword">using</span> System.Linq;
+<span class="hljs-keyword">using</span> System.Text;
+<span class="hljs-keyword">using</span> System.Windows.Forms;
+<span class="hljs-keyword">using</span> Wrapper;
+
+<span class="hljs-keyword">namespace</span> <span class="hljs-title">test01</span>
+{
+	<span class="hljs-keyword">public</span> <span class="hljs-keyword">partial</span> <span class="hljs-keyword">class</span> <span class="hljs-title">Form1</span> : <span class="hljs-title">Form</span>
+	{
+		WrapperClass _wr = <span class="hljs-keyword">new</span> WrapperClass(); <span class="hljs-comment">//WrapperClassのインスタンスを作成</span>
+
+		<span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Form1</span>()</span>
+		{
+			InitializeComponent();
+
+			<span class="hljs-built_in">int</span>[] a = {<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>, <span class="hljs-number">6</span>, <span class="hljs-number">7</span>, <span class="hljs-number">8</span>, <span class="hljs-number">9</span>, <span class="hljs-number">10</span>};
+			<span class="hljs-built_in">int</span>[] b = <span class="hljs-keyword">new</span> <span class="hljs-built_in">int</span>[<span class="hljs-number">10</span>];
+
+			MessageBox.Show(<span class="hljs-string">&quot;処理前：b[0]=&quot;</span> + b[<span class="hljs-number">0</span>].ToString() +
+			    <span class="hljs-string">&quot;, b[5]=&quot;</span> + b[<span class="hljs-number">5</span>].ToString() +
+			    <span class="hljs-string">&quot;, b[10]=&quot;</span> + b[<span class="hljs-number">9</span>].ToString());
+
+			_wr.MemCopy(a, b, <span class="hljs-number">10</span>); <span class="hljs-comment">//処理実行（C#のインテリセンスも働きます）</span>
+
+			MessageBox.Show(<span class="hljs-string">&quot;処理後：b[0]=&quot;</span> + b[<span class="hljs-number">0</span>].ToString() +
+			    <span class="hljs-string">&quot;, b[5]=&quot;</span> + b[<span class="hljs-number">5</span>].ToString() +
+			    <span class="hljs-string">&quot;, b[10]=&quot;</span> + b[<span class="hljs-number">9</span>].ToString());
+
+			Environment.Exit(<span class="hljs-number">0</span>);
+		}
+	}
+}</code></pre><h2 class="">結果</h2><p>実行ファイルは、<code>.\test01\bin\Debug</code>と<code>.\test01\bin\Release</code>にあります。</p><p>処理前、<img class=" tc-image-loading" src="img/test01_01.png"></p><p>処理後、<img class=" tc-image-loading" src="img/test01_02.png"></p><p>C++の関数で値が書き変わっています。
+<br>
+<br>
+<br>
+※1<br>
+ファイル → 新規作成 → プロジェクト → Visual C++<br>
+とした時に、<br>
+Visual C++ 2015 Tools for Windows Desktopをインストール<br>
+<img class=" tc-image-loading" src="img/install_cpp.png"><br>
+と表示される場合は、Visual C++がインストールされていません。<br>
+インストールを実行してください。<br></p><hr><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="index.html"><svg class="tc-image-home-button tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M112.985 119.502c.01-.165.015-.331.015-.499V67.568c3.137 2.948 8.076 2.884 11.134-.174a7.999 7.999 0 00-.002-11.316L70.396 2.343A7.978 7.978 0 0064.734 0a7.957 7.957 0 00-5.656 2.343L33 28.42V8.007C33 3.585 29.41 0 25 0c-4.418 0-8 3.59-8 8.007V44.42L5.342 56.078c-3.125 3.125-3.12 8.198-.002 11.316a7.999 7.999 0 0011.316-.003l.344-.343v52.945a8.11 8.11 0 000 .007c0 4.418 3.588 8 8 8h80c4.419 0 8-3.59 8-8a8.11 8.11 0 00-.015-.498zM97 112V51.574L64.737 19.31 33 51.048V112h64z" fill-rule="evenodd"></path></svg>Homeへ</a><svg class="tc-image-blank tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"></svg><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Programming.html"><svg class="tc-image-up-arrow tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M63.892.281c2.027 0 4.054.77 5.6 2.316l55.98 55.98a7.92 7.92 0 010 11.196c-3.086 3.085-8.104 3.092-11.196 0L63.894 19.393 13.513 69.774a7.92 7.92 0 01-11.196 0c-3.085-3.086-3.092-8.105 0-11.196l55.98-55.98A7.892 7.892 0 0163.893.28z"></path></svg>プログラミングの記事Topへ</a></p></div>
+</div></p>
+</section>
+</body>
+</html>
+

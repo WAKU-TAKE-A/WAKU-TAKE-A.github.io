@@ -1,0 +1,160 @@
+<!doctype html>
+<html>
+<head><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-80755908-2"></script><script>  window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-80755908-2');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6163695023100481" crossorigin="anonymous"></script>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="generator" content="TiddlyWiki" />
+<meta name="tiddlywiki-version" content="5.2.5" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="format-detection" content="telephone=no">
+<link id="faviconLink" rel="shortcut icon" href="favicon.ico">
+<link rel="stylesheet" href="static.css">
+<title>（05）PythonでTOF距離センサー（バッファについて）: WAKU-TAKE-A  PROGRAM</title>
+</head>
+<body class="tc-body">
+
+<section class="tc-story-river tc-static-story-river">
+<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists  tc-tagged-Python_Camera tc-tagged-Programming" data-tags="Python_Camera Programming" data-tiddler-title="（05）PythonでTOF距離センサー（バッファについて）" role="article"><div class="tc-tiddler-title"><div class="tc-titlebar"><span class="tc-tiddler-controls"><button aria-expanded="false" aria-label="more" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fmore-tiddler-actions" title="More actions"></button><div class=" tc-reveal" hidden="true"></div><button aria-label="edit" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fedit" title="Edit this tiddler"></button><button aria-label="close" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fclose" title="Close this tiddler"></button></span><span><h2 class="tc-title">（05）PythonでTOF距離センサー（バッファについて）</h2></span></div><div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div></div><div class="tc-reveal"></div><div class=" tc-reveal"><div class="tc-subtitle"><a class="tc-tiddlylink tc-tiddlylink-missing" href=".html"></a> 2nd January 2023 at 11:20am</div></div><div class=" tc-reveal"><div class="tc-tags-wrapper"><span class="tc-tag-list-item" data-tag-title="Programming"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">Programming</span><span class="tc-drop-down tc-reveal" hidden="true"></span></span><span class="tc-tag-list-item" data-tag-title="Python_Camera"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">Python_Camera</span><span class="tc-drop-down tc-reveal" hidden="true"></span></span></div></div><div class="tc-tiddler-body tc-reveal"><p>Terabee社製の「TeraRanger Evo Mini USB」（以降、EvoMini）を、Pythonで利用する方法を<a class="tc-tiddlylink tc-tiddlylink-resolves" href="%25EF%25BC%258804%25EF%25BC%2589Python%25E3%2581%25A7TOF%25E8%25B7%259D%25E9%259B%25A2%25E3%2582%25BB%25E3%2583%25B3%25E3%2582%25B5%25E3%2583%25BC.html">こちら</a>に書きました。</p><p>使っていると気づくと思いますが、計測値が最新ではないことがあります。</p><p>PySerialの<code>read()</code>を実行すると、EvoMiniのバッファ内の古い値から読み込んでいくことが原因です。</p><p>これは<a class="tc-tiddlylink tc-tiddlylink-resolves" href="%25EF%25BC%258803%25EF%25BC%2589Python%25EF%25BC%258BOpenCV%25E3%2581%25A7UVC%25E8%25A6%258F%25E6%25A0%25BC%25E3%2581%25AE%25E3%2582%25AB%25E3%2583%25A1%25E3%2583%25A9%25E5%2588%25B6%25E5%25BE%25A1%25EF%25BC%2588%25E3%2583%2590%25E3%2583%2583%25E3%2583%2595%25E3%2582%25A1%25E3%2581%25AB%25E3%2581%25A4%25E3%2581%2584%25E3%2581%25A6%25EF%25BC%2589.html">（03）Python＋OpenCVでUVC規格のカメラ制御（バッファについて）</a>と同じように対策することで解決します。別スレッドでEvoMiniから常に値を読み取り、Pythonのqueueに最新の値のみ入るようする方法です。</p><p>以下は<a class="tc-tiddlylink-external" href="https://github.com/WAKU-TAKE-A/teraranger_evo_sample001" rel="noopener noreferrer" target="_blank">サンプルプログラム</a>です。</p><pre class="hljs"><code class="python hljs"><span class="hljs-comment"># -*- coding: utf-8 -*-</span>
+
+<span class="hljs-string">&quot;&quot;&quot;
+Distance sensor by TeraRanger Evo Mini.
+
+・PySerial is required.
+・PRINT OUT MODE = TEXT / PIXEL MODE = PIXEL1 / RANGE MODE = LONG
+&quot;&quot;&quot;</span>
+
+<span class="hljs-keyword">import</span> serial, queue, threading, time
+
+PRINTOUT_TEXT = <span class="hljs-built_in">bytearray</span>(<span class="hljs-string">b&#x27;\x00\x11\x01\x45&#x27;</span>)
+PX1 = <span class="hljs-built_in">bytearray</span>(<span class="hljs-string">b&#x27;\x00\x21\x01\xBC&#x27;</span>)
+RANGE_LONG = <span class="hljs-built_in">bytearray</span>(<span class="hljs-string">b&#x27;\x00\x61\x03\xE9&#x27;</span>)
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">TeraRangerEvoMini</span>:
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, port=<span class="hljs-string">&#x27;COM1&#x27;</span>, baudrate=<span class="hljs-number">115200</span>, bytesize=<span class="hljs-number">8</span>, parity=<span class="hljs-string">&#x27;N&#x27;</span>, stopbits=<span class="hljs-number">1</span></span>):
+        <span class="hljs-string">&quot;&quot;&quot;
+        Initialize.
+        &quot;&quot;&quot;</span>
+        self.conn = serial.Serial(
+            port=port,
+            baudrate=baudrate,
+            bytesize=bytesize,
+            parity=parity,
+            stopbits=stopbits)
+        self.conn.write(PX1)
+        self.conn.write(RANGE_LONG)
+        self.conn.write(PRINTOUT_TEXT)
+        <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;------------------------&#x27;</span>)
+        <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;TeraRangerEvoMini.__init__&#x27;</span>)
+        <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;------------------------&#x27;</span>)
+        <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;Port = {0}&#x27;</span>.<span class="hljs-built_in">format</span>(port))
+        <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;Baud Rate = {0}&#x27;</span>.<span class="hljs-built_in">format</span>(baudrate))
+        <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;Byte Size = {0}&#x27;</span>.<span class="hljs-built_in">format</span>(bytesize))
+        <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;Parity = {0}&#x27;</span>.<span class="hljs-built_in">format</span>(parity))
+        <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;Stop Bits = {0}&#x27;</span>.<span class="hljs-built_in">format</span>(stopbits))
+        <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;PRINT OUT MODE = TEXT&#x27;</span>)
+        <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;PIXEL MODE = PIXEL1&#x27;</span>)
+        <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;RANGE MODE = LONG&#x27;</span>)
+        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">20</span>):
+            val = self._get_until_lf()
+            <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;Check value : {0}&#x27;</span>.<span class="hljs-built_in">format</span>(val))
+        self.q = queue.Queue()
+        self.t = threading.Thread(target=self._reader)
+        self.t.daemon = <span class="hljs-literal">True</span>
+        self.t.start()
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__del__</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-string">&quot;&quot;&quot;
+        Shutdown.
+        &quot;&quot;&quot;</span>
+        self.t.join(<span class="hljs-number">0</span>)
+        self.conn.close()
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">_get_until_lf</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-string">&quot;&quot;&quot;
+        Read until LF.
+        &quot;&quot;&quot;</span>
+        <span class="hljs-keyword">try</span>:
+            val = <span class="hljs-string">&#x27;&#x27;</span>
+            res = <span class="hljs-string">&#x27;&#x27;</span>
+            <span class="hljs-keyword">while</span> res != <span class="hljs-string">&#x27;\n&#x27;</span>:
+                val = val + res
+                res = self.conn.read().decode()
+            <span class="hljs-keyword">return</span> <span class="hljs-built_in">int</span>(val)
+        <span class="hljs-keyword">except</span>:
+            <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">_reader</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-string">&quot;&quot;&quot;
+        The queue always contains the latest values.
+        &quot;&quot;&quot;</span>
+        <span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:
+            val = self._get_until_lf()
+            <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> self.q.empty():
+                <span class="hljs-keyword">try</span>:
+                    self.q.get_nowait()
+                <span class="hljs-keyword">except</span> queue.Empty:
+                    <span class="hljs-keyword">pass</span>
+            self.q.put(val)
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">open</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-string">&quot;&quot;&quot;
+        Open.
+        &quot;&quot;&quot;</span>
+        <span class="hljs-keyword">try</span>:
+            <span class="hljs-keyword">if</span> self.conn.isOpen():
+                <span class="hljs-keyword">return</span>
+            <span class="hljs-keyword">else</span>:
+                self.conn.<span class="hljs-built_in">open</span>()
+            <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;Reopen.&#x27;</span>)
+        <span class="hljs-keyword">except</span> Exception <span class="hljs-keyword">as</span> e:
+            <span class="hljs-built_in">print</span>(e)
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">isConnect</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-string">&quot;&quot;&quot;
+        Check connection.
+        
+        * Closes when an error occurs.
+        &quot;&quot;&quot;</span>
+        <span class="hljs-keyword">try</span>:
+            <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> self.conn.isOpen():
+                self.conn.<span class="hljs-built_in">open</span>()
+            bret = self.conn.write(PRINTOUT_TEXT) == <span class="hljs-number">4</span>
+            <span class="hljs-keyword">return</span> bret
+        <span class="hljs-keyword">except</span> Exception <span class="hljs-keyword">as</span> e:
+            <span class="hljs-built_in">print</span>(e)
+            self.conn.close()
+            <span class="hljs-keyword">return</span> <span class="hljs-literal">False</span>
+    <span class="hljs-keyword">def</span> <span class="hljs-title function_">getDistance</span>(<span class="hljs-params">self</span>):
+        <span class="hljs-string">&quot;&quot;&quot;
+        Measure the distance.
+        &quot;&quot;&quot;</span>
+        <span class="hljs-keyword">try</span>:
+            <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> self.conn.isOpen():
+                self.conn.<span class="hljs-built_in">open</span>()
+            t_start = time.time()
+            val = self.q.get()
+            proc_time = time.time() - t_start
+            <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;calc time : {0} ms&#x27;</span>.<span class="hljs-built_in">format</span>(proc_time))
+            <span class="hljs-keyword">return</span> val
+        <span class="hljs-keyword">except</span> Exception <span class="hljs-keyword">as</span> e:
+            <span class="hljs-built_in">print</span>(e)
+            <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span></code></pre><p>上のサンプルのポイントの1番目は、キューに最新の計測値が入るようにするところです。</p><pre><code>    def _reader(self):
+        """
+        The queue always contains the latest values.
+        """
+        while True:
+            val = self._get_until_lf()
+            if not self.q.empty():
+                try:
+                    self.q.get_nowait()
+                except queue.Empty:
+                    pass
+            self.q.put(val)</code></pre><p>ポイントの2番目は、起動時に計測値が不安定になるので、初期化の部分で20回計測して安定させるところです。</p><pre><code>        for i in range(20):
+            val = self._get_until_lf()
+            print('Check value : {0}'.format(val))</code></pre><p>ポイントの3番目は、実際にシリアルコマンドを書き込みレスポンスを評価して接続確認するところです。PySerialの<code>isOpen()</code>は接続確認はしてくれません。</p><pre><code>            bret = self.conn.write(PRINTOUT_TEXT) == 4</code></pre><p>上のサンプルプログラムの実行例です。</p><p><img class=" tc-image-loading" src="img/TeraRangerEvo MiniUSB_005.jpg"></p><hr><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="index.html"><svg class="tc-image-home-button tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M112.985 119.502c.01-.165.015-.331.015-.499V67.568c3.137 2.948 8.076 2.884 11.134-.174a7.999 7.999 0 00-.002-11.316L70.396 2.343A7.978 7.978 0 0064.734 0a7.957 7.957 0 00-5.656 2.343L33 28.42V8.007C33 3.585 29.41 0 25 0c-4.418 0-8 3.59-8 8.007V44.42L5.342 56.078c-3.125 3.125-3.12 8.198-.002 11.316a7.999 7.999 0 0011.316-.003l.344-.343v52.945a8.11 8.11 0 000 .007c0 4.418 3.588 8 8 8h80c4.419 0 8-3.59 8-8a8.11 8.11 0 00-.015-.498zM97 112V51.574L64.737 19.31 33 51.048V112h64z" fill-rule="evenodd"></path></svg>Homeへ</a><svg class="tc-image-blank tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"></svg><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Programming.html"><svg class="tc-image-up-arrow tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M63.892.281c2.027 0 4.054.77 5.6 2.316l55.98 55.98a7.92 7.92 0 010 11.196c-3.086 3.085-8.104 3.092-11.196 0L63.894 19.393 13.513 69.774a7.92 7.92 0 01-11.196 0c-3.085-3.086-3.092-8.105 0-11.196l55.98-55.98A7.892 7.892 0 0163.893.28z"></path></svg>プログラミングの記事Topへ</a></p></div>
+</div></p>
+</section>
+</body>
+</html>
+

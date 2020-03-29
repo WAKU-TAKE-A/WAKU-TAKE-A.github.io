@@ -1,0 +1,165 @@
+<!doctype html>
+<html>
+<head><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-80755908-2"></script><script>  window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-80755908-2');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6163695023100481" crossorigin="anonymous"></script>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="generator" content="TiddlyWiki" />
+<meta name="tiddlywiki-version" content="5.2.5" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="format-detection" content="telephone=no">
+<link id="faviconLink" rel="shortcut icon" href="favicon.ico">
+<link rel="stylesheet" href="static.css">
+<title>（08）Dear PyGuiでブロブ解析アプリ: WAKU-TAKE-A  PROGRAM</title>
+</head>
+<body class="tc-body">
+
+<section class="tc-story-river tc-static-story-river">
+<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists  tc-tagged-DearPyGui tc-tagged-Programming" data-tags="DearPyGui Programming" data-tiddler-title="DearPyGui008" role="article"><div class="tc-tiddler-title"><div class="tc-titlebar"><span class="tc-tiddler-controls"><button aria-expanded="false" aria-label="more" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fmore-tiddler-actions" title="More actions"></button><div class=" tc-reveal" hidden="true"></div><button aria-label="edit" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fedit" title="Edit this tiddler"></button><button aria-label="close" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fclose" title="Close this tiddler"></button></span><span><h2 class="tc-title">（08）Dear PyGuiでブロブ解析アプリ</h2></span></div><div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div></div><div class="tc-reveal"></div><div class=" tc-reveal"><div class="tc-subtitle"><a class="tc-tiddlylink tc-tiddlylink-missing" href=".html"></a> 2nd January 2023 at 9:40pm</div></div><div class=" tc-reveal"><div class="tc-tags-wrapper"><span class="tc-tag-list-item" data-tag-title="DearPyGui"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">DearPyGui</span><span class="tc-drop-down tc-reveal" hidden="true"></span></span><span class="tc-tag-list-item" data-tag-title="Programming"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">Programming</span><span class="tc-drop-down tc-reveal" hidden="true"></span></span></div></div><div class="tc-tiddler-body tc-reveal"><p>今まで試してきた「<a class="tc-tiddlylink tc-tiddlylink-resolves" href="DearPyGui005.html">画像の表示</a>」「<a class="tc-tiddlylink tc-tiddlylink-resolves" href="DearPyGui006.html">WEBカメラの利用</a>」「<a class="tc-tiddlylink tc-tiddlylink-resolves" href="DearPyGui007.html">テーブルの利用</a>」を使って、</p><p>カメラから画像を取得し、画像処理を行い、その結果を表示するアプリケーションを作成してみます。</p><p>画像処理としては、ブロブ解析（OpenCVのSimpleBlobDetector_create関数）を行います。</p><p>私はDear PyGuiで、この一連のアプリケーションを作ってみたかったのです。</p><p>以下は、サンプルクリプト13です。</p><p><a class="tc-tiddlylink-external" href="https://github.com/WAKU-TAKE-A/DearPyGui_Samle/blob/main/DearPyGui_Sample13.py" rel="noopener noreferrer" target="_blank">DearPyGui_Sample13.py</a></p><p><safe-script src="https://gist-it.appspot.com/WAKU-TAKE-A/DearPyGui_Samle/blob/main/DearPyGui_Sample13.py"></safe-script></p><pre class="hljs"><code class="python hljs"><span class="hljs-comment"># サンプルスクリプト13</span>
+
+<span class="hljs-keyword">import</span> os
+<span class="hljs-keyword">import</span> threading
+<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+<span class="hljs-keyword">import</span> cv2
+<span class="hljs-keyword">import</span> dearpygui.dearpygui <span class="hljs-keyword">as</span> dpg
+
+<span class="hljs-comment"># UVCカメラは0で起動します。適当な番号にしてください。</span>
+<span class="hljs-comment"># この時点でテクスチャーのサイズが決まります。</span>
+CAP = cv2.VideoCapture(<span class="hljs-number">0</span>)
+ret, frame = CAP.read()
+CAP_W = <span class="hljs-built_in">int</span>(CAP.get(cv2.CAP_PROP_FRAME_WIDTH))
+CAP_H = <span class="hljs-built_in">int</span>(CAP.get(cv2.CAP_PROP_FRAME_HEIGHT))
+<span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Width = <span class="hljs-subst">{CAP_W}</span>&quot;</span>)
+<span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Height = <span class="hljs-subst">{CAP_H}</span>&quot;</span>)
+
+<span class="hljs-comment"># 初期は[stop]の状態</span>
+isContinuousGrab = <span class="hljs-literal">False</span>
+
+<span class="hljs-comment"># 撮像した画像</span>
+frame = <span class="hljs-literal">None</span>
+
+<span class="hljs-comment"># ブロブ解析の結果</span>
+keypoints = <span class="hljs-literal">None</span>
+
+<span class="hljs-comment"># 描画されている表の行数</span>
+table_row_num = <span class="hljs-number">0</span>
+
+<span class="hljs-comment"># テクスチャー「dynamic_texture」に画像を登録します</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">set_image_to_dynamic_texture</span>(<span class="hljs-params">image</span>):
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGBA)
+    dpg.set_value(<span class="hljs-string">&quot;dynamic_texture&quot;</span>, image/<span class="hljs-number">255</span>)
+
+<span class="hljs-comment"># 連続撮像を行い、テクスチャー「dynamic_texture」に画像を登録します</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">grab_and_set_image</span>():
+    <span class="hljs-keyword">global</span> frame
+    <span class="hljs-keyword">while</span> isContinuousGrab:
+        ret, frame = CAP.read()
+        set_image_to_dynamic_texture(frame)
+
+<span class="hljs-comment"># テーブル「table01」にデータを表示します。同時に画像にインデックス番号の描画を行います。</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">draw_table_and_index</span>(<span class="hljs-params">image</span>):
+    <span class="hljs-keyword">global</span> isContinuousGrab
+    <span class="hljs-keyword">global</span> keypoints
+    <span class="hljs-keyword">global</span> table_row_num
+    <span class="hljs-keyword">if</span> isContinuousGrab <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">False</span>:
+        <span class="hljs-keyword">return</span>
+    <span class="hljs-keyword">if</span> <span class="hljs-number">0</span> &lt; table_row_num:
+        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">0</span>, table_row_num):
+            dpg.delete_item(<span class="hljs-string">f&quot;Row<span class="hljs-subst">{i}</span>&quot;</span>)
+    num = <span class="hljs-built_in">len</span>(keypoints)
+    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">0</span>, num):
+        <span class="hljs-keyword">with</span> dpg.table_row(tag=<span class="hljs-string">f&quot;Row<span class="hljs-subst">{i}</span>&quot;</span>, parent=<span class="hljs-string">&quot;table01&quot;</span>):
+            ind = i+<span class="hljs-number">1</span>
+            x = keypoints[i].pt[<span class="hljs-number">0</span>]
+            y = keypoints[i].pt[<span class="hljs-number">1</span>]
+            size = keypoints[i].size
+            dpg.add_text(<span class="hljs-built_in">str</span>(ind))
+            dpg.add_text(<span class="hljs-built_in">str</span>(x))
+            dpg.add_text(<span class="hljs-built_in">str</span>(y))
+            dpg.add_text(<span class="hljs-built_in">str</span>(size))
+            cv2.putText(image, <span class="hljs-built_in">str</span>(ind), (<span class="hljs-built_in">int</span>(x),<span class="hljs-built_in">int</span>(y)), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=<span class="hljs-number">0.5</span>, color=(<span class="hljs-number">0</span>,<span class="hljs-number">0</span>,<span class="hljs-number">255</span>), thickness=<span class="hljs-number">1</span>)
+    dpg.set_value(<span class="hljs-string">&quot;blob_num&quot;</span>, <span class="hljs-string">&quot;Number of blobs : &quot;</span> + <span class="hljs-built_in">str</span>(<span class="hljs-built_in">len</span>(keypoints)))
+    table_row_num = num
+    <span class="hljs-keyword">return</span> image
+
+<span class="hljs-comment"># [start]ボタンを押した時のコールバック</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">button_start</span>(<span class="hljs-params">sender, app_data, user_data</span>):
+    <span class="hljs-keyword">global</span> isContinuousGrab
+    <span class="hljs-keyword">if</span> isContinuousGrab <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">True</span>:
+        isContinuousGrab = <span class="hljs-literal">True</span>
+        thread = threading.Thread(target=grab_and_set_image)
+        thread.start()
+
+<span class="hljs-comment"># [stop]ボタンを押した時のコールバック</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">button_stop</span>(<span class="hljs-params">sender, app_data, user_data</span>):
+    <span class="hljs-keyword">global</span> isContinuousGrab
+    <span class="hljs-keyword">if</span> isContinuousGrab <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">False</span>:
+        isContinuousGrab = <span class="hljs-literal">False</span>
+
+<span class="hljs-comment"># [blob_analisys]ボタンを押した時のコールバック</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">button_blob</span>(<span class="hljs-params">sender, app_data, user_data</span>):
+    <span class="hljs-keyword">global</span> isContinuousGrab
+    <span class="hljs-keyword">global</span> keypoints
+    <span class="hljs-keyword">if</span> isContinuousGrab <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">False</span>:
+        <span class="hljs-keyword">return</span>
+    params = cv2.SimpleBlobDetector_Params()
+    params.filterByArea = <span class="hljs-literal">True</span>
+    params.minArea = <span class="hljs-number">100</span>
+    params.maxArea = <span class="hljs-number">2500</span>
+    params.filterByCircularity = <span class="hljs-literal">False</span>
+    params.filterByColor = <span class="hljs-literal">False</span>
+    params.filterByConvexity = <span class="hljs-literal">False</span>
+    params.filterByInertia = <span class="hljs-literal">False</span>
+    detector = cv2.SimpleBlobDetector_create(params) 
+    keypoints = detector.detect(frame)
+    blank = np.zeros((<span class="hljs-number">1</span>, <span class="hljs-number">1</span>))  
+    img_blobs = cv2.drawKeypoints(frame, keypoints, blank, (<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">255</span>), cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+    img_blobs = draw_table_and_index(img_blobs)
+    set_image_to_dynamic_texture(img_blobs)    
+
+<span class="hljs-comment"># 以下、DearPyGuiの基本構成     </span>
+dpg.create_context()
+dpg.create_viewport(title=<span class="hljs-string">&#x27;Title&#x27;</span>, width=<span class="hljs-number">640</span>, height=<span class="hljs-number">480</span>)
+
+<span class="hljs-comment"># テクスチャーレジストリの作成</span>
+<span class="hljs-keyword">with</span> dpg.texture_registry():
+    img_white = np.ones((CAP_W, CAP_H, <span class="hljs-number">4</span>), np.uint8)
+    dpg.add_dynamic_texture(CAP_W, CAP_H, img_white, tag=<span class="hljs-string">&quot;dynamic_texture&quot;</span>)
+
+<span class="hljs-comment"># window01の作成（ボタンの作成）</span>
+<span class="hljs-keyword">with</span> dpg.window(tag=<span class="hljs-string">&quot;window01&quot;</span>):
+    dpg.add_button(label=<span class="hljs-string">&quot;start&quot;</span>, callback=button_start)
+    dpg.add_button(label=<span class="hljs-string">&quot;stop&quot;</span>, callback=button_stop)
+    dpg.add_button(label=<span class="hljs-string">&quot;blob_analisys&quot;</span>, callback=button_blob)
+
+<span class="hljs-comment"># window02の作成（画像の表示）</span>
+<span class="hljs-keyword">with</span> dpg.window(tag=<span class="hljs-string">&quot;window02&quot;</span>, pos=(<span class="hljs-number">100</span>,<span class="hljs-number">0</span>), width=<span class="hljs-number">500</span>, height=<span class="hljs-number">300</span>):
+    dpg.add_image(<span class="hljs-string">&quot;dynamic_texture&quot;</span>, tag=<span class="hljs-string">&quot;dynamic_image&quot;</span>)
+
+<span class="hljs-comment"># window03の作成（テーブルの表示）</span>
+<span class="hljs-keyword">with</span> dpg.window(tag=<span class="hljs-string">&quot;window03&quot;</span>, pos=(<span class="hljs-number">100</span>,<span class="hljs-number">300</span>), width=<span class="hljs-number">500</span>, height=<span class="hljs-number">100</span>):
+    dpg.add_text(<span class="hljs-string">&quot;Number of blobs : &quot;</span>, tag=<span class="hljs-string">&quot;blob_num&quot;</span>)
+    <span class="hljs-keyword">with</span> dpg.table(header_row=<span class="hljs-literal">True</span>,
+                   resizable=<span class="hljs-literal">True</span>, policy=dpg.mvTable_SizingStretchProp,
+                   row_background=<span class="hljs-literal">True</span>, 
+                   borders_outerH=<span class="hljs-literal">True</span>, borders_outerV=<span class="hljs-literal">True</span>, borders_innerH=<span class="hljs-literal">True</span>, borders_innerV=<span class="hljs-literal">True</span>,
+                   tag=<span class="hljs-string">&quot;table01&quot;</span>):
+        dpg.add_table_column(label=<span class="hljs-string">&quot;No&quot;</span>, tag=<span class="hljs-string">&quot;HeaderNo&quot;</span>)
+        dpg.add_table_column(label=<span class="hljs-string">&quot;X&quot;</span>, tag=<span class="hljs-string">&quot;HeaderX&quot;</span>)
+        dpg.add_table_column(label=<span class="hljs-string">&quot;Y&quot;</span>, tag=<span class="hljs-string">&quot;HeaderY&quot;</span>)
+        dpg.add_table_column(label=<span class="hljs-string">&quot;Size&quot;</span>, tag=<span class="hljs-string">&quot;HeaderSize&quot;</span>)
+
+dpg.setup_dearpygui()
+dpg.show_viewport()
+dpg.start_dearpygui()
+dpg.destroy_context()</code></pre><p>[start]でWEBカメラの連続撮像が開始され、[stop]で終了します。</p><p>[start] ⇒ [stop]で以下のような画像が得られたとします。</p><p><img class=" tc-image-loading" src="img/DearPyGui008_001.jpg"></p><p>[blob_analisys]を押すと、ブロブ解析の結果がテーブルに表示されます。</p><p><img class=" tc-image-loading" src="img/DearPyGui008_002.jpg"></p><p><code>cv2.SimpleBlobDetector_***</code>については、詳しくは<a class="tc-tiddlylink-external" href="https://docs.opencv.org/4.6.0/d0/d7a/classcv_1_1SimpleBlobDetector.html" rel="noopener noreferrer" target="_blank">cv::SimpleBlobDetectorクラス リファレンス</a>をご覧ください。</p><p>非常に簡単にアルゴリズムを説明すると、「2値化 ⇒ 連結成分の抽出 ⇒ 距離によるグループ化 ⇒ フィルタリング」という処理を実行します。</p><p>フィルタリングの種類としては、面積（filterByArea）／真円度（filterByCircularity）／明るさ（filterByColor）／凸性（filterByConvexity）／慣性モーメント（filterByInertia）があります。</p><p>本例では面積（filterByArea）だけを使っています。</p><p>以下で得られた結果（keypoints）を「cv2.drawKeypoints」で撮像画像に書き込んでいます。</p><pre class="hljs"><code class="python hljs">keypoints = detector.detect(frame)</code></pre><p>これくらいのプログラム量で出来てしまうのは驚きです！</p><hr><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="index.html"><svg class="tc-image-home-button tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M112.985 119.502c.01-.165.015-.331.015-.499V67.568c3.137 2.948 8.076 2.884 11.134-.174a7.999 7.999 0 00-.002-11.316L70.396 2.343A7.978 7.978 0 0064.734 0a7.957 7.957 0 00-5.656 2.343L33 28.42V8.007C33 3.585 29.41 0 25 0c-4.418 0-8 3.59-8 8.007V44.42L5.342 56.078c-3.125 3.125-3.12 8.198-.002 11.316a7.999 7.999 0 0011.316-.003l.344-.343v52.945a8.11 8.11 0 000 .007c0 4.418 3.588 8 8 8h80c4.419 0 8-3.59 8-8a8.11 8.11 0 00-.015-.498zM97 112V51.574L64.737 19.31 33 51.048V112h64z" fill-rule="evenodd"></path></svg>Homeへ</a><svg class="tc-image-blank tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"></svg><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Programming.html"><svg class="tc-image-up-arrow tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M63.892.281c2.027 0 4.054.77 5.6 2.316l55.98 55.98a7.92 7.92 0 010 11.196c-3.086 3.085-8.104 3.092-11.196 0L63.894 19.393 13.513 69.774a7.92 7.92 0 01-11.196 0c-3.085-3.086-3.092-8.105 0-11.196l55.98-55.98A7.892 7.892 0 0163.893.28z"></path></svg>プログラミングの記事Topへ</a></p></div>
+</div></p>
+</section>
+</body>
+</html>
+

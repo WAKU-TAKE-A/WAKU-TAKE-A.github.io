@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+<head><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-80755908-2"></script><script>  window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-80755908-2');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6163695023100481" crossorigin="anonymous"></script>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="generator" content="TiddlyWiki" />
+<meta name="tiddlywiki-version" content="5.2.5" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="format-detection" content="telephone=no">
+<link id="faviconLink" rel="shortcut icon" href="favicon.ico">
+<link rel="stylesheet" href="static.css">
+<title>（04）Dear PyGuiの値: WAKU-TAKE-A  PROGRAM</title>
+</head>
+<body class="tc-body">
+
+<section class="tc-story-river tc-static-story-river">
+<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists  tc-tagged-DearPyGui tc-tagged-Programming" data-tags="DearPyGui Programming" data-tiddler-title="DearPyGui004" role="article"><div class="tc-tiddler-title"><div class="tc-titlebar"><span class="tc-tiddler-controls"><button aria-expanded="false" aria-label="more" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fmore-tiddler-actions" title="More actions"></button><div class=" tc-reveal" hidden="true"></div><button aria-label="edit" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fedit" title="Edit this tiddler"></button><button aria-label="close" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fclose" title="Close this tiddler"></button></span><span><h2 class="tc-title">（04）Dear PyGuiの値</h2></span></div><div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div></div><div class="tc-reveal"></div><div class=" tc-reveal"><div class="tc-subtitle"><a class="tc-tiddlylink tc-tiddlylink-missing" href=".html"></a> 2nd January 2023 at 9:30pm</div></div><div class=" tc-reveal"><div class="tc-tags-wrapper"><span class="tc-tag-list-item" data-tag-title="DearPyGui"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">DearPyGui</span><span class="tc-drop-down tc-reveal" hidden="true"></span></span><span class="tc-tag-list-item" data-tag-title="Programming"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">Programming</span><span class="tc-drop-down tc-reveal" hidden="true"></span></span></div></div><div class="tc-tiddler-body tc-reveal"><p>アイテムには関連する値（value）が作成されます。テキストの場合はそのテキストの内容、チェックボックスの場合は論理値（TrueかFalse）が入っています。</p><p>値の特徴しては以下の通りです。</p><ul><li><code>dpg.get_value([タグ名])</code>で値を取得することができます。</li><li><code>dpg.set_value([タグ名])</code>で値を設定することができます。</li><li>同じタイプのアイテム同士は値を共有することができます。オプションは<code>, source=[タグ名]</code>です。</li></ul><p>下の例では、「window1」のボタンを押すと、「checkbox1」の値を取得して、「window2」にその値を表示します。<br>
+また、<code>, source=[タグ名]</code>を使って、「checkbox1」と「checkbox2」が連動しています。</p><p><a class="tc-tiddlylink-external" href="https://github.com/WAKU-TAKE-A/DearPyGui_Samle/blob/main/DearPyGui_Sample08.py" rel="noopener noreferrer" target="_blank">DearPyGui_Sample08.py</a></p><pre class="hljs"><code class="python hljs"><span class="hljs-comment"># サンプルスクリプト8</span>
+
+<span class="hljs-keyword">import</span> dearpygui.dearpygui <span class="hljs-keyword">as</span> dpg
+
+dpg.create_context()
+dpg.create_viewport(title=<span class="hljs-string">&#x27;Custom Title&#x27;</span>, width=<span class="hljs-number">600</span>, height=<span class="hljs-number">300</span>)
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">button_callback</span>(<span class="hljs-params">sender, app_data</span>):
+    value = dpg.get_value(<span class="hljs-string">&quot;checkbox1&quot;</span>)
+    dpg.set_value(<span class="hljs-string">&quot;text1&quot;</span>, value)
+
+<span class="hljs-keyword">with</span> dpg.window(label=<span class="hljs-string">&quot;window1&quot;</span>, width=<span class="hljs-number">250</span>, height=<span class="hljs-number">150</span>):
+    dpg.add_checkbox(label=<span class="hljs-string">&quot;checkbox1&quot;</span>, tag=<span class="hljs-string">&quot;checkbox1&quot;</span>)
+    dpg.add_checkbox(label=<span class="hljs-string">&quot;checkbox2&quot;</span>, source=<span class="hljs-string">&quot;checkbox1&quot;</span>)
+    dpg.add_button(label=<span class="hljs-string">&quot;Get the value of checkbox1.&quot;</span>, callback=button_callback)
+
+<span class="hljs-keyword">with</span> dpg.window(label=<span class="hljs-string">&quot;window2&quot;</span>, pos=(<span class="hljs-number">0</span>,<span class="hljs-number">150</span>)):
+    dpg.add_text(<span class="hljs-string">&quot;***&quot;</span>, tag=<span class="hljs-string">&quot;text1&quot;</span>)
+
+dpg.setup_dearpygui()
+dpg.show_viewport()
+dpg.start_dearpygui()
+dpg.destroy_context()
+</code></pre><p><img class=" tc-image-loading" src="img/dearpygui_007.png"></p><p>Dear PyGui内で使用する値を設定することができます。「値」アイテムは、値（value）レジストリに追加することで利用することができます。</p><p>以下のコマンドで値を追加することができます。</p><ul><li>dpg.add_bool_value</li><li>dpg.add_color_value</li><li>dpg.add_double_value</li><li>dpg.add_double4_value</li><li>dpg.add_float_value</li><li>dpg.add_float4_value</li><li>dpg.add_float_vect_value</li><li>dpg.add_int_value</li><li>dpg.add_int4_value</li><li>dpg.add_series_value</li><li>dpg.add_string_value</li></ul><p>サンプルスクリプト8の「text1」の値を上の方法を使って設定してみます。</p><p><a class="tc-tiddlylink-external" href="https://github.com/WAKU-TAKE-A/DearPyGui_Samle/blob/main/DearPyGui_Sample09.py" rel="noopener noreferrer" target="_blank">DearPyGui_Sample09.py</a></p><pre class="hljs"><code class="python hljs"><span class="hljs-comment"># サンプルスクリプト9</span>
+
+<span class="hljs-keyword">import</span> dearpygui.dearpygui <span class="hljs-keyword">as</span> dpg
+
+dpg.create_context()
+dpg.create_viewport(title=<span class="hljs-string">&#x27;Custom Title&#x27;</span>, width=<span class="hljs-number">600</span>, height=<span class="hljs-number">300</span>)
+
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">button_callback</span>(<span class="hljs-params">sender, app_data</span>):
+    value = dpg.get_value(<span class="hljs-string">&quot;checkbox1&quot;</span>)
+    dpg.set_value(<span class="hljs-string">&quot;string_value&quot;</span>, value) <span class="hljs-comment">#「text1」では無く、「string_value」にセットします。</span>
+
+<span class="hljs-keyword">with</span> dpg.value_registry(): <span class="hljs-comment">#「value_registry」もコンテナータイプのアイテムです。</span>
+    dpg.add_string_value(default_value=<span class="hljs-string">&quot;default_value&quot;</span>, tag=<span class="hljs-string">&quot;string_value&quot;</span>)
+
+<span class="hljs-keyword">with</span> dpg.window(label=<span class="hljs-string">&quot;window1&quot;</span>, width=<span class="hljs-number">250</span>, height=<span class="hljs-number">150</span>):
+    dpg.add_checkbox(label=<span class="hljs-string">&quot;checkbox1&quot;</span>, tag=<span class="hljs-string">&quot;checkbox1&quot;</span>)
+    dpg.add_checkbox(label=<span class="hljs-string">&quot;checkbox2&quot;</span>, source=<span class="hljs-string">&quot;checkbox1&quot;</span>)
+    dpg.add_button(label=<span class="hljs-string">&quot;Get the value of checkbox1.&quot;</span>, callback=button_callback)
+
+<span class="hljs-keyword">with</span> dpg.window(label=<span class="hljs-string">&quot;window2&quot;</span>, pos=(<span class="hljs-number">0</span>,<span class="hljs-number">150</span>)):    
+    dpg.add_text(tag=<span class="hljs-string">&quot;text1&quot;</span>, source=<span class="hljs-string">&quot;string_value&quot;</span>) <span class="hljs-comment">#「string_value」を共有しています。</span>
+
+dpg.setup_dearpygui()
+dpg.show_viewport()
+dpg.start_dearpygui()
+dpg.destroy_context()</code></pre><p>ここまで分かれば、コンソールを介さず値を表示することができます。</p><hr><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="index.html"><svg class="tc-image-home-button tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M112.985 119.502c.01-.165.015-.331.015-.499V67.568c3.137 2.948 8.076 2.884 11.134-.174a7.999 7.999 0 00-.002-11.316L70.396 2.343A7.978 7.978 0 0064.734 0a7.957 7.957 0 00-5.656 2.343L33 28.42V8.007C33 3.585 29.41 0 25 0c-4.418 0-8 3.59-8 8.007V44.42L5.342 56.078c-3.125 3.125-3.12 8.198-.002 11.316a7.999 7.999 0 0011.316-.003l.344-.343v52.945a8.11 8.11 0 000 .007c0 4.418 3.588 8 8 8h80c4.419 0 8-3.59 8-8a8.11 8.11 0 00-.015-.498zM97 112V51.574L64.737 19.31 33 51.048V112h64z" fill-rule="evenodd"></path></svg>Homeへ</a><svg class="tc-image-blank tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"></svg><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Programming.html"><svg class="tc-image-up-arrow tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M63.892.281c2.027 0 4.054.77 5.6 2.316l55.98 55.98a7.92 7.92 0 010 11.196c-3.086 3.085-8.104 3.092-11.196 0L63.894 19.393 13.513 69.774a7.92 7.92 0 01-11.196 0c-3.085-3.086-3.092-8.105 0-11.196l55.98-55.98A7.892 7.892 0 0163.893.28z"></path></svg>プログラミングの記事Topへ</a></p></div>
+</div></p>
+</section>
+</body>
+</html>
+

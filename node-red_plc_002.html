@@ -1,0 +1,177 @@
+<!doctype html>
+<html>
+<head><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-80755908-2"></script><script>  window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-80755908-2');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6163695023100481" crossorigin="anonymous"></script>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="generator" content="TiddlyWiki" />
+<meta name="tiddlywiki-version" content="5.2.5" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="format-detection" content="telephone=no">
+<link id="faviconLink" rel="shortcut icon" href="favicon.ico">
+<link rel="stylesheet" href="static.css">
+<title>Node-REDとPLCの連携 その2: WAKU-TAKE-A  PROGRAM</title>
+</head>
+<body class="tc-body">
+
+<section class="tc-story-river tc-static-story-river">
+<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists  tc-tagged-Node-RED" data-tags="Node-RED" data-tiddler-title="node-red_plc_002" role="article"><div class="tc-tiddler-title"><div class="tc-titlebar"><span class="tc-tiddler-controls"><button aria-expanded="false" aria-label="more" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fmore-tiddler-actions" title="More actions"></button><div class=" tc-reveal" hidden="true"></div><button aria-label="edit" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fedit" title="Edit this tiddler"></button><button aria-label="close" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fclose" title="Close this tiddler"></button></span><span><h2 class="tc-title">Node-REDとPLCの連携 その2</h2></span></div><div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div></div><div class="tc-reveal"></div><div class=" tc-reveal"><div class="tc-subtitle"><a class="tc-tiddlylink tc-tiddlylink-missing" href=".html"></a> 17th October 2021 at 8:30pm</div></div><div class=" tc-reveal"><div class="tc-tags-wrapper"><span class="tc-tag-list-item" data-tag-title="Node-RED"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">Node-RED</span><span class="tc-drop-down tc-reveal" hidden="true"></span></span></div></div><div class="tc-tiddler-body tc-reveal"><p>Node-REDとPLC(三菱)との連携を試します。</p><p>「PLC」の設定(その1) -&gt; 「Node-RED」の設定(その2)という順番で説明していますが、本ページは「その2」です。</p><p>ちなみに、「<a class="tc-tiddlylink tc-tiddlylink-resolves" href="node-red_plc_001.html">その1</a>」で作成したラダーは以下の通りです。</p><p><img class=" tc-image-loading" src="img/node-red-mcprotocol-009.jpg"></p><h2 class=""><u> 「Node-RED」の設定</u></h2><p>「mcprotocol」モジュールと「dashboard」モジュールをインストールします。以下のように、「パレットの管理」を開きます。</p><p><img class=" tc-image-loading" src="img/node-red-mcprotocol-021.jpg"></p><p>「ノードを追加」タブ -&gt; 検索用のボックスに「mcprotocol」と「dashboad」を各々入力し、「node-red-contrib-mcprotocol」と「node-red-dashboard」を追加します。</p><p><img class=" tc-image-loading" src="img/node-red-mcprotocol-011.jpg"></p><p><img class=" tc-image-loading" src="img/node-red-mcprotocol-012.jpg"></p><p>以下のようにノードを配置します。</p><p><img class=" tc-image-loading" src="img/node-red-mcprotocol-017.jpg"></p><dl><dt>「inject」ノード</dt><dd>・ 繰り返しトリガーをかけます。</dd><dd>・ 「Node-RED起動の0.1秒後、以下を行う」で、「指定した時間間隔 0.1秒」で設定します。</dd><dd></dd><dt>「text」ノード</dt><dd>・ 新規に「ui_group」と「ui_tab」を作成します。あとで設定できますので、デフォルトで構いません。</dd><dd><img class=" tc-image-loading" src="img/node-red-mcprotocol-013.jpg"></dd><dd><img class=" tc-image-loading" src="img/node-red-mcprotocol-014.jpg"></dd><dd></dd><dt>「MC Read」ノード</dt><dd>・ 新規にConnectionを作成します。</dd><dd><img class=" tc-image-loading" src="img/node-red-mcprotocol-015.jpg"></dd><dd>・ Name、Host、Port(その1で設定した番号)、frame、protocol、PLC typeを設定します。</dd><dd><img class=" tc-image-loading" src="img/node-red-mcprotocol-016.jpg"></dd><dd>・ 特に重要なのは「frame：4E」、「protocol：udp」の設定です。この設定にすることで、一度接続が切れても、自動的に再接続されます。</dd><dd>・ 最後に読み出すアドレスを設定します。(M0とD0)</dd><dd><img class=" tc-image-loading" src="img/node-red-mcprotocol-023.jpg"></dd><dd><img class=" tc-image-loading" src="img/node-red-mcprotocol-024.jpg"></dd></dl><p>右上の「デプロイ」 を押します。</p><p>「Dashboad」ボタンを押します。さらに表示します。</p><p><img class=" tc-image-loading" src="img/node-red-mcprotocol-018.jpg"></p><p><img class=" tc-image-loading" src="img/node-red-mcprotocol-019.jpg"></p><p><img class=" tc-image-loading" src="img/node-red-mcprotocol-021.gif"></p><p>表示の更新も自動的に行われます。PLCからデータを抽出できるっていうのは、かなりIoTっぽいですね。</p><h2 class=""><u>書き出したノード</u></h2><p>以下は上記のノードを書き出したものです。コピーしてください。</p><p><style>
+  #wrapper {
+    height: 200px;
+    width: 500px;
+    overflow-y: scroll;
+  }
+
+  #contents {
+    background-color: white;
+  }
+</style></p><p><div id="wrapper">
+  <div id="contents">
+    <pre><code>[
+    {
+        "id": "2e62a1bb596cf15a",
+        "type": "inject",
+        "z": "b3393683208de635",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "0.1",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payloadType": "date",
+        "x": 320,
+        "y": 160,
+        "wires": [
+            [
+                "d6414f71410301ff",
+                "af0a509658db49b5"
+            ]
+        ]
+    },
+    {
+        "id": "d6414f71410301ff",
+        "type": "MC Read",
+        "z": "b3393683208de635",
+        "name": "",
+        "topic": "",
+        "connection": "9844a8592ebaeb58",
+        "address": "M0",
+        "addressType": "str",
+        "outputFormat": 0,
+        "errorHandling": "throw",
+        "outputs": 1,
+        "x": 520,
+        "y": 160,
+        "wires": [
+            [
+                "cd74f93cf021908f"
+            ]
+        ]
+    },
+    {
+        "id": "cd74f93cf021908f",
+        "type": "ui_text",
+        "z": "b3393683208de635",
+        "group": "da28ed897f0a418c",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "M0",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 670,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "33ddf551954f7cc9",
+        "type": "ui_text",
+        "z": "b3393683208de635",
+        "group": "da28ed897f0a418c",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "D0",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 670,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "af0a509658db49b5",
+        "type": "MC Read",
+        "z": "b3393683208de635",
+        "name": "",
+        "topic": "",
+        "connection": "9844a8592ebaeb58",
+        "address": "D0",
+        "addressType": "str",
+        "outputFormat": 0,
+        "errorHandling": "throw",
+        "outputs": 1,
+        "x": 520,
+        "y": 220,
+        "wires": [
+            [
+                "33ddf551954f7cc9"
+            ]
+        ]
+    },
+    {
+        "id": "9844a8592ebaeb58",
+        "type": "MC Protocol Connection",
+        "name": "hoge",
+        "host": "192.168.0.1",
+        "port": "4000",
+        "protocol": "UDP",
+        "frame": "4E",
+        "plcType": "Q",
+        "ascii": false,
+        "PLCStation": "",
+        "PCStation": "",
+        "PLCModuleNo": "",
+        "network": "",
+        "octalInputOutput": false,
+        "timeout": "1000"
+    },
+    {
+        "id": "da28ed897f0a418c",
+        "type": "ui_group",
+        "name": "デフォルト",
+        "tab": "193f7413a392b1b1",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "193f7413a392b1b1",
+        "type": "ui_tab",
+        "name": "ホーム",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]</code></pre>
+  </div>
+</div></p><p>以下のようにして読み込みを実行し、ペーストしてください。</p><p><img class=" tc-image-loading" src="img/node-red-mcprotocol-025.jpg"></p><hr><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="index.html"><svg class="tc-image-home-button tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M112.985 119.502c.01-.165.015-.331.015-.499V67.568c3.137 2.948 8.076 2.884 11.134-.174a7.999 7.999 0 00-.002-11.316L70.396 2.343A7.978 7.978 0 0064.734 0a7.957 7.957 0 00-5.656 2.343L33 28.42V8.007C33 3.585 29.41 0 25 0c-4.418 0-8 3.59-8 8.007V44.42L5.342 56.078c-3.125 3.125-3.12 8.198-.002 11.316a7.999 7.999 0 0011.316-.003l.344-.343v52.945a8.11 8.11 0 000 .007c0 4.418 3.588 8 8 8h80c4.419 0 8-3.59 8-8a8.11 8.11 0 00-.015-.498zM97 112V51.574L64.737 19.31 33 51.048V112h64z" fill-rule="evenodd"></path></svg>Homeへ</a><svg class="tc-image-blank tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"></svg><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Node-RED.html"><svg class="tc-image-up-arrow tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M63.892.281c2.027 0 4.054.77 5.6 2.316l55.98 55.98a7.92 7.92 0 010 11.196c-3.086 3.085-8.104 3.092-11.196 0L63.894 19.393 13.513 69.774a7.92 7.92 0 01-11.196 0c-3.085-3.086-3.092-8.105 0-11.196l55.98-55.98A7.892 7.892 0 0163.893.28z"></path></svg>Node-REDの記事Topへ</a></p></div>
+</div></p>
+</section>
+</body>
+</html>
+

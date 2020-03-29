@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+<head><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-80755908-2"></script><script>  window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-80755908-2');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6163695023100481" crossorigin="anonymous"></script>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="generator" content="TiddlyWiki" />
+<meta name="tiddlywiki-version" content="5.2.5" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="format-detection" content="telephone=no">
+<link id="faviconLink" rel="shortcut icon" href="favicon.ico">
+<link rel="stylesheet" href="static.css">
+<title>ImageJをPC起動時に自動実行する: WAKU-TAKE-A  PROGRAM</title>
+</head>
+<body class="tc-body">
+
+<section class="tc-story-river tc-static-story-river">
+<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists  tc-tagged-ImageJ" data-tags="ImageJ" data-tiddler-title="imagej_autorun_001" role="article"><div class="tc-tiddler-title"><div class="tc-titlebar"><span class="tc-tiddler-controls"><button aria-expanded="false" aria-label="more" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fmore-tiddler-actions" title="More actions"></button><div class=" tc-reveal" hidden="true"></div><button aria-label="edit" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fedit" title="Edit this tiddler"></button><button aria-label="close" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fclose" title="Close this tiddler"></button></span><span><h2 class="tc-title">ImageJをPC起動時に自動実行する</h2></span></div><div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div></div><div class="tc-reveal"></div><div class=" tc-reveal"><div class="tc-subtitle"><a class="tc-tiddlylink tc-tiddlylink-missing" href=".html"></a> 17th October 2021 at 4:34pm</div></div><div class=" tc-reveal"><div class="tc-tags-wrapper"><span class="tc-tag-list-item" data-tag-title="ImageJ"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">ImageJ</span><span class="tc-drop-down tc-reveal" hidden="true"></span></span></div></div><div class="tc-tiddler-body tc-reveal"><p>ImageJをPC起動時に自動実行したい場合があります。</p><p>タスクスケジューラを使うと簡単に実現できますが、<code>ImageJ.exe</code>を直接実行すると、GUIが表示されず、画像処理用のマクロが実行できませんでした。<br>
+タスクマネージャには実行中であることが表示されるのですが。。。</p><p>BATファイルでImageJを起動するとGUIは表示されるのですが、DOS窓も表示されてしまいます。</p><p><img class=" tc-image-loading" src="img/imagej_autorun_001.jpg"></p><p>DOS窓を表示しないようにするためには、VBScriptを使えば可能です。(<a class="tc-tiddlylink-external" href="https://uguisu.skr.jp/Windows/bat_nowindow.html" rel="noopener noreferrer" target="_blank">[Windows] バッチファイル（.bat）を非表示・最小化した状態で起動する</a>を参考にしました)</p><p>「ならVBScriptで全て実行してしまおう」と考え、
+環境変数パスの追加、カレントディレクトリの移動、ImageJの起動など全てを実行するVBスクリプト作成してみました。
+以下にサンプルとして挙げておきます。</p><p>ポイントは、</p><ul><li>WScript.ShellをRunする時にウィンドウ非表示の引数を指定すること。</li><li>最後に追加したパスを削除すること。こうしないと環境変数パスにどんどん追加されてしまいます。</li></ul><pre><code>Option Explicit
+ 
+Const vbHide = 0    'ウィンドウを非表示
+Const vbNormalFocus = 1     '通常のウィンドウ、かつ最前面のウィンドウ
+Const vbMinimizedFocus = 2    '最小化、かつ最前面のウィンドウ
+Const vbMaximizedFocus = 3    '最大化、かつ最前面のウィンドウ
+Const vbNormalNoFocus = 4    '通常のウィンドウ、ただし、最前面にはならない
+Const vbMinimizedNoFocus = 6    '最小化、ただし、最前面にはならない
+ 
+Dim objWShell
+Set objWShell = CreateObject("WScript.Shell")
+
+'パス追加
+Dim env
+Set env = objWShell.Environment("User")
+Dim env_ini
+env_ini = env.Item("PATH")
+env.Item("PATH") =  env_ini &amp; ";C:\ImageJ\plugins;macros;C:\ImageJ\lib\win64"
+' MsgBox(env.Item("PATH"))    'デバッグ用
+
+'カレントディレクトの移動
+objWShell.CurrentDirectory = "C:\ImageJ" 
+
+'ImageJ起動
+'・サンプルはvbHideにしています。
+'・ImageJの引数に「 -macro ABC」も使えます。
+objWShell.Run "ImageJ.exe", vbHide, False
+
+env.Item("PATH") = env_ini     'こうしないと環境変数パスにどんどん追加されてしまいます。
+Set objWShell = Nothing    '無くても良いというページもありました。念のため、入れておきます。</code></pre><p>後は、タスクスケジューラにVBscriptを指定してやればOKです。</p><p>タスクスケジューラの「終了」でImageJも終了してほしいところですが、無理でした。</p><p><img class=" tc-image-loading" src="img/imagej_autorun_002.jpg"></p><p>再起動したい時には、ImageJを直接閉じる -&gt; 再びタスクスケジューラで「実行する」。</p><p>ちなみに起動しているプロセスの中から、<code>ImageJ.exe</code>を探索し終了するスクリプトは以下の通りです。</p><pre><code>for each Process in _
+    GetObject("winmgmts:{impersonationLevel=impersonate}").ExecQuery("select * from Win32_Process where Name='ImageJ.exe'")
+    Process.terminate
+Next</code></pre><hr><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="index.html"><svg class="tc-image-home-button tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M112.985 119.502c.01-.165.015-.331.015-.499V67.568c3.137 2.948 8.076 2.884 11.134-.174a7.999 7.999 0 00-.002-11.316L70.396 2.343A7.978 7.978 0 0064.734 0a7.957 7.957 0 00-5.656 2.343L33 28.42V8.007C33 3.585 29.41 0 25 0c-4.418 0-8 3.59-8 8.007V44.42L5.342 56.078c-3.125 3.125-3.12 8.198-.002 11.316a7.999 7.999 0 0011.316-.003l.344-.343v52.945a8.11 8.11 0 000 .007c0 4.418 3.588 8 8 8h80c4.419 0 8-3.59 8-8a8.11 8.11 0 00-.015-.498zM97 112V51.574L64.737 19.31 33 51.048V112h64z" fill-rule="evenodd"></path></svg>Homeへ</a><svg class="tc-image-blank tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"></svg><a class="tc-tiddlylink tc-tiddlylink-resolves" href="ImageJ.html"><svg class="tc-image-up-arrow tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M63.892.281c2.027 0 4.054.77 5.6 2.316l55.98 55.98a7.92 7.92 0 010 11.196c-3.086 3.085-8.104 3.092-11.196 0L63.894 19.393 13.513 69.774a7.92 7.92 0 01-11.196 0c-3.085-3.086-3.092-8.105 0-11.196l55.98-55.98A7.892 7.892 0 0163.893.28z"></path></svg>ImageJの記事Topへ</a></p></div>
+</div></p>
+</section>
+</body>
+</html>
+

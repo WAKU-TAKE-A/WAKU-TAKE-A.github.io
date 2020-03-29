@@ -1,0 +1,161 @@
+<!doctype html>
+<html>
+<head><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-80755908-2"></script><script>  window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-80755908-2');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6163695023100481" crossorigin="anonymous"></script>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="generator" content="TiddlyWiki" />
+<meta name="tiddlywiki-version" content="5.2.5" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="format-detection" content="telephone=no">
+<link id="faviconLink" rel="shortcut icon" href="favicon.ico">
+<link rel="stylesheet" href="static.css">
+<title>Node-REDとPLCの連携_その2_CODE: WAKU-TAKE-A  PROGRAM</title>
+</head>
+<body class="tc-body">
+
+<section class="tc-story-river tc-static-story-river">
+<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists " data-tags="" data-tiddler-title="Node-REDとPLCの連携_その2_CODE" role="article"><div class="tc-tiddler-title"><div class="tc-titlebar"><span class="tc-tiddler-controls"><button aria-expanded="false" aria-label="more" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fmore-tiddler-actions" title="More actions"></button><div class=" tc-reveal" hidden="true"></div><button aria-label="edit" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fedit" title="Edit this tiddler"></button><button aria-label="close" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fclose" title="Close this tiddler"></button></span><span><h2 class="tc-title">Node-REDとPLCの連携_その2_CODE</h2></span></div><div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div></div><div class="tc-reveal"></div><div class=" tc-reveal"><div class="tc-subtitle"><a class="tc-tiddlylink tc-tiddlylink-missing" href=".html"></a> 22nd September 2021 at 11:07pm</div></div><div class=" tc-reveal"><div class="tc-tags-wrapper"></div></div><div class="tc-tiddler-body tc-reveal"><pre><code>[
+    {
+        "id": "2e62a1bb596cf15a",
+        "type": "inject",
+        "z": "b3393683208de635",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "0.1",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payloadType": "date",
+        "x": 320,
+        "y": 160,
+        "wires": [
+            [
+                "d6414f71410301ff",
+                "af0a509658db49b5"
+            ]
+        ]
+    },
+    {
+        "id": "d6414f71410301ff",
+        "type": "MC Read",
+        "z": "b3393683208de635",
+        "name": "",
+        "topic": "",
+        "connection": "9844a8592ebaeb58",
+        "address": "M0",
+        "addressType": "str",
+        "outputFormat": 0,
+        "errorHandling": "throw",
+        "outputs": 1,
+        "x": 520,
+        "y": 160,
+        "wires": [
+            [
+                "cd74f93cf021908f"
+            ]
+        ]
+    },
+    {
+        "id": "cd74f93cf021908f",
+        "type": "ui_text",
+        "z": "b3393683208de635",
+        "group": "da28ed897f0a418c",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "M0",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 670,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "33ddf551954f7cc9",
+        "type": "ui_text",
+        "z": "b3393683208de635",
+        "group": "da28ed897f0a418c",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "D0",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "x": 670,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "af0a509658db49b5",
+        "type": "MC Read",
+        "z": "b3393683208de635",
+        "name": "",
+        "topic": "",
+        "connection": "9844a8592ebaeb58",
+        "address": "D0",
+        "addressType": "str",
+        "outputFormat": 0,
+        "errorHandling": "throw",
+        "outputs": 1,
+        "x": 520,
+        "y": 220,
+        "wires": [
+            [
+                "33ddf551954f7cc9"
+            ]
+        ]
+    },
+    {
+        "id": "9844a8592ebaeb58",
+        "type": "MC Protocol Connection",
+        "name": "hoge",
+        "host": "192.168.0.1",
+        "port": "4000",
+        "protocol": "UDP",
+        "frame": "4E",
+        "plcType": "Q",
+        "ascii": false,
+        "PLCStation": "",
+        "PCStation": "",
+        "PLCModuleNo": "",
+        "network": "",
+        "octalInputOutput": false,
+        "timeout": "1000"
+    },
+    {
+        "id": "da28ed897f0a418c",
+        "type": "ui_group",
+        "name": "デフォルト",
+        "tab": "193f7413a392b1b1",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "193f7413a392b1b1",
+        "type": "ui_tab",
+        "name": "ホーム",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]</code></pre></div>
+</div></p>
+</section>
+</body>
+</html>
+

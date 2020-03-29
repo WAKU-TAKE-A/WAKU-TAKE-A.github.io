@@ -1,0 +1,154 @@
+<!doctype html>
+<html>
+<head><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-80755908-2"></script><script>  window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-80755908-2');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6163695023100481" crossorigin="anonymous"></script>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="generator" content="TiddlyWiki" />
+<meta name="tiddlywiki-version" content="5.2.5" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="format-detection" content="telephone=no">
+<link id="faviconLink" rel="shortcut icon" href="favicon.ico">
+<link rel="stylesheet" href="static.css">
+<title>Node-REDで画像処理_opencv4nodejs_CODE: WAKU-TAKE-A  PROGRAM</title>
+</head>
+<body class="tc-body">
+
+<section class="tc-story-river tc-static-story-river">
+<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists  tc-tagged-Node-RED" data-tags="Node-RED" data-tiddler-title="Node-REDで画像処理_opencv4nodejs_CODE" role="article"><div class="tc-tiddler-title"><div class="tc-titlebar"><span class="tc-tiddler-controls"><button aria-expanded="false" aria-label="more" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fmore-tiddler-actions" title="More actions"></button><div class=" tc-reveal" hidden="true"></div><button aria-label="edit" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fedit" title="Edit this tiddler"></button><button aria-label="close" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fclose" title="Close this tiddler"></button></span><span><h2 class="tc-title">Node-REDで画像処理_opencv4nodejs_CODE</h2></span></div><div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div></div><div class="tc-reveal"></div><div class=" tc-reveal"><div class="tc-subtitle"><a class="tc-tiddlylink tc-tiddlylink-missing" href=".html"></a> 30th September 2021 at 7:22am</div></div><div class=" tc-reveal"><div class="tc-tags-wrapper"><span class="tc-tag-list-item" data-tag-title="Node-RED"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">Node-RED</span><span class="tc-drop-down tc-reveal" hidden="true"></span></span></div></div><div class="tc-tiddler-body tc-reveal"><pre><code>[
+    {
+        "id": "c98540bb293ace80",
+        "type": "inject",
+        "z": "bd33bcab6871647c",
+        "name": "初期化",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payloadType": "date",
+        "x": 140,
+        "y": 80,
+        "wires": [
+            [
+                "304436470ce4770d"
+            ]
+        ]
+    },
+    {
+        "id": "304436470ce4770d",
+        "type": "function",
+        "z": "bd33bcab6871647c",
+        "name": "Init VideoCapture",
+        "func": "const cv = global.get(\"cv\");\n\nconst cap = new cv.VideoCapture(0);\n\nglobal.set(\"cap\", cap);\n\nmsg.payload = \"VideoCaptureの初期化 \";\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 330,
+        "y": 80,
+        "wires": [
+            [
+                "de1dae70b6eb899b"
+            ]
+        ]
+    },
+    {
+        "id": "de1dae70b6eb899b",
+        "type": "debug",
+        "z": "bd33bcab6871647c",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 530,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "6551da61e8db9eba",
+        "type": "inject",
+        "z": "bd33bcab6871647c",
+        "name": "実行",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payloadType": "date",
+        "x": 150,
+        "y": 140,
+        "wires": [
+            [
+                "baeb172d1fd5e141"
+            ]
+        ]
+    },
+    {
+        "id": "baeb172d1fd5e141",
+        "type": "function",
+        "z": "bd33bcab6871647c",
+        "name": "grab",
+        "func": "const cv = global.get(\"cv\");\nconst cap = global.get(\"cap\")\n\nlet image = cap.read();\n//image = image.blur(new cv.Size(3, 3)).canny(30,60);\nconst str =  cv.imencode('.jpg', image).toString('base64');\nmsg.payload = Buffer.from(str, 'base64');\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 290,
+        "y": 140,
+        "wires": [
+            [
+                "3245c954feda7937"
+            ]
+        ]
+    },
+    {
+        "id": "3245c954feda7937",
+        "type": "image",
+        "z": "bd33bcab6871647c",
+        "name": "",
+        "width": 160,
+        "data": "payload",
+        "dataType": "msg",
+        "thumbnail": false,
+        "active": true,
+        "pass": false,
+        "outputs": 0,
+        "x": 460,
+        "y": 140,
+        "wires": []
+    }
+]</code></pre></div>
+</div></p>
+</section>
+</body>
+</html>
+

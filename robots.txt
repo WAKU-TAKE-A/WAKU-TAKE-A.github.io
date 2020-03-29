@@ -1,0 +1,7 @@
+User-Agent: Googlebot
+Disallow: /img/
+Disallow: /img/Making_a_new_page_with_the_output_PDF.html
+Disallow: /img/Sample_ToDo.html
+Disallow: /img/study_the_tiddlywiki.html
+Disallow: /IJToolsUsingOpenCV%25E3%2583%2597%25E3%2583%25A9%25E3%2582%25B0%25E3%2582%25A4%25E3%2583%25B3.html
+Sitemap: https://waku-take-a.github.io/sitemap.xml

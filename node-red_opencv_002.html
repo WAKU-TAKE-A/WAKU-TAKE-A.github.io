@@ -1,0 +1,185 @@
+<!doctype html>
+<html>
+<head><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-80755908-2"></script><script>  window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-80755908-2');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6163695023100481" crossorigin="anonymous"></script>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="generator" content="TiddlyWiki" />
+<meta name="tiddlywiki-version" content="5.2.5" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="format-detection" content="telephone=no">
+<link id="faviconLink" rel="shortcut icon" href="favicon.ico">
+<link rel="stylesheet" href="static.css">
+<title>Node-REDで画像処理(opencv4nodejs) その2: WAKU-TAKE-A  PROGRAM</title>
+</head>
+<body class="tc-body">
+
+<section class="tc-story-river tc-static-story-river">
+<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists  tc-tagged-Node-RED" data-tags="Node-RED" data-tiddler-title="node-red_opencv_002" role="article"><div class="tc-tiddler-title"><div class="tc-titlebar"><span class="tc-tiddler-controls"><button aria-expanded="false" aria-label="more" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fmore-tiddler-actions" title="More actions"></button><div class=" tc-reveal" hidden="true"></div><button aria-label="edit" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fedit" title="Edit this tiddler"></button><button aria-label="close" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fclose" title="Close this tiddler"></button></span><span><h2 class="tc-title">Node-REDで画像処理(opencv4nodejs) その2</h2></span></div><div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div></div><div class="tc-reveal"></div><div class=" tc-reveal"><div class="tc-subtitle"><a class="tc-tiddlylink tc-tiddlylink-missing" href=".html"></a> 16th October 2021 at 4:33pm</div></div><div class=" tc-reveal"><div class="tc-tags-wrapper"><span class="tc-tag-list-item" data-tag-title="Node-RED"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">Node-RED</span><span class="tc-drop-down tc-reveal" hidden="true"></span></span></div></div><div class="tc-tiddler-body tc-reveal"><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="node-red_opencv_001.html">Node-REDで画像処理(opencv4nodejs) その1</a>でインストールした「opencv4nodejs」をNode-REDで使う方法を説明します。</p><p>Node-REDのバージョン1.3以降の「<a class="tc-tiddlylink-external" href="https://nodered.jp/blog/2021/04/08/version-1-3-released#function-node-use-of-npm-modules" rel="noopener noreferrer" target="_blank">Functionノードにおける外部npmモジュールの簡単に利用できる</a>」機能を使えば、「opencv4nodejs」も簡単に使えそうですが、2021/8時点ではうまくいきませんでした。</p><p><img class=" tc-image-loading" src="img/opencv4nodejs_inst_004.jpg"></p><p>仕方ないので従来の方法を使います。</p><h2 class=""><u>従来の外部モジュールの利用方法</u></h2><p><code>C:\Users\[YOUR ACCOUNT]\.node-red\settings.js</code>を以下のように編集します。</p><pre class="hljs"><code class="json hljs">    <span class="hljs-comment">/** Allow the Function node to load additional npm modules directly */</span>
+    functionExternalModules<span class="hljs-punctuation">:</span> <span class="hljs-keyword">false</span><span class="hljs-punctuation">,</span>
+
+    <span class="hljs-comment">/** The following property can be used to set predefined values in Global Context.
+     * This allows extra node modules to be made available with in Function node.
+     * For example, the following:
+     *    functionGlobalContext: { os:require(&#x27;os&#x27;) }
+     * will allow the `os` module to be accessed in a Function node using:
+     *    global.get(&quot;os&quot;)
+     */</span>
+    functionGlobalContext<span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+        <span class="hljs-comment">// os:require(&#x27;os&#x27;),</span>
+        cv<span class="hljs-punctuation">:</span>require(&#x27;opencv4nodejs&#x27;)
+    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span></code></pre><p>「functionExternalModules」をfalseにして、「cv:require('opencv4nodejs')」を追加します。</p><p>この後、Node-REDを再起動してください。</p><p>Node-REDの「Function」ノード上で以下のようにすれば、OpenCVの関数を使うことができます。</p><pre><code>const cv = global.get("cv");</code></pre><h2 class=""><u> USBカメラの画像を表示してみます</u></h2><p>USBカメラを1台つなげます。ノートPCなどカメラがついているものは不要です。</p><p>Node-REDを起動します。</p><p>右上の <img class=" tc-image-loading" src="img/node-red_subflow_001.jpg"> マークをクリックし、「パレットの管理」を選択してください。「node-red-contrib-image-output」がインストールされていなければ、「ノードを追加」⇒「ノードを検索」⇒「node-red-contrib-image-output」で追加してください。</p><p>「npm install ～」と違い、Node-REDを再起動する必要はありません。</p><p>ノードを以下のように配置します。</p><p><img class=" tc-image-loading" src="img/opencv4nodejs_inst_005.jpg"></p><dl><dt>①「inject」ノード</dt><dd>「Node-REDの起動後の0.1秒後、以下を行う」のチェックボックスをONにして、起動後に1回だけ実行するようにします。</dd><dd><img class=" tc-image-loading" src="img/opencv4nodejs_inst_006.jpg"></dd><dt>②「Function」ノード</dt><dd><code>const cv = global.get("cv");</code>でOpenCVを使えるようにして、VideoCaptureクラスを初期化します。作成したオブジェクト（cap）をグローバル変数にセットし、他のノードで使えるようにします。撮像するたびにVideoCaptureクラスを初期化すると時間がかかります。時間短縮のための工夫です。</dd><dd><img class=" tc-image-loading" src="img/opencv4nodejs_inst_007.jpg"></dd><dt>③「Debug」ノード</dt><dd>一応、初期化したことを表示します。</dd><dt>④ 「inject」ノード</dt><dd>配置しただけ、ただのトリガーです。</dd><dt>⑤「Function」ノード</dt><dd>cv（OpenCV）とcap（VideoCaptureクラス）を使えるようにします。<code>const image = cap.read();</code>で撮像し、後は「image」ノードで表示できるように変換します。今回はバッファに変換しました。（<a class="tc-tiddlylink-external" href="https://stackoverflow.com/questions/62733462/how-to-convert-image-into-buffer" rel="noopener noreferrer" target="_blank">参照ページ</a>）<br></dd><dd><img class=" tc-image-loading" src="img/opencv4nodejs_inst_008.jpg"></dd><dt>⑥「image」ノード</dt><dd>配置しただけです。</dd></dl><p>配置と接続が終了したら、「デプロイ」ボタンを押します。<br>
+<img class=" tc-image-loading" src="img/node-red_http_005.jpg"></p><p>正常動作すると、「デバッグ」に以下のように表示されます。<br>
+<img class=" tc-image-loading" src="img/opencv4nodejs_inst_009.jpg"></p><p>④実行のボタンを押すと、「image」ノードの下に画像が表示されます。<br>
+<img class=" tc-image-loading" src="img/opencv4nodejs_inst_010.jpg"></p><p>以下はフローをJSON形式で書き出したものです。以下をコピーして、Node-REDの右上の <img class=" tc-image-loading" src="img/node-red_subflow_001.jpg"> マークをクリックし、
+「読み込み」で開いたテキストボックスにペーストしてください。上のフローを読み込むことができます。</p><p><style>
+  #wrapper {
+    height: 200px;
+    width: 500px;
+    overflow-y: scroll;
+  }
+
+  #contents {
+    background-color: white;
+  }
+</style></p><p><div id="wrapper">
+  <div id="contents">
+    <pre><code>[
+    {
+        "id": "c98540bb293ace80",
+        "type": "inject",
+        "z": "bd33bcab6871647c",
+        "name": "初期化",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payloadType": "date",
+        "x": 140,
+        "y": 80,
+        "wires": [
+            [
+                "304436470ce4770d"
+            ]
+        ]
+    },
+    {
+        "id": "304436470ce4770d",
+        "type": "function",
+        "z": "bd33bcab6871647c",
+        "name": "Init VideoCapture",
+        "func": "const cv = global.get(\"cv\");\n\nconst cap = new cv.VideoCapture(0);\n\nglobal.set(\"cap\", cap);\n\nmsg.payload = \"VideoCaptureの初期化 \";\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 330,
+        "y": 80,
+        "wires": [
+            [
+                "de1dae70b6eb899b"
+            ]
+        ]
+    },
+    {
+        "id": "de1dae70b6eb899b",
+        "type": "debug",
+        "z": "bd33bcab6871647c",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 530,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "6551da61e8db9eba",
+        "type": "inject",
+        "z": "bd33bcab6871647c",
+        "name": "実行",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payloadType": "date",
+        "x": 150,
+        "y": 140,
+        "wires": [
+            [
+                "baeb172d1fd5e141"
+            ]
+        ]
+    },
+    {
+        "id": "baeb172d1fd5e141",
+        "type": "function",
+        "z": "bd33bcab6871647c",
+        "name": "grab",
+        "func": "const cv = global.get(\"cv\");\nconst cap = global.get(\"cap\")\n\nlet image = cap.read();\n//image = image.blur(new cv.Size(3, 3)).canny(30,60);\nconst str =  cv.imencode('.jpg', image).toString('base64');\nmsg.payload = Buffer.from(str, 'base64');\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 290,
+        "y": 140,
+        "wires": [
+            [
+                "3245c954feda7937"
+            ]
+        ]
+    },
+    {
+        "id": "3245c954feda7937",
+        "type": "image",
+        "z": "bd33bcab6871647c",
+        "name": "",
+        "width": 160,
+        "data": "payload",
+        "dataType": "msg",
+        "thumbnail": false,
+        "active": true,
+        "pass": false,
+        "outputs": 0,
+        "x": 460,
+        "y": 140,
+        "wires": []
+    }
+]</code></pre>
+  </div>
+</div></p><p>Node-REDはいろいろなセンサーと連携できることをセールスポイントにしていますが、USBカメラとの連携ができる使い勝手の良いノードが見当たらなかったので感動です。HDの解像度を超えるカメラから撮像することが可能です。</p><p>何だか画像処理という感じがしませんので、5行目にボカシ-&gt;Canny法によるエッジ抽出を入れておきます。コメントを外して試してください。メソッドチェーンも使えますね。</p><p><img class=" tc-image-loading" src="img/opencv4nodejs_inst_011.jpg"></p><hr><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="index.html"><svg class="tc-image-home-button tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M112.985 119.502c.01-.165.015-.331.015-.499V67.568c3.137 2.948 8.076 2.884 11.134-.174a7.999 7.999 0 00-.002-11.316L70.396 2.343A7.978 7.978 0 0064.734 0a7.957 7.957 0 00-5.656 2.343L33 28.42V8.007C33 3.585 29.41 0 25 0c-4.418 0-8 3.59-8 8.007V44.42L5.342 56.078c-3.125 3.125-3.12 8.198-.002 11.316a7.999 7.999 0 0011.316-.003l.344-.343v52.945a8.11 8.11 0 000 .007c0 4.418 3.588 8 8 8h80c4.419 0 8-3.59 8-8a8.11 8.11 0 00-.015-.498zM97 112V51.574L64.737 19.31 33 51.048V112h64z" fill-rule="evenodd"></path></svg>Homeへ</a><svg class="tc-image-blank tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"></svg><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Node-RED.html"><svg class="tc-image-up-arrow tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M63.892.281c2.027 0 4.054.77 5.6 2.316l55.98 55.98a7.92 7.92 0 010 11.196c-3.086 3.085-8.104 3.092-11.196 0L63.894 19.393 13.513 69.774a7.92 7.92 0 01-11.196 0c-3.085-3.086-3.092-8.105 0-11.196l55.98-55.98A7.892 7.892 0 0163.893.28z"></path></svg>Node-REDの記事Topへ</a></p></div>
+</div></p>
+</section>
+</body>
+</html>
+

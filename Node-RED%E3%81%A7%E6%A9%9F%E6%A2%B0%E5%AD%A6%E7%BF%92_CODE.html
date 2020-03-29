@@ -1,0 +1,161 @@
+<!doctype html>
+<html>
+<head><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-80755908-2"></script><script>  window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-80755908-2');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6163695023100481" crossorigin="anonymous"></script>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="generator" content="TiddlyWiki" />
+<meta name="tiddlywiki-version" content="5.2.5" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="format-detection" content="telephone=no">
+<link id="faviconLink" rel="shortcut icon" href="favicon.ico">
+<link rel="stylesheet" href="static.css">
+<title>Node-REDで機械学習_CODE: WAKU-TAKE-A  PROGRAM</title>
+</head>
+<body class="tc-body">
+
+<section class="tc-story-river tc-static-story-river">
+<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists " data-tags="" data-tiddler-title="Node-REDで機械学習_CODE" role="article"><div class="tc-tiddler-title"><div class="tc-titlebar"><span class="tc-tiddler-controls"><button aria-expanded="false" aria-label="more" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fmore-tiddler-actions" title="More actions"></button><div class=" tc-reveal" hidden="true"></div><button aria-label="edit" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fedit" title="Edit this tiddler"></button><button aria-label="close" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fclose" title="Close this tiddler"></button></span><span><h2 class="tc-title">Node-REDで機械学習_CODE</h2></span></div><div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div></div><div class="tc-reveal"></div><div class=" tc-reveal"><div class="tc-subtitle"><a class="tc-tiddlylink tc-tiddlylink-missing" href=".html"></a> 1st October 2021 at 9:22pm</div></div><div class=" tc-reveal"><div class="tc-tags-wrapper"></div></div><div class="tc-tiddler-body tc-reveal"><pre><code>[
+    {
+        "id": "30727d20eb9731bc",
+        "type": "inject",
+        "z": "bbc7170261bafbe4",
+        "name": "実行",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payloadType": "date",
+        "x": 150,
+        "y": 60,
+        "wires": [
+            [
+                "a1073781125e5843"
+            ]
+        ]
+    },
+    {
+        "id": "a1073781125e5843",
+        "type": "file in",
+        "z": "bbc7170261bafbe4",
+        "name": "",
+        "filename": "c:/tmp/019.png",
+        "format": "",
+        "chunk": false,
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 320,
+        "y": 60,
+        "wires": [
+            [
+                "d175111c0641da56"
+            ]
+        ]
+    },
+    {
+        "id": "c5abd02ee5bbc6d3",
+        "type": "image",
+        "z": "bbc7170261bafbe4",
+        "name": "",
+        "width": 160,
+        "data": "payload",
+        "dataType": "msg",
+        "thumbnail": false,
+        "active": true,
+        "pass": false,
+        "outputs": 0,
+        "x": 480,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "92715ce9fe92b35f",
+        "type": "http request",
+        "z": "bbc7170261bafbe4",
+        "name": "",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://localhost:38101/v1/predict/4fb17929-da02-4232-a3d5-1e0023eaa27a",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 610,
+        "y": 120,
+        "wires": [
+            [
+                "c1f308c52b7531a4"
+            ]
+        ]
+    },
+    {
+        "id": "d175111c0641da56",
+        "type": "base64",
+        "z": "bbc7170261bafbe4",
+        "name": "",
+        "action": "",
+        "property": "payload",
+        "x": 300,
+        "y": 120,
+        "wires": [
+            [
+                "dcf8048a38dee8a2",
+                "c5abd02ee5bbc6d3"
+            ]
+        ]
+    },
+    {
+        "id": "c1f308c52b7531a4",
+        "type": "debug",
+        "z": "bbc7170261bafbe4",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 790,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "dcf8048a38dee8a2",
+        "type": "template",
+        "z": "bbc7170261bafbe4",
+        "name": "body",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "json",
+        "syntax": "mustache",
+        "template": "{\n    \"image\": \"{{{payload}}}\"\n}",
+        "output": "json",
+        "x": 450,
+        "y": 120,
+        "wires": [
+            [
+                "92715ce9fe92b35f"
+            ]
+        ]
+    }
+]</code></pre></div>
+</div></p>
+</section>
+</body>
+</html>
+

@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+<head><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-80755908-2"></script><script>  window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-80755908-2');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6163695023100481" crossorigin="anonymous"></script>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="generator" content="TiddlyWiki" />
+<meta name="tiddlywiki-version" content="5.2.5" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="format-detection" content="telephone=no">
+<link id="faviconLink" rel="shortcut icon" href="favicon.ico">
+<link rel="stylesheet" href="static.css">
+<title>（01）Dear PyGuiのステップ1: WAKU-TAKE-A  PROGRAM</title>
+</head>
+<body class="tc-body">
+
+<section class="tc-story-river tc-static-story-river">
+<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists  tc-tagged-DearPyGui tc-tagged-Programming" data-tags="DearPyGui Programming" data-tiddler-title="DearPyGui001" role="article"><div class="tc-tiddler-title"><div class="tc-titlebar"><span class="tc-tiddler-controls"><button aria-expanded="false" aria-label="more" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fmore-tiddler-actions" title="More actions"></button><div class=" tc-reveal" hidden="true"></div><button aria-label="edit" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fedit" title="Edit this tiddler"></button><button aria-label="close" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fclose" title="Close this tiddler"></button></span><span><h2 class="tc-title">（01）Dear PyGuiのステップ1</h2></span></div><div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div></div><div class="tc-reveal"></div><div class=" tc-reveal"><div class="tc-subtitle"><a class="tc-tiddlylink tc-tiddlylink-missing" href=".html"></a> 4th January 2023 at 9:09am</div></div><div class=" tc-reveal"><div class="tc-tags-wrapper"><span class="tc-tag-list-item" data-tag-title="DearPyGui"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">DearPyGui</span><span class="tc-drop-down tc-reveal" hidden="true"></span></span><span class="tc-tag-list-item" data-tag-title="Programming"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">Programming</span><span class="tc-drop-down tc-reveal" hidden="true"></span></span></div></div><div class="tc-tiddler-body tc-reveal"><p>Dear PyGuiは、Python用のGUIツールキットです。簡単なだけでなく、かなり複雑なGUIの作成も可能です。</p><p>C++用のGUIライブラリ「<a class="tc-tiddlylink-external" href="https://github.com/ocornut/imgui" rel="noopener noreferrer" target="_blank">ImGui</a>」で構築されています。ゲームやリアルタイム3Dなどへの利用を想定していて、高速性もありそうです。</p><p>インストールは、以下で簡単に出来てしまいます。ただし、Python3.6（64ビット）以上が必要です。</p><pre><code>&gt; pip install dearpygui</code></pre><p>以下の例では、「WinPython-3.8.9.amd64」のIDLEを使っています。</p><h2 class=""><u>ビューポートとアイテム</u></h2><p>以下のサンプルコードは<a class="tc-tiddlylink-external" href="https://dearpygui.readthedocs.io/en/latest/tutorials/first-steps.html" rel="noopener noreferrer" target="_blank">DearPyGuiのドキュメント</a>からの引用です。</p><p><a class="tc-tiddlylink-external" href="https://github.com/WAKU-TAKE-A/DearPyGui_Samle/blob/main/DearPyGui_Sample01.py" rel="noopener noreferrer" target="_blank">DearPyGui_Sample01.py</a></p><pre class="hljs"><code class="python hljs"><span class="hljs-comment"># サンプルスクリプト1</span>
+
+<span class="hljs-keyword">import</span> dearpygui.dearpygui <span class="hljs-keyword">as</span> dpg
+
+dpg.create_context()
+dpg.create_viewport(title=<span class="hljs-string">&#x27;Custom Title&#x27;</span>, width=<span class="hljs-number">600</span>, height=<span class="hljs-number">300</span>)
+
+<span class="hljs-keyword">with</span> dpg.window(label=<span class="hljs-string">&quot;Example Window&quot;</span>, pos=(<span class="hljs-number">10</span>, <span class="hljs-number">10</span>), width=<span class="hljs-number">200</span>, height=<span class="hljs-number">200</span>):
+    dpg.add_text(<span class="hljs-string">&quot;Hello, world&quot;</span>)
+    dpg.add_button(label=<span class="hljs-string">&quot;Save&quot;</span>)
+    dpg.add_input_text(label=<span class="hljs-string">&quot;string&quot;</span>, default_value=<span class="hljs-string">&quot;Quick brown fox&quot;</span>)
+    dpg.add_slider_float(label=<span class="hljs-string">&quot;float&quot;</span>, default_value=<span class="hljs-number">0.273</span>, max_value=<span class="hljs-number">1</span>)
+
+dpg.setup_dearpygui()
+dpg.show_viewport()
+dpg.start_dearpygui()
+dpg.destroy_context()</code></pre><p>実行すると以下のGUIアプリケーションが表示されます。</p><p><img class=" tc-image-loading" src="img/dearpygui_001.png"></p><p>すべてのDPG（<strong>D</strong>ear <strong>P</strong>y<strong>G</strong>ui）アプリは、以下を実行する必要があります。</p><ul><li>コンテキストの作成<code>create_context()</code><ul><li>これが一番最初でないと、DearPyGuiは起動しません。</li></ul></li><li>ビューポートの作成から表示<ol><li>ビューポートの作成<code>create_viewport()</code></li><li>ビューポートの割り当て<code>setup_dearpygui()</code></li><li>ビューポートの表示<code>show_viewport()</code></li></ol></li><li>レンダリングの開始<code>start_dearpygui()</code></li><li>コンテキストの破棄<code>destroy_context()</code></li></ul><p>Dear PyGuiでは、一番外側のウィンドウを「ビューポート（赤枠）」、その中で作成されたものはすべて「アイテム」と呼ばれます。緑枠のウィンドウや、ウィンドウの中に作成されたボタンやテキストなども「アイテム」と呼ばれます。</p><h2 class=""><u>属するコンテナー</u></h2><p>ウィンドウは子アイテムを持ことができるコンテナータイプと呼ばれるアイテムです。ボタンやテキストなどはコンテナータイプのアイテムに追加されます。</p><p>下のサンプルスクリプト2の<code>with dpg.window(・・・):</code>内で作成されたアイテムは、自動的にそのウィンドウに属することになります。</p><p><code>with dpg.window(・・・):</code>内で作成されなくても、オプション（<code>, parent=～</code>）で属するコンテナーを指定することが可能です。</p><p>ちなみに、<code>button1 = dpg.add_button()</code>の場合は、「button1」がアイテムの変数名になります。<code>with dpg.window() as window1;</code>の場合は、<code>as</code>以降の「winodw1」がアイテムの変数名になります。</p><p><a class="tc-tiddlylink-external" href="https://github.com/WAKU-TAKE-A/DearPyGui_Samle/blob/main/DearPyGui_Sample02.py" rel="noopener noreferrer" target="_blank">DearPyGui_Sample02.py</a></p><pre class="hljs"><code class="python hljs"><span class="hljs-comment"># サンプルスクリプト2</span>
+
+<span class="hljs-keyword">import</span> dearpygui.dearpygui <span class="hljs-keyword">as</span> dpg
+
+dpg.create_context()
+dpg.create_viewport(title=<span class="hljs-string">&#x27;Custom Title&#x27;</span>, width=<span class="hljs-number">600</span>, height=<span class="hljs-number">300</span>)
+
+<span class="hljs-keyword">with</span> dpg.window(label=<span class="hljs-string">&quot;Label of Window1&quot;</span>, pos=(<span class="hljs-number">10</span>, <span class="hljs-number">10</span>), width=<span class="hljs-number">250</span>, height=<span class="hljs-number">200</span>) <span class="hljs-keyword">as</span> window1:
+    button1 = dpg.add_button(label=<span class="hljs-string">&quot;My parerent is window1.&quot;</span>)
+
+button2 = dpg.add_button(label=<span class="hljs-string">&quot;My parerent is Window1, too.&quot;</span>, parent=window1)
+
+dpg.setup_dearpygui()
+dpg.show_viewport()
+dpg.start_dearpygui()
+dpg.destroy_context()</code></pre><p>実行すると以下のGUIアプリケーションが表示されます。</p><p><img class=" tc-image-loading" src="img/dearpygui_002.png"></p><h2 class=""><u>タグシステム</u></h2><p>すべてのアイテムにはユニークなIDが関連付けられている必要があります。</p><p>通常、アイテムが作成されるとIDが自動的に生成されます。後で操作する場合は、このIDを明示的に設定することで操作することができます。ユニークなIDでない場合はエラーが発生します。</p><p>サンプルスクリプト2をタグを使った記述に書き直してみます。</p><p><a class="tc-tiddlylink-external" href="https://github.com/WAKU-TAKE-A/DearPyGui_Samle/blob/main/DearPyGui_Sample03.py" rel="noopener noreferrer" target="_blank">DearPyGui_Sample03.py</a></p><pre class="hljs"><code class="python hljs"><span class="hljs-comment"># サンプルスクリプト3</span>
+
+<span class="hljs-keyword">import</span> dearpygui.dearpygui <span class="hljs-keyword">as</span> dpg
+
+dpg.create_context()
+dpg.create_viewport(title=<span class="hljs-string">&#x27;Custom Title&#x27;</span>, width=<span class="hljs-number">600</span>, height=<span class="hljs-number">300</span>)
+
+<span class="hljs-keyword">with</span> dpg.window(label=<span class="hljs-string">&quot;Label of Window1&quot;</span>, pos=(<span class="hljs-number">10</span>, <span class="hljs-number">10</span>), width=<span class="hljs-number">250</span>, height=<span class="hljs-number">200</span>, tag=<span class="hljs-string">&quot;window1&quot;</span>):
+    button1 = dpg.add_button(label=<span class="hljs-string">&quot;My parerent is window1.&quot;</span>, tag=<span class="hljs-string">&quot;button1&quot;</span>)
+
+dpg.add_button(label=<span class="hljs-string">&quot;My parerent is Window1, too.&quot;</span>, parent=<span class="hljs-string">&quot;window1&quot;</span>, tag=<span class="hljs-string">&quot;button1&quot;</span>)
+
+dpg.setup_dearpygui()
+dpg.show_viewport()
+dpg.start_dearpygui()
+dpg.destroy_context()</code></pre><p>サンプルスクリプト3を実行すると、ユニークなIDではないので最初エラーが発生します。<code>tag="button1</code>を<code>tag="button2</code>などとするとエラーは解消され、2と同じ結果になります。</p><p>変数名を使わずに、タグを使う事でDear PyGui独自の使い方が可能になります。</p><hr><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="index.html"><svg class="tc-image-home-button tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M112.985 119.502c.01-.165.015-.331.015-.499V67.568c3.137 2.948 8.076 2.884 11.134-.174a7.999 7.999 0 00-.002-11.316L70.396 2.343A7.978 7.978 0 0064.734 0a7.957 7.957 0 00-5.656 2.343L33 28.42V8.007C33 3.585 29.41 0 25 0c-4.418 0-8 3.59-8 8.007V44.42L5.342 56.078c-3.125 3.125-3.12 8.198-.002 11.316a7.999 7.999 0 0011.316-.003l.344-.343v52.945a8.11 8.11 0 000 .007c0 4.418 3.588 8 8 8h80c4.419 0 8-3.59 8-8a8.11 8.11 0 00-.015-.498zM97 112V51.574L64.737 19.31 33 51.048V112h64z" fill-rule="evenodd"></path></svg>Homeへ</a><svg class="tc-image-blank tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"></svg><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Programming.html"><svg class="tc-image-up-arrow tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M63.892.281c2.027 0 4.054.77 5.6 2.316l55.98 55.98a7.92 7.92 0 010 11.196c-3.086 3.085-8.104 3.092-11.196 0L63.894 19.393 13.513 69.774a7.92 7.92 0 01-11.196 0c-3.085-3.086-3.092-8.105 0-11.196l55.98-55.98A7.892 7.892 0 0163.893.28z"></path></svg>プログラミングの記事Topへ</a></p></div>
+</div></p>
+</section>
+</body>
+</html>
+

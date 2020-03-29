@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+<head><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-80755908-2"></script><script>  window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-80755908-2');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6163695023100481" crossorigin="anonymous"></script>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="generator" content="TiddlyWiki" />
+<meta name="tiddlywiki-version" content="5.2.5" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="format-detection" content="telephone=no">
+<link id="faviconLink" rel="shortcut icon" href="favicon.ico">
+<link rel="stylesheet" href="static.css">
+<title>環境変数Pathについて: WAKU-TAKE-A  PROGRAM</title>
+</head>
+<body class="tc-body">
+
+<section class="tc-story-river tc-static-story-river">
+<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists  tc-tagged-ProgrammingEtc" data-tags="ProgrammingEtc" data-tiddler-title="about_environment_variable_path" role="article"><div class="tc-tiddler-title"><div class="tc-titlebar"><span class="tc-tiddler-controls"><button aria-expanded="false" aria-label="more" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fmore-tiddler-actions" title="More actions"></button><div class=" tc-reveal" hidden="true"></div><button aria-label="edit" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fedit" title="Edit this tiddler"></button><button aria-label="close" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fclose" title="Close this tiddler"></button></span><span><h2 class="tc-title">環境変数Pathについて</h2></span></div><div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div></div><div class="tc-reveal"></div><div class=" tc-reveal"><div class="tc-subtitle"><a class="tc-tiddlylink tc-tiddlylink-missing" href=".html"></a> 2nd March 2023 at 9:16pm</div></div><div class=" tc-reveal"><div class="tc-tags-wrapper"><span class="tc-tag-list-item" data-tag-title="ProgrammingEtc"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">ProgrammingEtc</span><span class="tc-drop-down tc-reveal" hidden="true"></span></span></div></div><div class="tc-tiddler-body tc-reveal"><p>環境変数Pathを設定すると、実行ファイルをフルパス（例えば、<code>c:\tmp\abc.exe</code>）でなく、実行ファイル名だけ（例えば、<code>abc.exe</code>）で実行することができます。</p><p>環境変数Pathを設定するダイアログは案外開くのに手間取ります。以下の方法が簡単な開き方の一つだと思います。</p><p>[Windows]キー＋[Pause/Break]キー</p><p><svg class="tc-image-cssgg-arrow-down tc-image-button" fill="none" height="22pt" viewBox="0 0 24 24" width="22pt"><path d="M11.0001 3.67157L13.0001 3.67157L13.0001 16.4999L16.2426 13.2574L17.6568 14.6716L12 20.3284L6.34314 14.6716L7.75735 13.2574L11.0001 16.5001L11.0001 3.67157Z" fill="currentColor"></path></svg></p><p>[システムの詳細設定]をクリック<br>
+<img class=" tc-image-loading" src="img/env_var_dialog_003.jpg"><br>
+図1</p><p><svg class="tc-image-cssgg-arrow-down tc-image-button" fill="none" height="22pt" viewBox="0 0 24 24" width="22pt"><path d="M11.0001 3.67157L13.0001 3.67157L13.0001 16.4999L16.2426 13.2574L17.6568 14.6716L12 20.3284L6.34314 14.6716L7.75735 13.2574L11.0001 16.5001L11.0001 3.67157Z" fill="currentColor"></path></svg></p><p>[環境変数]ボタンをクリック<br>
+<img class=" tc-image-loading" src="img/env_var_dialog_004.jpg"><br>
+図2</p><p><svg class="tc-image-cssgg-arrow-down tc-image-button" fill="none" height="22pt" viewBox="0 0 24 24" width="22pt"><path d="M11.0001 3.67157L13.0001 3.67157L13.0001 16.4999L16.2426 13.2574L17.6568 14.6716L12 20.3284L6.34314 14.6716L7.75735 13.2574L11.0001 16.5001L11.0001 3.67157Z" fill="currentColor"></path></svg></p><p>以下の画面が開きます。<br>
+<img class=" tc-image-loading" src="img/env_var_dialog_001.jpg"><br>
+図3</p><p>Windowsには、システム環境変数とユーザー環境変数があります。<br>
+システム環境変数はそのPCを利用する全てのユーザー用の設定で、ユーザー環境変数は各ユーザー個別の設定です。</p><p>Python・CMake・GitなどのPathは、システム環境変数に登録するのが良いかもしれません。</p><p>Pathをダブルクリックすると以下の画面が開きます。<br>
+<img class=" tc-image-loading" src="img/env_var_dialog_002.jpg"><br>
+図4</p><p>Pathを追加する場合、[新規]ボタンを押し所望のフォルダを指定してください。</p><p>環境変数Pathは上の行のパスが優先されます。</p><p>図4の場合、仮に実行ファイル<code>XYZ.exe</code>が<code>C:\WINDOWS</code>フォルダにも<code>C:\WINDOWS\system32</code>フォルダにもあったとします。</p><p>コマンドプロンプトで<code>XYZ.exe</code>を実行ファイル名だけで実行すると、より上側に設定されている<code>C:\WINDOWS</code>フォルダのものが実行されます。</p><p>いろいろなソフトウェアで利用される実行ファイルは思いもよらないPathに存在する場合があります。</p><p>例えばpython.exeがあります。</p><p>私の環境では、<code>C:\Users\[YOUR ACCOUNT]\AppData\Local\Microsoft\WindowsApps\</code>
+の<code>python.exe</code>が邪魔をして、<code>python.exe</code>が実行できなくなったことがありました。</p><p>確実に実行したい実行ファイルのあるフォルダを、[上へ]ボタンでより上側に設定しましょう。</p><h2 class=""><u>環境変数のQA</u></h2><p><svg class="tc-image-tmd-message-question-outline tc-image-button" height="22pt" viewBox="0 0 24 24" width="22pt"><path d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2M20 16H5.2L4 17.2V4H20V16M12.2 5.5C11.3 5.5 10.6 5.7 10.1 6C9.5 6.4 9.2 7 9.3 7.7H11.3C11.3 7.4 11.4 7.2 11.6 7.1C11.8 7 12 6.9 12.3 6.9C12.6 6.9 12.9 7 13.1 7.2C13.3 7.4 13.4 7.6 13.4 7.9C13.4 8.2 13.3 8.4 13.2 8.6C13 8.8 12.8 9 12.6 9.1C12.1 9.4 11.7 9.7 11.5 9.9C11.1 10.2 11 10.5 11 11H13C13 10.7 13.1 10.5 13.1 10.3C13.2 10.1 13.4 10 13.6 9.8C14.1 9.6 14.4 9.3 14.7 8.9C15 8.5 15.1 8.1 15.1 7.7C15.1 7 14.8 6.4 14.3 6C13.9 5.7 13.1 5.5 12.2 5.5M11 12V14H13V12H11Z"></path></svg>ある環境変数でアプリAが起動したとします。アプリAが起動中に、環境変数が変更されました。（例えばインストーラなどで）起動中のアプリAでは変更された環境変数が適用されるでしょうか？<br>
+<svg class="tc-image-tmd-message-reply-text tc-image-button" height="22pt" viewBox="0 0 24 24" width="22pt"><path d="M18,8H6V6H18V8M18,11H6V9H18V11M18,14H6V12H18V14M22,4A2,2 0 0,0 20,2H4A2,2 0 0,0 2,4V16A2,2 0 0,0 4,18H18L22,22V4Z"></path></svg>基本は適用されません。適用したい場合はアプリAを再起動しなくてはいけません。Pathも同様です。</p><p><svg class="tc-image-tmd-message-question-outline tc-image-button" height="22pt" viewBox="0 0 24 24" width="22pt"><path d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2M20 16H5.2L4 17.2V4H20V16M12.2 5.5C11.3 5.5 10.6 5.7 10.1 6C9.5 6.4 9.2 7 9.3 7.7H11.3C11.3 7.4 11.4 7.2 11.6 7.1C11.8 7 12 6.9 12.3 6.9C12.6 6.9 12.9 7 13.1 7.2C13.3 7.4 13.4 7.6 13.4 7.9C13.4 8.2 13.3 8.4 13.2 8.6C13 8.8 12.8 9 12.6 9.1C12.1 9.4 11.7 9.7 11.5 9.9C11.1 10.2 11 10.5 11 11H13C13 10.7 13.1 10.5 13.1 10.3C13.2 10.1 13.4 10 13.6 9.8C14.1 9.6 14.4 9.3 14.7 8.9C15 8.5 15.1 8.1 15.1 7.7C15.1 7 14.8 6.4 14.3 6C13.9 5.7 13.1 5.5 12.2 5.5M11 12V14H13V12H11Z"></path></svg>同じ変数がシステム環境変数とユーザー環境変数の両方で設定された場合はどちらが優先されますか？<br>
+<svg class="tc-image-tmd-message-reply-text tc-image-button" height="22pt" viewBox="0 0 24 24" width="22pt"><path d="M18,8H6V6H18V8M18,11H6V9H18V11M18,14H6V12H18V14M22,4A2,2 0 0,0 20,2H4A2,2 0 0,0 2,4V16A2,2 0 0,0 4,18H18L22,22V4Z"></path></svg>ユーザー環境変数が優先されます。ただし、Pathは特別で、システム環境変数の後ろに、ユーザー環境変数が追加されます。（つまりシステム環境変数の方が優先される）</p></div>
+</div></p>
+</section>
+</body>
+</html>
+

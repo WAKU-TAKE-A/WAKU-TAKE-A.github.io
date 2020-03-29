@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+<head><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-80755908-2"></script><script>  window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-80755908-2');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6163695023100481" crossorigin="anonymous"></script>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="generator" content="TiddlyWiki" />
+<meta name="tiddlywiki-version" content="5.2.5" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="format-detection" content="telephone=no">
+<link id="faviconLink" rel="shortcut icon" href="favicon.ico">
+<link rel="stylesheet" href="static.css">
+<title>（04）PythonでTOF距離センサー: WAKU-TAKE-A  PROGRAM</title>
+</head>
+<body class="tc-body">
+
+<section class="tc-story-river tc-static-story-river">
+<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists  tc-tagged-Python_Camera tc-tagged-Programming" data-tags="Python_Camera Programming" data-tiddler-title="（04）PythonでTOF距離センサー" role="article"><div class="tc-tiddler-title"><div class="tc-titlebar"><span class="tc-tiddler-controls"><button aria-expanded="false" aria-label="more" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fmore-tiddler-actions" title="More actions"></button><div class=" tc-reveal" hidden="true"></div><button aria-label="edit" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fedit" title="Edit this tiddler"></button><button aria-label="close" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fclose" title="Close this tiddler"></button></span><span><h2 class="tc-title">（04）PythonでTOF距離センサー</h2></span></div><div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div></div><div class="tc-reveal"></div><div class=" tc-reveal"><div class="tc-subtitle"><a class="tc-tiddlylink tc-tiddlylink-missing" href=".html"></a> 2nd January 2023 at 11:20am</div></div><div class=" tc-reveal"><div class="tc-tags-wrapper"><span class="tc-tag-list-item" data-tag-title="Programming"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">Programming</span><span class="tc-drop-down tc-reveal" hidden="true"></span></span><span class="tc-tag-list-item" data-tag-title="Python_Camera"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">Python_Camera</span><span class="tc-drop-down tc-reveal" hidden="true"></span></span></div></div><div class="tc-tiddler-body tc-reveal"><h2 class=""><u>Terabee社製の「TeraRanger Evo Mini USB」</u></h2><p>数年前にI2Cの距離センサーを使うことがありました。自分の拙い技術で配線をして使っていたのであまり気に入ってはいませんでした。それ以来、USBなどで繋げるかっちりしたものを何となく探していました。当然、Pythonからも制御できるものです。</p><p>最近、Terabee社製の「TeraRanger Evo Mini USB」を見つけ、値段が4000～5000円程度（2020年1月）だったので、試しに買ってみました。</p><p>Terabee社は、3D TOFカメラ、TOF距離センサー、サーマルカメラなどを作っている会社です。スイスの国境に近いフランスの会社です。製品の用途は、ロボティクス、自動化、監視、IoTのようです。</p><p>購入は正規販売店のMouser Electronicsにしました。<a class="tc-tiddlylink-external" href="https://www.mouser.jp/ProductDetail/Terabee/TR-EVO-MINI-USB?qs=sGAEpiMZZMsG1k5vdNM%2Fc5tKHpq8eW0kiltcJTUgMzI%3D" rel="noopener noreferrer" target="_blank">こちら</a>を参照してください。他にも販売店はあったのですが、ホームページに「東京でのサポート」と書いてあったので、こちらにしました。</p><p>在庫は無く、1月に発注して納期まで2か月くらいかかりました。以下は適合証明書と本体の写真です。</p><p><img class=" tc-image-loading" src="img/TeraRangerEvo MiniUSB_001.jpg"></p><h2 class=""><u>動作確認</u></h2><p>まずは、必要なものを<a class="tc-tiddlylink-external" href="https://www.terabee.com/shop/lidar-tof-range-finders/teraranger-evo-mini/#downloads" rel="noopener noreferrer" target="_blank">こちら</a>からダウンロードします。</p><p><img class=" tc-image-loading" src="img/TeraRangerEvo MiniUSB_002.jpg"></p><p>データシート、マニュアル、TeraRanger Evo GUI（簡易GUI）をダウンロードしましょう。上の方には簡単な特徴なども書いてくれているので、読んでおくと良いと思います。</p><p><code>TeraRangerEvoInstaller_***.zip</code>を展開し、<code>TeraRangerEvoInstaller_***.exe</code>をインストールします。</p><p>次に、動作の確認を行います。（ちなみに私の環境はWindows10 64bitです）</p><p>TeraRanger Evo Mini USB（以降、Evo Mini）をPCにつないで、スタートメニューからTeraRanger Evoを実行します。File - Connectで正常に距離が測定されていれば、動作確認OKです。</p><p><img class=" tc-image-loading" src="img/TeraRangerEvo MiniUSB_003.gif"></p><h2 class=""><u>Pythonでの利用</u></h2><p>マニュアル（英語なので、苦手な方は翻訳サイトを駆使しましょう）によれば、USBはシリアル制御で動くようです。</p><p>Pythonでは<a class="tc-tiddlylink-external" href="https://pypi.org/project/pyserial/" rel="noopener noreferrer" target="_blank">pyserial</a>がありますので、インストールされていない場合は「pip install pyserial」しておきましょう。</p><p>以下の条件で接続します。</p><dl><dt>Baud rate</dt><dd>115200 bit/s</dd><dt>Data bits</dt><dd>8</dd><dt>Parity bit</dt><dd>None</dd><dt>Stop bit</dt><dd>1</dd></dl><p>また、簡易GUIのTeraRanger Evoによると、私の環境ではポートはCOM4でした。</p><p>Pythonインタプリタを起動します。（私はIDLEを使います）</p><pre class="hljs"><code class="python hljs">
+<span class="hljs-keyword">import</span> serial
+
+conn = serial.Serial(port=<span class="hljs-string">&#x27;COM4&#x27;</span>, baudrate=<span class="hljs-number">115200</span>, bytesize=<span class="hljs-number">8</span>, parity=serial.PARITY_NONE, stopbits=<span class="hljs-number">1</span>)
+
+conn.read()</code></pre><p>conn.read() するとEvo Miniから何かの信号が帰ってきているのがわかります。</p><p>さらにマニュアルのP.20「5.1. USB/UART list of commands」に実行できるコマンドの一覧があります。以下のように設定します。</p><dl><dt>PRINT OUT MODE</dt><dd>・TEXT</dd><dd>・BYTE配列で「00 11 01 45」</dd><dt>PIXEL MODE</dt><dd>・1PX MODE</dd><dd>・BYTE配列で「00 21 01 BC」</dd><dt>RANGE MODE</dt><dd>・LONG RANGE MODE</dd><dd>・BYTE配列で「00 61 03 E9」</dd></dl><pre class="hljs"><code class="python hljs"><span class="hljs-keyword">import</span> serial
+<span class="hljs-keyword">import</span> time
+
+PRINTOUT_TEXT = <span class="hljs-built_in">bytearray</span>(<span class="hljs-string">b&#x27;\x00\x11\x01\x45&#x27;</span>)
+PX1 = <span class="hljs-built_in">bytearray</span>(<span class="hljs-string">b&#x27;\x00\x21\x01\xBC&#x27;</span>)
+RANGE_LONG = <span class="hljs-built_in">bytearray</span>(<span class="hljs-string">b&#x27;\x00\x61\x03\xE9&#x27;</span>)
+
+conn = serial.Serial(port=<span class="hljs-string">&#x27;COM4&#x27;</span>, baudrate=<span class="hljs-number">115200</span>, bytesize=<span class="hljs-number">8</span>, parity=serial.PARITY_NONE, stopbits=<span class="hljs-number">1</span>)
+conn.write(PX1)
+conn.write(RANGE_LONG)
+conn.write(PRINTOUT_TEXT)
+
+val = <span class="hljs-string">&#x27;&#x27;</span>
+
+<span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">100</span>):
+    res = conn.read().decode()
+    <span class="hljs-keyword">if</span> res == <span class="hljs-string">&#x27;\n&#x27;</span>:
+        <span class="hljs-built_in">print</span>(val)
+        val = <span class="hljs-string">&#x27;&#x27;</span>
+    <span class="hljs-keyword">else</span>:
+        val = val + res</code></pre><p>上のスクリプトを実行すると以下のような結果になりました。非常に簡単にPythonで距離を測定することができました。</p><p><img class=" tc-image-loading" src="img/TeraRangerEvo MiniUSB_004.jpg"></p><hr><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="index.html"><svg class="tc-image-home-button tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M112.985 119.502c.01-.165.015-.331.015-.499V67.568c3.137 2.948 8.076 2.884 11.134-.174a7.999 7.999 0 00-.002-11.316L70.396 2.343A7.978 7.978 0 0064.734 0a7.957 7.957 0 00-5.656 2.343L33 28.42V8.007C33 3.585 29.41 0 25 0c-4.418 0-8 3.59-8 8.007V44.42L5.342 56.078c-3.125 3.125-3.12 8.198-.002 11.316a7.999 7.999 0 0011.316-.003l.344-.343v52.945a8.11 8.11 0 000 .007c0 4.418 3.588 8 8 8h80c4.419 0 8-3.59 8-8a8.11 8.11 0 00-.015-.498zM97 112V51.574L64.737 19.31 33 51.048V112h64z" fill-rule="evenodd"></path></svg>Homeへ</a><svg class="tc-image-blank tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"></svg><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Programming.html"><svg class="tc-image-up-arrow tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M63.892.281c2.027 0 4.054.77 5.6 2.316l55.98 55.98a7.92 7.92 0 010 11.196c-3.086 3.085-8.104 3.092-11.196 0L63.894 19.393 13.513 69.774a7.92 7.92 0 01-11.196 0c-3.085-3.086-3.092-8.105 0-11.196l55.98-55.98A7.892 7.892 0 0163.893.28z"></path></svg>プログラミングの記事Topへ</a></p></div>
+</div></p>
+</section>
+</body>
+</html>
+

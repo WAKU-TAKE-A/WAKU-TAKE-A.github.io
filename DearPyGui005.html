@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+<head><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-80755908-2"></script><script>  window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-80755908-2');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6163695023100481" crossorigin="anonymous"></script>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="generator" content="TiddlyWiki" />
+<meta name="tiddlywiki-version" content="5.2.5" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="format-detection" content="telephone=no">
+<link id="faviconLink" rel="shortcut icon" href="favicon.ico">
+<link rel="stylesheet" href="static.css">
+<title>（05）Dear PyGuiで画像表示アプリ: WAKU-TAKE-A  PROGRAM</title>
+</head>
+<body class="tc-body">
+
+<section class="tc-story-river tc-static-story-river">
+<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists  tc-tagged-DearPyGui tc-tagged-Programming" data-tags="DearPyGui Programming" data-tiddler-title="DearPyGui005" role="article"><div class="tc-tiddler-title"><div class="tc-titlebar"><span class="tc-tiddler-controls"><button aria-expanded="false" aria-label="more" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fmore-tiddler-actions" title="More actions"></button><div class=" tc-reveal" hidden="true"></div><button aria-label="edit" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fedit" title="Edit this tiddler"></button><button aria-label="close" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fclose" title="Close this tiddler"></button></span><span><h2 class="tc-title">（05）Dear PyGuiで画像表示アプリ</h2></span></div><div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div></div><div class="tc-reveal"></div><div class=" tc-reveal"><div class="tc-subtitle"><a class="tc-tiddlylink tc-tiddlylink-missing" href=".html"></a> 2nd January 2023 at 9:30pm</div></div><div class=" tc-reveal"><div class="tc-tags-wrapper"><span class="tc-tag-list-item" data-tag-title="DearPyGui"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">DearPyGui</span><span class="tc-drop-down tc-reveal" hidden="true"></span></span><span class="tc-tag-list-item" data-tag-title="Programming"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">Programming</span><span class="tc-drop-down tc-reveal" hidden="true"></span></span></div></div><div class="tc-tiddler-body tc-reveal"><p>Dear PyGuiを使って、画像ファイルを表示するアプリケーションを作ってみます。</p><p>後に、画像処理なども行う予定なので、表示以外はOpenCVを利用します。</p><p>画像を描画する手順としては、以下の通りです。</p><ol><li>画像を「テクスチャー」にして、 「テクスチャーレジストリ」に追加します。</li><li>「テクスチャー」を描画コマンドを使って、描画用コンテナに追加します。<ul><li>追加できるコンテナは、ビューポート／ウィンドウ／ドローリスト（drawlist）です。</li><li>画像を描画するコマンドには、<code>dpg.draw_image()</code>や<code>dpg.add_image()</code>があります。</li></ul></li></ol><h2 class=""><u>テクスチャー</u></h2><p>Dear PyGuiでは、画像を「テクスチャー」にして「テクスチャーレジストリ」に追加する必要があります。</p><p>以下はテクスチャーレジストリの作成の例です。ウィンドウなどと同様です。</p><pre class="hljs"><code class="python hljs"><span class="hljs-keyword">with</span> dpg.texture_registry():
+    dpg.add_static_texture(image_width, image_height, image_data, tag=<span class="hljs-string">&quot;texture_id&quot;</span>)</code></pre><p>テクスチャーには以下の3タイプがあります。</p><ul><li>Static（静的）<ul><li>頻繁に変更されない画像に使用されます。</li><li>一度読み込んだテクスチャーを変更することはできません。</li></ul></li><li>Dynamic（動的）<ul><li>変化する可能性のあるテクスチャに使用されます。</li><li>テクスチャーを変更することが可能です。ただし、サイズを変更することはできません。</li></ul></li><li>Raw（生データ）<ul><li>動的テクスチャと同じように利用します。</li><li>主な違いは「テクスチャーにできるのは配列のみ」、「安全チェックは行われない」。</li></ul></li></ul><p>image_dataには、floatのRGBA形式の配列を入力する必要があります。</p><p>OpenCVを利用する場合は、<code>cv2.cvtColor()</code>を使ってRGBA形式にし255で割って、0から1の小数に変換する必要があります。</p><p>また、画像を描画するコマンドには、<code>dpg.draw_image()</code>や<code>dpg.add_image()</code>があります。</p><p>今回は、<code>dpg.add_image()</code>を使います。</p><p>今回はドローリストは使わず、ウィンドウに直接に、画像を描画します。</p><h2 class=""><u>サンプルスクリプト</u></h2><p>上記の方法で作成したサンプルクリプト10です。</p><p>起動時に、実行するpyファイルと同じフォルダに以下の画像「Default.png」を入れてください。</p><p><img class=" tc-image-loading" src="img/Default.png" title="Default.png"></p><p><a class="tc-tiddlylink-external" href="https://github.com/WAKU-TAKE-A/DearPyGui_Samle/blob/main/DearPyGui_Sample10.py" rel="noopener noreferrer" target="_blank">DearPyGui_Sample10.py</a></p><pre class="hljs"><code class="python hljs"><span class="hljs-comment"># サンプルスクリプト10</span>
+
+<span class="hljs-keyword">import</span> os
+<span class="hljs-keyword">import</span> dearpygui.dearpygui <span class="hljs-keyword">as</span> dpg
+<span class="hljs-keyword">import</span> easygui <span class="hljs-keyword">as</span> eg
+<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+<span class="hljs-keyword">import</span> cv2
+
+<span class="hljs-comment"># 実行するpyファイルのあるディレクトリ名の取得</span>
+DIR = os.path.dirname(__file__)
+
+<span class="hljs-comment"># DearPyGuiのアイテ「x」がすでにある場合は削除する関数</span>
+delItemIfExist = <span class="hljs-keyword">lambda</span> x: dpg.delete_item(x) <span class="hljs-keyword">if</span> dpg.does_item_exist(x) <span class="hljs-keyword">else</span> <span class="hljs-string">&quot;&quot;</span>
+
+<span class="hljs-comment"># 画像をRGBA形式で開く関数</span>
+imread_rgba = <span class="hljs-keyword">lambda</span> x : cv2.cvtColor(cv2.imread(x), cv2.COLOR_BGR2RGBA)
+
+<span class="hljs-comment"># 画像ファイルをテクスチャーレジストリに登録し、描画する関数</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">draw_image_opencv</span>(<span class="hljs-params">img, tag_texture_registry, parent=<span class="hljs-literal">None</span></span>):
+    h, w, ch = img.shape
+    <span class="hljs-keyword">if</span> ch != <span class="hljs-number">4</span>:
+        <span class="hljs-keyword">return</span>
+    delItemIfExist(<span class="hljs-string">&quot;txtr_for_this_func&quot;</span>)
+    delItemIfExist(<span class="hljs-string">&quot;img_for_this_func&quot;</span>)
+    dpg.add_static_texture(w, h, img/<span class="hljs-number">255</span>, parent=tag_texture_registry, tag=<span class="hljs-string">&quot;txtr_for_this_func&quot;</span>)
+    <span class="hljs-keyword">if</span> parent <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>:
+        <span class="hljs-keyword">return</span> dpg.add_image(<span class="hljs-string">&quot;txtr_for_this_func&quot;</span>, tag =<span class="hljs-string">&quot;img_for_this_func&quot;</span>, width=w, height=h)
+    <span class="hljs-keyword">else</span>:
+        <span class="hljs-keyword">return</span> dpg.add_image(<span class="hljs-string">&quot;txtr_for_this_func&quot;</span>, parent=parent, tag =<span class="hljs-string">&quot;img_for_this_func&quot;</span>, width=w, height=h)
+
+<span class="hljs-comment"># ボタンを押した時のコールバック</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">button_callback</span>(<span class="hljs-params">sender, app_data, user_data</span>):
+    fname = eg.fileopenbox()
+    img = imread_rgba(fname)
+    draw_image_opencv(img, <span class="hljs-string">&quot;texture_registry_01&quot;</span>, parent=<span class="hljs-string">&quot;window2&quot;</span>)
+ 
+<span class="hljs-comment"># 以下、DearPyGuiの基本構成 </span>
+dpg.create_context()
+dpg.create_viewport(title=<span class="hljs-string">&#x27;Title&#x27;</span>, width=<span class="hljs-number">600</span>, height=<span class="hljs-number">600</span>)
+
+<span class="hljs-comment"># テクスチャーレジストリの作成</span>
+<span class="hljs-keyword">with</span> dpg.texture_registry(tag=<span class="hljs-string">&quot;texture_registry_01&quot;</span>):
+    <span class="hljs-keyword">pass</span>
+
+<span class="hljs-comment"># window01の作成</span>
+<span class="hljs-keyword">with</span> dpg.window(label=<span class="hljs-string">&quot;window01&quot;</span>):
+    dpg.add_button(label=<span class="hljs-string">&quot;file open&quot;</span>, callback=button_callback)
+
+<span class="hljs-comment"># windows02の作成（Default.pngを読み込みます）</span>
+<span class="hljs-keyword">with</span> dpg.window(label=<span class="hljs-string">&quot;window02&quot;</span>, pos=(<span class="hljs-number">100</span>,<span class="hljs-number">0</span>), width=<span class="hljs-number">400</span>, height=<span class="hljs-number">400</span>, tag=<span class="hljs-string">&quot;window2&quot;</span>, horizontal_scrollbar=<span class="hljs-literal">True</span>):
+    fname = DIR + <span class="hljs-string">&quot;/Default.png&quot;</span>
+    img = imread_rgba(fname)
+    draw_image_opencv(img, <span class="hljs-string">&quot;texture_registry_01&quot;</span>)
+
+dpg.setup_dearpygui()
+dpg.show_viewport()
+dpg.start_dearpygui()
+dpg.destroy_context()</code></pre><p>実行すると、</p><p><img class=" tc-image-loading" src="img/dearpygui_008.png"></p><p>[file open]ボタンを押して、画像ファイルを選択すると、</p><p><img class=" tc-image-loading" src="img/dearpygui_009.png"></p><p>サンプル10を簡単に説明します。</p><p>ファイルオープンダイアログは「EasyGUI」を使っています。「pip install easygui」でインストールしておきましょう。とても簡単に汎用的なGUIを利用することができるモジュールです。</p><p>まず、ラムダ式を使って、DearPyGuiのアイテム「x」がすでにある場合は削除する関数「delItemIfExist」と、画像をRGBA形式で開く関数「imread_rgba」を作成します。</p><p>さらに、それらを利用して、画像ファイルをテクスチャーレジストリに登録し、描画する関数「draw_image_opencv」を作成します。すでにあるアイテム「txtr_for_this_func」「img_for_this_func」（本関数内でのみ使用します）を削除し、再作成しています。</p><p>ボタンが押されると、ファイルオープンダイアログが開き、次に「draw_image_opencv」関数が実行されます。</p><p><code>with window01()</code>内で呼び出され、window01アイテムにテクスチャーを描画する場合はparent=Noneで構いません。</p><p>今回は、window01アイテムで呼び出されて、window02アイテムに描画するので、<code>parent="window2"</code>と指定する必要があります。</p><p><code>dpg.create_context()</code>以降は、今まで繰り返してきたDearPyGuiのアイテムの作成や表示などの基本的な流れです。</p><p><code>dearpygui.dearpygui.window(**kwargs)</code>の引数の1つの「tag」について少し説明します。</p><p>「tag」はプログラムでアイテムを参照するために使用されるユニークな IDです。「label 」が使用されていない場合は、これが「label 」になります。</p><p>サンプル10では以下のようにしています。</p><pre><code>with dpg.window(tag="window01"):
+    ・・・</code></pre><p>つまり、「label 」もwindow01になります。</p><hr><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="index.html"><svg class="tc-image-home-button tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M112.985 119.502c.01-.165.015-.331.015-.499V67.568c3.137 2.948 8.076 2.884 11.134-.174a7.999 7.999 0 00-.002-11.316L70.396 2.343A7.978 7.978 0 0064.734 0a7.957 7.957 0 00-5.656 2.343L33 28.42V8.007C33 3.585 29.41 0 25 0c-4.418 0-8 3.59-8 8.007V44.42L5.342 56.078c-3.125 3.125-3.12 8.198-.002 11.316a7.999 7.999 0 0011.316-.003l.344-.343v52.945a8.11 8.11 0 000 .007c0 4.418 3.588 8 8 8h80c4.419 0 8-3.59 8-8a8.11 8.11 0 00-.015-.498zM97 112V51.574L64.737 19.31 33 51.048V112h64z" fill-rule="evenodd"></path></svg>Homeへ</a><svg class="tc-image-blank tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"></svg><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Programming.html"><svg class="tc-image-up-arrow tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M63.892.281c2.027 0 4.054.77 5.6 2.316l55.98 55.98a7.92 7.92 0 010 11.196c-3.086 3.085-8.104 3.092-11.196 0L63.894 19.393 13.513 69.774a7.92 7.92 0 01-11.196 0c-3.085-3.086-3.092-8.105 0-11.196l55.98-55.98A7.892 7.892 0 0163.893.28z"></path></svg>プログラミングの記事Topへ</a></p></div>
+</div></p>
+</section>
+</body>
+</html>
+

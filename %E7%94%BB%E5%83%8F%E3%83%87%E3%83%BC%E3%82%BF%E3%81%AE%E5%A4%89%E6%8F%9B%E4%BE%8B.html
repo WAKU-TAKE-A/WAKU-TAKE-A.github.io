@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+<head><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-80755908-2"></script><script>  window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-80755908-2');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6163695023100481" crossorigin="anonymous"></script>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="generator" content="TiddlyWiki" />
+<meta name="tiddlywiki-version" content="5.2.5" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="format-detection" content="telephone=no">
+<link id="faviconLink" rel="shortcut icon" href="favicon.ico">
+<link rel="stylesheet" href="static.css">
+<title>画像データの変換例: WAKU-TAKE-A  PROGRAM</title>
+</head>
+<body class="tc-body">
+
+<section class="tc-story-river tc-static-story-river">
+<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists  tc-tagged-ImageJ_OpenCV" data-tags="ImageJ_OpenCV" data-tiddler-title="画像データの変換例" role="article"><div class="tc-tiddler-title"><div class="tc-titlebar"><span class="tc-tiddler-controls"><button aria-expanded="false" aria-label="more" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fmore-tiddler-actions" title="More actions"></button><div class=" tc-reveal" hidden="true"></div><button aria-label="edit" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fedit" title="Edit this tiddler"></button><button aria-label="close" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fclose" title="Close this tiddler"></button></span><span><h2 class="tc-title">画像データの変換例</h2></span></div><div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div></div><div class="tc-reveal"></div><div class=" tc-reveal"><div class="tc-subtitle"><a class="tc-tiddlylink tc-tiddlylink-missing" href=".html"></a> 2nd May 2018 at 5:29am</div></div><div class=" tc-reveal"><div class="tc-tags-wrapper"><span class="tc-tag-list-item" data-tag-title="ImageJ_OpenCV"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">ImageJ_OpenCV</span><span class="tc-drop-down tc-reveal" hidden="true"></span></span></div></div><div class="tc-tiddler-body tc-reveal"><p>ImageJからOpenCVライブラリを利用する際に、ImageJの画像データとOpenCVの画像データの変換が重要となります。</p><p>具体的には以下のようになります。</p><dl><dt><code>ImageJ の ImagePlusクラス</code></dt><dd>・  ImageProcessor （2D 画像） や ImageStack （3D 画像）を含んだクラスです。</dd><dd>・ getChannelProcessor()メソッドを使って、ImageProcessorを得ることできます。</dd><dd>・ 得られるImageProcessorは、ImagePlusの画像データを参照しています。</dd></dl><p>↑↓</p><dl><dt><code>ImageJ の ImageProcessorクラス</code></dt><dd>・ getPixels()メソッドを使って、配列を得ることできます。</dd><dd>・ 得られる配列は、ImageProcessorの画像データを参照しています。</dd><dd>・ 8bitグレイスケール画像の時はbyte配列。RGB画像の時はint配列。</dd></dl><p>↑↓</p><dl><dt><code>配列（byte[]、int[]など）</code></dt><dd>・ Matクラスのget()メソッドやput()メソッドでデータのやり取りができます。</dd><dd>・ コピーです。</dd></dl><p>↑↓</p><dl><dt><code>OpneCV の Matクラス</code></dt></dl><p>「参照」とは、そのものを表しています、つまり、配列が画像データの「参照」であるである場合は、配列の数値を変更すると画像データも更新されます。</p><p>「コピー」とは、同じものを複写しています。つまり、Matクラスの内容がある配列の「コピー」だった場合には、配列の数値を変更してもMatクラスは更新されません。再度、「コピー」が必要です。</p><p>8bitグレイスケール画像の時のコードの例を以下に示します。（<a class="tc-tiddlylink-external" href="https://github.com/WAKU-TAKE-A/IJToolsUsingOpenCV/blob/master/OCV_EqualizeHist.java" rel="noopener noreferrer" target="_blank">参考にしたコードはこちら</a>）</p><pre class="hljs"><code class="java hljs"><span class="hljs-meta">@Override</span>
+<span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">run</span><span class="hljs-params">(ImageProcessor ip)</span> <span class="hljs-comment">// ExtendedPlugInFilterのrunメソッド</span>
+{
+	<span class="hljs-comment">// ImageJにおける画像データ配列</span>
+	<span class="hljs-type">int</span> <span class="hljs-variable">imw</span> <span class="hljs-operator">=</span> ip.getWidth();
+	<span class="hljs-type">int</span> <span class="hljs-variable">imh</span> <span class="hljs-operator">=</span> ip.getHeight();
+	<span class="hljs-type">byte</span>[] srcdst_bytes = (<span class="hljs-type">byte</span>[])ip.getPixels();
+
+	<span class="hljs-comment">// Matクラスの作成</span>
+	<span class="hljs-type">Mat</span> <span class="hljs-variable">src_mat</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Mat</span>(imh, imw, CvType.CV_8UC1); <span class="hljs-comment">// 元画像</span>
+	<span class="hljs-type">Mat</span> <span class="hljs-variable">dst_mat</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Mat</span>(imh, imw, CvType.CV_8UC1); <span class="hljs-comment">// 結果画像</span>
+
+	<span class="hljs-comment">// Matクラスに画像データ配列をコピーして画像処理実行</span>
+	<span class="hljs-comment">// その後、結果を画像データ配列にコピー</span>
+	src_mat.put(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, srcdst_bytes);
+	Imgproc.equalizeHist(src_mat, dst_mat);
+	dst_mat.get(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, srcdst_bytes);
+}</code></pre><p>RGB画像については、<a class="tc-tiddlylink tc-tiddlylink-resolves" href="%25E7%2594%25BB%25E5%2583%258F%25E3%2583%2587%25E3%2583%25BC%25E3%2582%25BF%25E3%2581%25AE%25E5%25A4%2589%25E6%258F%259B%25E4%25BE%258B2.html">こちら</a>を見てください。</p><hr><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="index.html"><svg class="tc-image-home-button tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M112.985 119.502c.01-.165.015-.331.015-.499V67.568c3.137 2.948 8.076 2.884 11.134-.174a7.999 7.999 0 00-.002-11.316L70.396 2.343A7.978 7.978 0 0064.734 0a7.957 7.957 0 00-5.656 2.343L33 28.42V8.007C33 3.585 29.41 0 25 0c-4.418 0-8 3.59-8 8.007V44.42L5.342 56.078c-3.125 3.125-3.12 8.198-.002 11.316a7.999 7.999 0 0011.316-.003l.344-.343v52.945a8.11 8.11 0 000 .007c0 4.418 3.588 8 8 8h80c4.419 0 8-3.59 8-8a8.11 8.11 0 00-.015-.498zM97 112V51.574L64.737 19.31 33 51.048V112h64z" fill-rule="evenodd"></path></svg>Homeへ</a><svg class="tc-image-blank tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"></svg><a class="tc-tiddlylink tc-tiddlylink-resolves" href="ImageJ.html"><svg class="tc-image-up-arrow tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M63.892.281c2.027 0 4.054.77 5.6 2.316l55.98 55.98a7.92 7.92 0 010 11.196c-3.086 3.085-8.104 3.092-11.196 0L63.894 19.393 13.513 69.774a7.92 7.92 0 01-11.196 0c-3.085-3.086-3.092-8.105 0-11.196l55.98-55.98A7.892 7.892 0 0163.893.28z"></path></svg>ImageJの記事Topへ</a></p></div>
+</div></p>
+</section>
+</body>
+</html>
+

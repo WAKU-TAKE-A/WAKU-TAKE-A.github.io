@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+<head><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-80755908-2"></script><script>  window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-80755908-2');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6163695023100481" crossorigin="anonymous"></script>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="generator" content="TiddlyWiki" />
+<meta name="tiddlywiki-version" content="5.2.5" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="format-detection" content="telephone=no">
+<link id="faviconLink" rel="shortcut icon" href="favicon.ico">
+<link rel="stylesheet" href="static.css">
+<title>Node-REDで画像処理(sharp): WAKU-TAKE-A  PROGRAM</title>
+</head>
+<body class="tc-body">
+
+<section class="tc-story-river tc-static-story-river">
+<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists  tc-tagged-Node-RED" data-tags="Node-RED" data-tiddler-title="node-red_sharp_001" role="article"><div class="tc-tiddler-title"><div class="tc-titlebar"><span class="tc-tiddler-controls"><button aria-expanded="false" aria-label="more" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fmore-tiddler-actions" title="More actions"></button><div class=" tc-reveal" hidden="true"></div><button aria-label="edit" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fedit" title="Edit this tiddler"></button><button aria-label="close" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fclose" title="Close this tiddler"></button></span><span><h2 class="tc-title">Node-REDで画像処理(sharp)</h2></span></div><div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div></div><div class="tc-reveal"></div><div class=" tc-reveal"><div class="tc-subtitle"><a class="tc-tiddlylink tc-tiddlylink-missing" href=".html"></a> 17th October 2021 at 8:26pm</div></div><div class=" tc-reveal"><div class="tc-tags-wrapper"><span class="tc-tag-list-item" data-tag-title="Node-RED"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">Node-RED</span><span class="tc-drop-down tc-reveal" hidden="true"></span></span></div></div><div class="tc-tiddler-body tc-reveal"><p>Node-RED（というかJavaScript）で画像処理を簡単に行いたい場合、「Sharp」モジュールを使うのが良いと思います。</p><h2 class=""><u>インストール手順</u></h2><p>Node.js バージョン12系／14系も、次のコマンドでインストールすることができます。</p><pre class="hljs"><code class="javascript hljs">&gt; npm install -g sharp</code></pre><p>Node-REDのバージョン1.3以降の「<a class="tc-tiddlylink-external" href="https://nodered.jp/blog/2021/04/08/version-1-3-released#function-node-use-of-npm-modules" rel="noopener noreferrer" target="_blank">Functionノードにおける外部npmモジュールの簡単に利用できる</a>」機能を使えば、簡単に使えます。</p><p><img class=" tc-image-loading" src="img/opencv4nodejs_sharp_003.jpg"></p><p>ただし、「nrlint」モジュール（lint機能）とは相性が悪いようです。</p><p><img class=" tc-image-loading" src="img/opencv4nodejs_sharp_001.jpg"></p><p><img class=" tc-image-loading" src="img/opencv4nodejs_sharp_002.jpg"><br>
+こんな警告がでます。しかし、普通に動作するので、右クリックして、このノードもしくはフローにおいて無視（ignore）設定しましょう。</p><h2 class=""><u>サンプルフロー</u></h2><p>まず、右上の <img class=" tc-image-loading" src="img/node-red_subflow_001.jpg"> マークをクリックし、「パレットの管理」を選択してください。「node-red-contrib-image-output」がインストールされていなければ、「ノードを追加」⇒「ノードを検索」⇒「node-red-contrib-image-output」で追加してください。</p><p>次に、以下のようにノードを配置し接続します。</p><p><img class=" tc-image-loading" src="img/opencv4nodejs_sharp_004.jpg"></p><dl><dt>①「inject」ノード</dt><dd>単純にトリガーするためのノードです。</dd><dt>②「Function」ノード</dt><dd><code>c:/tmp/lena.jpg</code>（適当に書き換えてください）を読み込んで、ぼかし処理をし、バッファー変換します。</dd><dd><img class=" tc-image-loading" src="img/opencv4nodejs_sharp_005.jpg"></dd><dt>③「image」ノード</dt><dd>単純に配置するだけです。画像表示用。</dd></dl><p>配置と接続が終了したら、「デプロイ」ボタンを押します。<br>
+<img class=" tc-image-loading" src="img/node-red_http_005.jpg"></p><p>①「inject」ノードのボタンを押すと、「image」ノードの下に画像が表示されます。<br>
+<img class=" tc-image-loading" src="img/opencv4nodejs_sharp_006.jpg"></p><p>以下はフローをJSON形式で書き出したものです。以下をコピーして、Node-REDの右上の <img class=" tc-image-loading" src="img/node-red_subflow_001.jpg"> マークをクリックし、
+「読み込み」で開いたテキストボックスにペーストしてください。上のフローを読み込むことができます。</p><p><style>
+  #wrapper {
+    height: 200px;
+    width: 500px;
+    overflow-y: scroll;
+  }
+
+  #contents {
+    background-color: white;
+  }
+</style></p><p><div id="wrapper">
+  <div id="contents">
+    <pre><code>[
+    {
+        "id": "b4ef144d424bce74",
+        "type": "inject",
+        "z": "c2f97dc56d34ab2d",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 200,
+        "y": 120,
+        "wires": [
+            [
+                "a2f6f3adcb37ef37"
+            ]
+        ]
+    },
+    {
+        "id": "a2f6f3adcb37ef37",
+        "type": "function",
+        "z": "c2f97dc56d34ab2d",
+        "name": "",
+        "func": "msg.payload = await sharp(\"c:/tmp/lena.jpg\")\n    .blur(10)\n    .toBuffer();\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [
+            {
+                "var": "sharp",
+                "module": "sharp"
+            }
+        ],
+        "x": 380,
+        "y": 120,
+        "wires": [
+            [
+                "7c7a4c1120d017a7"
+            ]
+        ]
+    },
+    {
+        "id": "7c7a4c1120d017a7",
+        "type": "image",
+        "z": "c2f97dc56d34ab2d",
+        "name": "",
+        "width": 160,
+        "data": "payload",
+        "dataType": "msg",
+        "thumbnail": false,
+        "active": true,
+        "pass": false,
+        "outputs": 0,
+        "x": 560,
+        "y": 120,
+        "wires": []
+    }
+]</code></pre>
+  </div>
+</div></p><hr><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="index.html"><svg class="tc-image-home-button tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M112.985 119.502c.01-.165.015-.331.015-.499V67.568c3.137 2.948 8.076 2.884 11.134-.174a7.999 7.999 0 00-.002-11.316L70.396 2.343A7.978 7.978 0 0064.734 0a7.957 7.957 0 00-5.656 2.343L33 28.42V8.007C33 3.585 29.41 0 25 0c-4.418 0-8 3.59-8 8.007V44.42L5.342 56.078c-3.125 3.125-3.12 8.198-.002 11.316a7.999 7.999 0 0011.316-.003l.344-.343v52.945a8.11 8.11 0 000 .007c0 4.418 3.588 8 8 8h80c4.419 0 8-3.59 8-8a8.11 8.11 0 00-.015-.498zM97 112V51.574L64.737 19.31 33 51.048V112h64z" fill-rule="evenodd"></path></svg>Homeへ</a><svg class="tc-image-blank tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"></svg><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Node-RED.html"><svg class="tc-image-up-arrow tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M63.892.281c2.027 0 4.054.77 5.6 2.316l55.98 55.98a7.92 7.92 0 010 11.196c-3.086 3.085-8.104 3.092-11.196 0L63.894 19.393 13.513 69.774a7.92 7.92 0 01-11.196 0c-3.085-3.086-3.092-8.105 0-11.196l55.98-55.98A7.892 7.892 0 0163.893.28z"></path></svg>Node-REDの記事Topへ</a></p></div>
+</div></p>
+</section>
+</body>
+</html>
+

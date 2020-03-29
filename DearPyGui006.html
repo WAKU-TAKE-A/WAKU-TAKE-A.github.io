@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+<head><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-80755908-2"></script><script>  window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-80755908-2');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6163695023100481" crossorigin="anonymous"></script>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="generator" content="TiddlyWiki" />
+<meta name="tiddlywiki-version" content="5.2.5" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="format-detection" content="telephone=no">
+<link id="faviconLink" rel="shortcut icon" href="favicon.ico">
+<link rel="stylesheet" href="static.css">
+<title>（06）Dear PyGuiでWEBカメラ表示アプリ: WAKU-TAKE-A  PROGRAM</title>
+</head>
+<body class="tc-body">
+
+<section class="tc-story-river tc-static-story-river">
+<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists  tc-tagged-DearPyGui tc-tagged-Programming" data-tags="DearPyGui Programming" data-tiddler-title="DearPyGui006" role="article"><div class="tc-tiddler-title"><div class="tc-titlebar"><span class="tc-tiddler-controls"><button aria-expanded="false" aria-label="more" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fmore-tiddler-actions" title="More actions"></button><div class=" tc-reveal" hidden="true"></div><button aria-label="edit" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fedit" title="Edit this tiddler"></button><button aria-label="close" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fclose" title="Close this tiddler"></button></span><span><h2 class="tc-title">（06）Dear PyGuiでWEBカメラ表示アプリ</h2></span></div><div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div></div><div class="tc-reveal"></div><div class=" tc-reveal"><div class="tc-subtitle"><a class="tc-tiddlylink tc-tiddlylink-missing" href=".html"></a> 2nd January 2023 at 9:31pm</div></div><div class=" tc-reveal"><div class="tc-tags-wrapper"><span class="tc-tag-list-item" data-tag-title="DearPyGui"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">DearPyGui</span><span class="tc-drop-down tc-reveal" hidden="true"></span></span><span class="tc-tag-list-item" data-tag-title="Programming"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">Programming</span><span class="tc-drop-down tc-reveal" hidden="true"></span></span></div></div><div class="tc-tiddler-body tc-reveal"><p>Dear PyGuiを使って、WEBカメラによる撮像画像（OpenCVのVideoCaptureクラスを利用）を表示するアプリケーションを作ってみます。</p><p>アプリケーションの動作としては、以下の通りです。</p><ol><li>アプリケーション起動時にWEBカメラの撮像画像サイズを取得します。</li><li>上記サイズで「動的テクスチャー（Dynamic Texture）」を作成します。</li><li>[start]ボタンで連続撮像を開始し、画像を「動的テクスチャー」に登録します。</li><li>[stop]ボタンで連続撮像を中止します。</li></ol><h2 class=""><u>動的テクスチャー（Dynamic Texture）</u></h2><p>テクスチャーには以下の3タイプがあります。今回は動的テクスチャーを利用します。</p><ul><li>Static（静的）<ul><li>頻繁に変更されない画像に使用されます。</li><li>一度読み込んだテクスチャーを変更することはできません。</li></ul></li><li>Dynamic（動的）<ul><li>変化する可能性のあるテクスチャに使用されます。</li><li>テクスチャーを変更することが可能です。ただし、サイズを変更することはできません。</li></ul></li><li>Raw（生データ）<ul><li>動的テクスチャと同じように利用します。</li><li>主な違いは「テクスチャーにできるのは配列のみ」、「安全チェックは行われない」。</li></ul></li></ul><p>サイズ変更はできませんので、起動時に作成します。</p><h2 class=""><u>サンプルスクリプト</u></h2><p>以下は、サンプルクリプト11です。</p><p><a class="tc-tiddlylink-external" href="https://github.com/WAKU-TAKE-A/DearPyGui_Samle/blob/main/DearPyGui_Sample11.py" rel="noopener noreferrer" target="_blank">DearPyGui_Sample11.py</a></p><pre class="hljs"><code class="python hljs"><span class="hljs-comment"># サンプルスクリプト11</span>
+
+<span class="hljs-keyword">import</span> os
+<span class="hljs-keyword">import</span> threading
+<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+<span class="hljs-keyword">import</span> cv2
+<span class="hljs-keyword">import</span> dearpygui.dearpygui <span class="hljs-keyword">as</span> dpg
+
+<span class="hljs-comment"># UVCカメラは0で起動します。適当な番号にしてください。</span>
+<span class="hljs-comment"># この時点でテクスチャーのサイズが決まります。</span>
+CAP = cv2.VideoCapture(<span class="hljs-number">0</span>)
+ret, frame = CAP.read()
+CAP_W = <span class="hljs-built_in">int</span>(CAP.get(cv2.CAP_PROP_FRAME_WIDTH))
+CAP_H = <span class="hljs-built_in">int</span>(CAP.get(cv2.CAP_PROP_FRAME_HEIGHT))
+<span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Width = <span class="hljs-subst">{CAP_W}</span>&quot;</span>)
+<span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Height = <span class="hljs-subst">{CAP_H}</span>&quot;</span>)
+
+<span class="hljs-comment"># 初期は[stop]の状態</span>
+isContinuousGrab = <span class="hljs-literal">False</span>
+
+<span class="hljs-comment"># 撮像した画像</span>
+frame = <span class="hljs-literal">None</span>
+
+<span class="hljs-comment"># テクスチャー「dynamic_texture」に画像を登録します</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">set_image_to_dynamic_texture</span>(<span class="hljs-params">image</span>):
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGBA)
+    dpg.set_value(<span class="hljs-string">&quot;dynamic_texture&quot;</span>, image/<span class="hljs-number">255</span>)
+
+<span class="hljs-comment"># 連続撮像を行い、テクスチャー「dynamic_texture」に画像を登録します</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">grab_and_set_image</span>():
+    <span class="hljs-keyword">global</span> frame
+    <span class="hljs-keyword">while</span> isContinuousGrab:
+        ret, frame = CAP.read()
+        set_image_to_dynamic_texture(frame)
+
+<span class="hljs-comment"># [start]ボタンを押した時のコールバック</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">button_start</span>(<span class="hljs-params">sender, app_data, user_data</span>):
+    <span class="hljs-keyword">global</span> isContinuousGrab
+    <span class="hljs-keyword">if</span> isContinuousGrab <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">True</span>:
+        isContinuousGrab = <span class="hljs-literal">True</span>
+        thread = threading.Thread(target=grab_and_set_image)
+        thread.start()
+
+<span class="hljs-comment"># [stop]ボタンを押した時のコールバック</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">button_stop</span>(<span class="hljs-params">sender, app_data, user_data</span>):
+    <span class="hljs-keyword">global</span> isContinuousGrab
+    <span class="hljs-keyword">if</span> isContinuousGrab <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">False</span>:
+        isContinuousGrab = <span class="hljs-literal">False</span>
+
+<span class="hljs-comment"># 以下、DearPyGuiの基本構成     </span>
+dpg.create_context()
+dpg.create_viewport(title=<span class="hljs-string">&#x27;Title&#x27;</span>, width=<span class="hljs-number">300</span>, height=<span class="hljs-number">300</span>)
+
+<span class="hljs-comment"># テクスチャーレジストリの作成</span>
+<span class="hljs-keyword">with</span> dpg.texture_registry():
+    img_white = np.ones((CAP_W, CAP_H, <span class="hljs-number">4</span>), np.uint8)
+    dpg.add_dynamic_texture(CAP_W, CAP_H, img_white, tag=<span class="hljs-string">&quot;dynamic_texture&quot;</span>)
+
+<span class="hljs-comment"># window01の作成（ボタンの作成）</span>
+<span class="hljs-keyword">with</span> dpg.window(label=<span class="hljs-string">&quot;window01&quot;</span>) <span class="hljs-keyword">as</span> parent_window01:
+    dpg.add_button(label=<span class="hljs-string">&quot;start&quot;</span>, callback=button_start)
+    dpg.add_button(label=<span class="hljs-string">&quot;stop&quot;</span>, callback=button_stop)
+
+<span class="hljs-comment"># window02の作成（画像の表示）</span>
+<span class="hljs-keyword">with</span> dpg.window(label=<span class="hljs-string">&quot;window02&quot;</span>, pos=(<span class="hljs-number">100</span>,<span class="hljs-number">0</span>)) <span class="hljs-keyword">as</span> parent_window02:
+    dpg.add_image(<span class="hljs-string">&quot;dynamic_texture&quot;</span>, tag =<span class="hljs-string">&quot;dynamic_image&quot;</span>)
+
+dpg.setup_dearpygui()
+dpg.show_viewport()
+dpg.start_dearpygui()
+dpg.destroy_context()</code></pre><p>実行すると、</p><p><img class=" tc-image-loading" src="img/dearpygui_010.png"></p><p>[start]ボタンを押すと、連続撮像を開始します。[stop]ボタンを押すと、中止します。</p><p><img class=" tc-image-loading" src="img/dearpygui_011.png"></p><p>サンプル11を簡単に説明します。</p><p>まず、<code>CAP = cv2.VideoCapture(0)</code>以降で、起動時にWEBカメラの起動と撮像画像サイズの取得を行います。「ID=0」としていますので、適当に変更してください。</p><p>連続撮像用のフラグ「isContinuousGrab」は初期はFalseにしています。</p><p>次に、「関数」や「コールバック関数」の設定をしています。</p><dl><dt><code>def set_image_to_dynamic_texture(image)</code></dt><dd>・テクスチャーに画像をセットする関数です。</dd><dd>・セットできる形式は、floatのRGBA形式です。</dd><dd>・テクスチャーを生成しなおす必要はありません。静的テクスチャーの時よりもコードが簡素です。</dd><dt><code>def grab_and_set_image()</code></dt><dd>・ 連続撮像し、撮像した画像を引数に「set_image_to_dynamic_texture」を実行します。</dd><dd>・isContinuousGrabがTrueの時のみループします。</dd><dd>・今後のことを考えて、最後に撮像した画像はグローバル変数にしておきます。</dd><dt><code>button_start(sender, app_data, user_data)</code></dt><dd>・[start]ボタンを押した時のコールバックです。</dd><dd>・フリーズしないようにスレッドで実行しています。</dd><dt><code>button_stop(sender, app_data, user_data)</code></dt><dd>・[stop]ボタンを押した時のコールバックです。</dd><dd>・isContinuousGrabをFalseにするだけです。</dd></dl><p>最後に、<code>dpg.create_context()</code>以降は、今まで繰り返してきたDearPyGuiのアイテムの作成や表示などの基本的な流れです。あまり難しい部分はないかと思います。</p><p><code>with dpg.texture_registry()</code>でテクスチャーを、WEBカメラの撮像画像サイズで作成しています。初期は、真っ白画像（すべて1）です。</p><p>これだけのコードで、「カメラからの画像の取得」～「ボタンのコールバック」～「画像の表示」までできてしまうのは、なかなかではないでしょうか。</p><hr><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="index.html"><svg class="tc-image-home-button tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M112.985 119.502c.01-.165.015-.331.015-.499V67.568c3.137 2.948 8.076 2.884 11.134-.174a7.999 7.999 0 00-.002-11.316L70.396 2.343A7.978 7.978 0 0064.734 0a7.957 7.957 0 00-5.656 2.343L33 28.42V8.007C33 3.585 29.41 0 25 0c-4.418 0-8 3.59-8 8.007V44.42L5.342 56.078c-3.125 3.125-3.12 8.198-.002 11.316a7.999 7.999 0 0011.316-.003l.344-.343v52.945a8.11 8.11 0 000 .007c0 4.418 3.588 8 8 8h80c4.419 0 8-3.59 8-8a8.11 8.11 0 00-.015-.498zM97 112V51.574L64.737 19.31 33 51.048V112h64z" fill-rule="evenodd"></path></svg>Homeへ</a><svg class="tc-image-blank tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"></svg><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Programming.html"><svg class="tc-image-up-arrow tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M63.892.281c2.027 0 4.054.77 5.6 2.316l55.98 55.98a7.92 7.92 0 010 11.196c-3.086 3.085-8.104 3.092-11.196 0L63.894 19.393 13.513 69.774a7.92 7.92 0 01-11.196 0c-3.085-3.086-3.092-8.105 0-11.196l55.98-55.98A7.892 7.892 0 0163.893.28z"></path></svg>プログラミングの記事Topへ</a></p></div>
+</div></p>
+</section>
+</body>
+</html>
+

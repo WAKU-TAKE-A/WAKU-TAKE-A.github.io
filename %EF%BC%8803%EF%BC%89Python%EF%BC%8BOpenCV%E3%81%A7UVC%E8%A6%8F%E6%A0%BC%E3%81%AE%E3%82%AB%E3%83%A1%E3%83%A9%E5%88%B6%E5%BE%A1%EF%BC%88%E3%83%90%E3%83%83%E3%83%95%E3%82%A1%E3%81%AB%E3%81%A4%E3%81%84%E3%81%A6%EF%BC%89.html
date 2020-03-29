@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<head><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-80755908-2"></script><script>  window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-80755908-2');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6163695023100481" crossorigin="anonymous"></script>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="generator" content="TiddlyWiki" />
+<meta name="tiddlywiki-version" content="5.2.5" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="format-detection" content="telephone=no">
+<link id="faviconLink" rel="shortcut icon" href="favicon.ico">
+<link rel="stylesheet" href="static.css">
+<title>（03）Python＋OpenCVでUVC規格のカメラ制御（バッファについて）: WAKU-TAKE-A  PROGRAM</title>
+</head>
+<body class="tc-body">
+
+<section class="tc-story-river tc-static-story-river">
+<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists  tc-tagged-Python_Camera tc-tagged-Programming" data-tags="Python_Camera Programming" data-tiddler-title="（03）Python＋OpenCVでUVC規格のカメラ制御（バッファについて）" role="article"><div class="tc-tiddler-title"><div class="tc-titlebar"><span class="tc-tiddler-controls"><button aria-expanded="false" aria-label="more" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fmore-tiddler-actions" title="More actions"></button><div class=" tc-reveal" hidden="true"></div><button aria-label="edit" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fedit" title="Edit this tiddler"></button><button aria-label="close" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fclose" title="Close this tiddler"></button></span><span><h2 class="tc-title">（03）Python＋OpenCVでUVC規格のカメラ制御（バッファについて）</h2></span></div><div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div></div><div class="tc-reveal"></div><div class=" tc-reveal"><div class="tc-subtitle"><a class="tc-tiddlylink tc-tiddlylink-missing" href=".html"></a> 2nd January 2023 at 11:20am</div></div><div class=" tc-reveal"><div class="tc-tags-wrapper"><span class="tc-tag-list-item" data-tag-title="Programming"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">Programming</span><span class="tc-drop-down tc-reveal" hidden="true"></span></span><span class="tc-tag-list-item" data-tag-title="Python_Camera"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">Python_Camera</span><span class="tc-drop-down tc-reveal" hidden="true"></span></span></div></div><div class="tc-tiddler-body tc-reveal"><p>WEBカメラなどUVC規格のカメラから、Pythonで画像を取得する方法で一番有名なのは、OpenCVのVideoCaptureクラスを使う方法ではいでしょうか。</p><p>以下のような簡単なプログラムで画像が取得できます。（事前に<code>pip install opencv-python</code>しておいてください）</p><pre class="hljs"><code class="python hljs"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">import</span> cv2
+<span class="hljs-meta">&gt;&gt;&gt; </span>cap = cv2.VideoCapture(<span class="hljs-number">0</span>) <span class="hljs-comment"># 複数ある場合は適切なIDを指定してください</span>
+<span class="hljs-meta">&gt;&gt;&gt; </span>ret, img = cap.read() <span class="hljs-comment"># ret必須です</span></code></pre><p>表示を行いたい時は、以下を実行してください。</p><pre class="hljs"><code class="python hljs"><span class="hljs-meta">&gt;&gt;&gt; </span>cv2.imshow(<span class="hljs-string">&quot;img&quot;</span>, img)
+<span class="hljs-meta">&gt;&gt;&gt; </span>cv2.waitKey(<span class="hljs-number">1</span>)</code></pre><p>さて、<code>ret, img = VideoCapture.read()</code>は、<code>ret = VideoCapture.grab()</code>と<code>ret, img = VideoCapture.retrieve()</code>が一度ずつ行われます。それぞれのメソッドの特徴を以下にあげます。</p><dl><dt>VideoCapture.grab()</dt><dd>・カメラから次のフレームを取得し、バッファーに入れます。</dd><dt>VideoCapture.retrieve()</dt><dd>・バッファにあるフレームを画像配列（NumPyの配列）にして取得します。</dd><dd>・バッファが空の時、<code>ret = False</code>、<code>img = None</code>。</dd><dd>・バッファが空ではない時には画像を取り込みますが、キューではないので空にしたりはしません。<code>grab()</code>せずに<code>retrieve()</code>を連続実行すると同じ画像が撮り込まれます。（OpenCV4.1.0）</dd></dl><p><code>grab()</code>してから、<code>retrieve()</code>した場合。</p><pre class="hljs"><code class="python hljs"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">import</span> cv2
+<span class="hljs-meta">&gt;&gt;&gt; </span>cap = cv2.VideoCapture(<span class="hljs-number">0</span>)
+<span class="hljs-meta">&gt;&gt;&gt; </span>cap.grab()
+<span class="hljs-literal">True</span> ←撮像成功
+<span class="hljs-meta">&gt;&gt;&gt; </span>ret, img = cap.retrieve()
+<span class="hljs-meta">&gt;&gt;&gt; </span>ret
+<span class="hljs-literal">True</span> ←画像として取り込み成功
+<span class="hljs-meta">&gt;&gt;&gt; </span>ret, img = cap.retrieve()
+<span class="hljs-meta">&gt;&gt;&gt; </span>ret
+<span class="hljs-literal">True</span> ←画像として取り込み成功、ただし上と同じ画像</code></pre><p><code>grab()</code>せずに、<code>retrieve()</code>した場合。</p><pre class="hljs"><code class="python hljs"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">import</span> cv2
+<span class="hljs-meta">&gt;&gt;&gt; </span>cap = cv2.VideoCapture(<span class="hljs-number">0</span>)
+<span class="hljs-meta">&gt;&gt;&gt; </span>ret, img = cap.retrieve()
+<span class="hljs-meta">&gt;&gt;&gt; </span>ret
+<span class="hljs-literal">False</span> ←取り込み失敗
+<span class="hljs-meta">&gt;&gt;&gt; </span>img <span class="hljs-keyword">is</span> <span class="hljs-literal">None</span>
+<span class="hljs-literal">True</span> ←imgは<span class="hljs-literal">None</span></code></pre><p>マルチスレッドなどで実行すると、撮像が追随しない場合があります。つまり古い画像が取り込まれる場合があります。常に新しい画像を取得したい場合には工夫が必要です。解決方法が以下のページにありました。</p><p><a class="tc-tiddlylink-external" href="https://stackoverflow.com/questions/43665208/how-to-get-the-latest-frame-from-capture-device-camera-in-opencv-python" rel="noopener noreferrer" target="_blank">how to get the latest frame from capture device (camera) in opencv [python]</a></p><p>Queueモジュールを利用します。まず、別スレッドで以下を常時繰り返します。<br>
+<code>VideoCapture.read()</code>で画像を撮り込む ⇒ キューに画像が入っている時は画像を取り出し、空の時はキューに画像を入れる</p><p>次に、メインスレッドからキューに入っている画像を撮りだします。常に新しい画像になっているはずです。仮にキューが空だった時は、キューに画像が入るまで待機してくれます。（<code>Queue.get()</code>の機能）</p><p><a class="tc-tiddlylink-external" href="https://github.com/WAKU-TAKE-A/bufferlesscapture_sample001" rel="noopener noreferrer" target="_blank">こちら</a>に自作サンプル「camera_uvc.py」を置いておきます。ダウンロードして、Libフォルダにコピーしてください。以下のような感じで使います。</p><pre class="hljs"><code class="python hljs"><span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-keyword">import</span> camera_uvc <span class="hljs-keyword">import</span> *
+<span class="hljs-meta">&gt;&gt;&gt; </span>cap = BufferlessCapture()
+<span class="hljs-meta">&gt;&gt;&gt; </span>img = cap.read()
+&gt;&gt;&gt;
+<span class="hljs-meta">&gt;&gt;&gt; </span><span class="hljs-built_in">help</span>(BufferlessCapture) ← Helpでメソッドの一覧が見れます
+Help on <span class="hljs-keyword">class</span> <span class="hljs-title class_">BufferlessCapture</span> <span class="hljs-keyword">in</span> module camera_uvc:
+
+<span class="hljs-keyword">class</span> <span class="hljs-title class_">BufferlessCapture</span>(builtins.<span class="hljs-built_in">object</span>)
+ |  Get the latest frame <span class="hljs-keyword">from</span> capture device (camera).
+ |  
+ |  Methods defined here:
+ |  
+ |  __init__(self, <span class="hljs-built_in">id</span>=<span class="hljs-number">0</span>, width=<span class="hljs-number">640</span>, height=<span class="hljs-number">480</span>, exposure=-<span class="hljs-number">6</span>)
+ |      Initialize
+ |  
+ |  read(self)
+ |      Read</code></pre><h2 class=""><u>ひとこと</u></h2><p>ライブラリによって撮像の考え方がずいぶん異なるな～と思いました（例えば、opencv-pythonとpypylon）。理解するのが大変。</p><hr><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="index.html"><svg class="tc-image-home-button tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M112.985 119.502c.01-.165.015-.331.015-.499V67.568c3.137 2.948 8.076 2.884 11.134-.174a7.999 7.999 0 00-.002-11.316L70.396 2.343A7.978 7.978 0 0064.734 0a7.957 7.957 0 00-5.656 2.343L33 28.42V8.007C33 3.585 29.41 0 25 0c-4.418 0-8 3.59-8 8.007V44.42L5.342 56.078c-3.125 3.125-3.12 8.198-.002 11.316a7.999 7.999 0 0011.316-.003l.344-.343v52.945a8.11 8.11 0 000 .007c0 4.418 3.588 8 8 8h80c4.419 0 8-3.59 8-8a8.11 8.11 0 00-.015-.498zM97 112V51.574L64.737 19.31 33 51.048V112h64z" fill-rule="evenodd"></path></svg>Homeへ</a><svg class="tc-image-blank tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"></svg><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Programming.html"><svg class="tc-image-up-arrow tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M63.892.281c2.027 0 4.054.77 5.6 2.316l55.98 55.98a7.92 7.92 0 010 11.196c-3.086 3.085-8.104 3.092-11.196 0L63.894 19.393 13.513 69.774a7.92 7.92 0 01-11.196 0c-3.085-3.086-3.092-8.105 0-11.196l55.98-55.98A7.892 7.892 0 0163.893.28z"></path></svg>プログラミングの記事Topへ</a></p></div>
+</div></p>
+</section>
+</body>
+</html>
+

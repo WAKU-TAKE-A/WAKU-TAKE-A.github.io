@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+<head><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-80755908-2"></script><script>  window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-80755908-2');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6163695023100481" crossorigin="anonymous"></script>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="generator" content="TiddlyWiki" />
+<meta name="tiddlywiki-version" content="5.2.5" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="format-detection" content="telephone=no">
+<link id="faviconLink" rel="shortcut icon" href="favicon.ico">
+<link rel="stylesheet" href="static.css">
+<title>Node-REDで画像処理(opencv4nodejs) その1: WAKU-TAKE-A  PROGRAM</title>
+</head>
+<body class="tc-body">
+
+<section class="tc-story-river tc-static-story-river">
+<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists  tc-tagged-Node-RED" data-tags="Node-RED" data-tiddler-title="node-red_opencv_001" role="article"><div class="tc-tiddler-title"><div class="tc-titlebar"><span class="tc-tiddler-controls"><button aria-expanded="false" aria-label="more" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fmore-tiddler-actions" title="More actions"></button><div class=" tc-reveal" hidden="true"></div><button aria-label="edit" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fedit" title="Edit this tiddler"></button><button aria-label="close" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fclose" title="Close this tiddler"></button></span><span><h2 class="tc-title">Node-REDで画像処理(opencv4nodejs) その1</h2></span></div><div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div></div><div class="tc-reveal"></div><div class=" tc-reveal"><div class="tc-subtitle"><a class="tc-tiddlylink tc-tiddlylink-missing" href=".html"></a> 26th February 2023 at 10:20pm</div></div><div class=" tc-reveal"><div class="tc-tags-wrapper"><span class="tc-tag-list-item" data-tag-title="Node-RED"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">Node-RED</span><span class="tc-drop-down tc-reveal" hidden="true"></span></span></div></div><div class="tc-tiddler-body tc-reveal"><p>「<a class="tc-tiddlylink-external" href="https://github.com/justadudewhohacks/opencv4nodejs" rel="noopener noreferrer" target="_blank">opencv4nodejs</a>」はNode.js上で画像処理ライブラリ「OpenCV」を利用するためのモジュールです。</p><p>Node-REDから「opencv4nodejs」を利用する手順を説明します。今回は「opencv4nodejs」のインストール手順について説明します。</p><p>以下は、Windows10 64bit + Node.jsバージョン14系での手順です。</p><h2 class=""><u>インストール手順</u></h2><p>「opencv4nodejs」はバイナリーでは提供されていません。自PCでビルドする必要があります。</p><p>ビルド自体は「npm install ～」で実行してくれるので難しくはないのですが、ビルド環境の準備をする必要があります。</p><p>まず、Node.jsのネイティブアドオンモジュール（C++で作成したモジュール）をコンパイルするためツール「<a class="tc-tiddlylink-external" href="https://github.com/nodejs/node-gyp" rel="noopener noreferrer" target="_blank">node-gyp</a>」をインストールします。</p><p>PowerShellを管理者権限で起動し以下を実行します。</p><pre class="hljs"><code class="shell hljs"><span class="hljs-meta">&gt; </span><span class="language-bash">npm install -g node-gyp</span></code></pre><p>次に、「windows-build-tools」をインストールします。</p><pre class="hljs"><code class="shell hljs"><span class="hljs-meta">&gt; </span><span class="language-bash">npm install -g --production windows-build-tools</span></code></pre><p>「windows-build-tools」のインストールは曲者です。私の環境では何時間も固まったようになり「Build Tools for Visual Studio」のインストールが失敗します。</p><p>何時間待っても終了しない時は、インストール中のPowerShellを閉じ、<code>C:\Users\[YOUR ACCOUNT]\.windows-build-tools</code>内の<code>vs_BuildTools.exe</code>を直接実行してみるのも手かもしれません。</p><p><img class=" tc-image-loading" src="img/opencv4nodejs_inst_003.jpg"></p><p>以下のような画面が表示されます。</p><p><img class=" tc-image-loading" src="img/opencv4nodejs_inst_001.jpg"></p><p><img class=" tc-image-loading" src="img/opencv4nodejs_inst_002.jpg"></p><p>下の方は「セットアップが一時停止されました」と表示されていますが、これが何時間も固まった時の状態だと思われます。私は最新のものをインストールしました。（上の方）</p><p>「node-gyp」はPythonを利用します。2021/8において、推奨はPython v3.6、v3.7、v3.8、v3.9のようです。</p><p>今回は「windows-build-tools」に入っているPython v2.7は使わずに、Python v3.9をインストールして使います。(※1)</p><p><a class="tc-tiddlylink-external" href="https://www.python.org/downloads/" rel="noopener noreferrer" target="_blank">こちら</a>からv3.9系をダウンロードししました。インストール時にPathの追加する設定を忘れないようにしてください。</p><p>インストール後に以下を実行してください。</p><pre><code>&gt; python --version</code></pre><p>Pythonのバージョンが適切なバージョンであることを確認してください。</p><p>次に、<a class="tc-tiddlylink-external" href="https://cmake.org/download/" rel="noopener noreferrer" target="_blank">CMake</a>をインストールします。途中でPathを追加（add）するかを質問されるので、追加してください。デフォルトは追加しないになっていますので注意してください。</p><p>インストール後に以下を実行してください。</p><pre class="hljs"><code class="shell hljs"><span class="hljs-meta">&gt; </span><span class="language-bash">cmake --version</span></code></pre><p>CMakeのバージョンが表示されることを確認してください。</p><p>さらにに、<a class="tc-tiddlylink-external" href="https://gitforwindows.org/" rel="noopener noreferrer" target="_blank">Git for Windows</a>をインストールします。基本、デフォルト設定でインストールして問題ありませんが、エクスプローラの右クリックメニューにGitのコマンドを表示したくない場合は、コンポーネント選択画面で「Windows Explorer Integration」をOFFにしてください。</p><p><img class=" tc-image-loading" src="img/opencv4nodejs_inst_012.jpg"></p><p>インストール後に以下を実行してください。</p><pre class="hljs"><code class="shell hljs"><span class="hljs-meta">&gt; </span><span class="language-bash">git --version</span></code></pre><p>Gitのバージョンが表示されることを確認してください。</p><p>Python、Cmake、GitのPathが通っていな時は、<a class="tc-tiddlylink tc-tiddlylink-resolves" href="about_environment_variable_path.html">こちら</a>を参考にして追加してください。</p><p>そして、最後に以下を実行してください。</p><pre class="hljs"><code class="shell hljs"><span class="hljs-meta">&gt; </span><span class="language-bash">npm install -g opencv4nodejs</span></code></pre><pre class="hljs"><code class="shell hljs"><span class="hljs-meta">&gt; </span><span class="language-bash">opencv-build@0.1.9 install C:\Users\[YOUR ACCOUNT]\opencv4nodejs\node_modules\opencv-build</span>
+<span class="hljs-meta">&gt; </span><span class="language-bash">node ./install.js</span>
+
+info install if you want to use an own OpenCV installation set OPENCV4NODEJS_DISABLE_AUTOBUILD
+info readAutoBuildFile file does not exists: C:\Users\[YOUR ACCOUNT]\opencv4nodejs\node_modules\opencv-build\opencv\auto-build.json C:\Users\[YOUR ACCOUNT]\opencv4nodejs\node_modules\opencv-build\opencv\auto-build.json
+info install failed to find auto-build.json: C:\Users\[YOUR ACCOUNT]\opencv4nodejs\node_modules\opencv-build\opencv\auto-build.json
+info install
+info install running install script...
+info install
+info install opencv version: 3.4.6
+info install with opencv contrib: yes
+info install custom build flags:
+info install
+info install executing: git --version
+info install git --version: git version 2.32.0.windows.2
+info install
+info install executing: cmake --version
+info install cmake --version: cmake version 3.21.1
+info install
+info install CMake suite maintained and supported by Kitware (kitware.com/cmake).
+info install
+info install using msbuild: {
+info install   path: &#x27;C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe&#x27;,
+info install   version: 15
+info install }
+info install installing opencv version 3.4.6 into directory: C:\Users\[YOUR ACCOUNT]\AppData\Roaming\npm\node_modules\opencv4nodejs\node_modules\opencv-build\opencv
+
+・・・
+
+info install spawning node gyp process: node-gyp rebuild --jobs max
+
+・・・
+</code></pre><p>途中で、<code>git --version</code>と<code>cmake --version</code>、<code>MSBuild.exeの有無</code>のチェックをしているようです。また、PythonのPathが通っていないと<code>node-gyp rebuild --jobs max</code>の部分で失敗します。</p><p>うまくいけば、以下のような感じで終了します。私の環境ではずいぶん時間がかかりました。</p><pre class="hljs"><code class="shell hljs">・・・
+
++ opencv4nodejs@5.6.0
+added 29 packages from 60 contributors and updated 1 package in 2382.262s</code></pre><blockquote><div><svg class="tc-image-tmd-message-reply-text-outline tc-image-button" height="22pt" viewBox="0 0 24 24" width="22pt"><path d="M9 11H18V13H9V11M18 7H6V9H18V7M22 4V22L18 18H4C2.9 18 2 17.11 2 16V4C2 2.9 2.9 2 4 2H20C21.1 2 22 2.89 22 4M20 4H4V16H18.83L20 17.17V4Z"></path></svg></div><div>2021/8  : </div><div>「windows-build-tools」に入っているPython v2.7で成功しました。</div><div>2021/10 : </div><div>他のPCにインストールの際に「windows-build-tools」に入っているPython v2.7で失敗しました。Python v3.9をインストールし、<code>C:\Users\[YOUR ACCOUNT]\.windows-build-tools\python27</code>をPathから削除し、Python v3.9をPathに追加し成功しました。</div></blockquote><h2 class=""><u>正常にインストールされた場合</u></h2><p>スタートメニュー -&gt; Node.js -&gt; Node.js を実行してください。</p><p>以下のように、<code>const cv = require("opencv4nodejs")</code>を実行した後、<code>cv</code>を実行してください。</p><pre class="hljs"><code class="shell hljs"><span class="hljs-meta">&gt; </span><span class="language-bash">const cv = require(<span class="hljs-string">&quot;opencv4nodejs&quot;</span>)</span>
+undefined
+<span class="hljs-meta">&gt; </span><span class="language-bash">cv</span>
+{
+  isCustomMatAllocatorEnabled: [Function: isCustomMatAllocatorEnabled],
+  dangerousEnableCustomMatAllocator: [Function: dangerousEnableCustomMatAllocator],
+  dangerousDisableCustomMatAllocator: [Function: dangerousDisableCustomMatAllocator],
+  getMemMetrics: [Function: getMemMetrics],
+  version: { major: 3, minor: 4, revision: 6 },
+  modules: {
+    core: true,
+    calib3d: true,
+    dnn: true,
+    face: true,
+    features2d: true,
+    imgproc: true,</code></pre><h2 class=""><u>正常にインストールされなかった場合</u></h2><h3 class="">その1</h3><pre class="hljs"><code class="shell hljs"><span class="hljs-meta">&gt; </span><span class="language-bash">const cv = require(<span class="hljs-string">&quot;opencv4nodejs&quot;</span>)</span>
+Uncaught Error: The specified module could not be found.
+\\?\C:\Users\[YOUR ACCOUNT]\AppData\Roaming\npm\node_modules\opencv4nodejs\build\Release\opencv4nodejs.node
+    at Object.Module._extensions..node (internal/modules/cjs/loader.js:1131:18)
+    at Module.load (internal/modules/cjs/loader.js:937:32)
+    at Function.Module._load (internal/modules/cjs/loader.js:778:12)
+    at Module.require (internal/modules/cjs/loader.js:961:19)
+    at require (internal/modules/cjs/helpers.js:92:18)</code></pre><p>上の場合、必要なdllが読み込めなかったようです。</p><p><code>C:\Users\[YOUR ACCOUNT]\AppData\Roaming\npm\node_modules\opencv4nodejs\node_modules\opencv-build\opencv\build\bin\Release</code>のPathを通すことで問題は解決されました。</p><h3 class="">その2</h3><pre class="hljs"><code class="shell hljs"><span class="hljs-meta">&gt; </span><span class="language-bash">const cv = require(<span class="hljs-string">&quot;opencv4nodejs&quot;</span>)</span>
+Uncaught Error: Cannot find module &#x27;opencv4nodejs&#x27;
+Require stack:
+- &lt;repl&gt;
+    at Function.Module._resolveFilename (internal/modules/cjs/loader.js:889:15)
+    at Function.Module._load (internal/modules/cjs/loader.js:745:27)
+    at Module.require (internal/modules/cjs/loader.js:961:19)
+    at require (internal/modules/cjs/helpers.js:92:18) {
+  code: &#x27;MODULE_NOT_FOUND&#x27;,
+  requireStack: [ &#x27;&lt;repl&gt;&#x27; ]
+}</code></pre><p>この場合、環境変数<code>NODE_PATH</code>を<code>C:\Users\[YOUR ACCOUNT]\AppData\Roaming\npm\node_modules</code>で作成し、環境変数Pathに<code>%NODE_PATH%</code>を追加してください。</p><p>これは、Node.jsのインストール時の忘れでした。</p><h2 class=""><u>最後に</u></h2><p><a class="tc-tiddlylink-external" href="https://github.com/justadudewhohacks/opencv4nodejs#how-to-install" rel="noopener noreferrer" target="_blank">こちら</a>の「How to install」も参考にしてください。</p><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="node-red_opencv_002.html">Node-REDで画像処理(opencv4nodejs) その2</a>で、Node-REDからの利用手順を説明します。</p><hr><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="index.html"><svg class="tc-image-home-button tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M112.985 119.502c.01-.165.015-.331.015-.499V67.568c3.137 2.948 8.076 2.884 11.134-.174a7.999 7.999 0 00-.002-11.316L70.396 2.343A7.978 7.978 0 0064.734 0a7.957 7.957 0 00-5.656 2.343L33 28.42V8.007C33 3.585 29.41 0 25 0c-4.418 0-8 3.59-8 8.007V44.42L5.342 56.078c-3.125 3.125-3.12 8.198-.002 11.316a7.999 7.999 0 0011.316-.003l.344-.343v52.945a8.11 8.11 0 000 .007c0 4.418 3.588 8 8 8h80c4.419 0 8-3.59 8-8a8.11 8.11 0 00-.015-.498zM97 112V51.574L64.737 19.31 33 51.048V112h64z" fill-rule="evenodd"></path></svg>Homeへ</a><svg class="tc-image-blank tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"></svg><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Node-RED.html"><svg class="tc-image-up-arrow tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M63.892.281c2.027 0 4.054.77 5.6 2.316l55.98 55.98a7.92 7.92 0 010 11.196c-3.086 3.085-8.104 3.092-11.196 0L63.894 19.393 13.513 69.774a7.92 7.92 0 01-11.196 0c-3.085-3.086-3.092-8.105 0-11.196l55.98-55.98A7.892 7.892 0 0163.893.28z"></path></svg>Node-REDの記事Topへ</a></p></div>
+</div></p>
+</section>
+</body>
+</html>
+

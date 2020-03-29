@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<head><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-80755908-2"></script><script>  window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-80755908-2');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6163695023100481" crossorigin="anonymous"></script>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="generator" content="TiddlyWiki" />
+<meta name="tiddlywiki-version" content="5.2.5" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="format-detection" content="telephone=no">
+<link id="faviconLink" rel="shortcut icon" href="favicon.ico">
+<link rel="stylesheet" href="static.css">
+<title>AI2とPythonの連携: WAKU-TAKE-A  PROGRAM</title>
+</head>
+<body class="tc-body">
+
+<section class="tc-story-river tc-static-story-river">
+<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists  tc-tagged-AppInventor" data-tags="AppInventor" data-tiddler-title="AI2とPythonの連携" role="article"><div class="tc-tiddler-title"><div class="tc-titlebar"><span class="tc-tiddler-controls"><button aria-expanded="false" aria-label="more" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fmore-tiddler-actions" title="More actions"></button><div class=" tc-reveal" hidden="true"></div><button aria-label="edit" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fedit" title="Edit this tiddler"></button><button aria-label="close" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fclose" title="Close this tiddler"></button></span><span><h2 class="tc-title">AI2とPythonの連携</h2></span></div><div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div></div><div class="tc-reveal"></div><div class=" tc-reveal"><div class="tc-subtitle"><a class="tc-tiddlylink tc-tiddlylink-missing" href=".html"></a> 18th October 2021 at 11:06pm</div></div><div class=" tc-reveal"><div class="tc-tags-wrapper"><span class="tc-tag-list-item" data-tag-title="AppInventor"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">AppInventor</span><span class="tc-drop-down tc-reveal" hidden="true"></span></span></div></div><div class="tc-tiddler-body tc-reveal"><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="AI2%25E3%2581%25A7%25E7%2594%25BB%25E5%2583%258F%25E3%2581%25AE%25E9%2580%2581%25E4%25BF%25A1%25E3%2581%25A8%25E5%258F%2597%25E4%25BF%25A1%25EF%25BC%2588HTTP%25E9%2580%259A%25E4%25BF%25A1%25EF%25BC%2589.html">AI2で画像の送信と受信（HTTP通信）</a>で、画像の送受信をApp Inventor2（以降AI2）で行いました。</p><p>今回は、画像の送信先をPCのウェブアプリケーション（エコーサーバー）にします。PCのウェブアプリケーションは、PythonのFlaskで実現します。</p><p>ポイントは、AI2から受信したテキストデータを画像に戻し、PC上に保存し、受信したテキストデータをJSON形式にしてAI2に返信します。</p><p>前回と同様に、作成したプログラム（今回はPythonスクリプトなど）は<a class="tc-tiddlylink-external" href="https://github.com/WAKU-TAKE-A/ai2-test-post" rel="noopener noreferrer" target="_blank">こちら</a>に置いておきます。本ページではポイントを説明します。</p><h2 class=""><u>Flaskの簡単な説明</u></h2><p>Flaskは軽量なPython Webアプリケーションフレームワークです。簡単に開始できるのが特徴ですが、複雑なアプリケーションにスケールアップするようにも設計されています。</p><p>最小限のFlaskアプリケーションは次のようになります。<br>
+<code>http://[アドレス]:[ポート番号]/</code>で、「Hello World!」が表示されます。</p><pre class="hljs"><code class="python hljs"><span class="hljs-keyword">from</span> flask <span class="hljs-keyword">import</span> Flask
+app = Flask(__name__)
+
+<span class="hljs-meta">@app.route(<span class="hljs-params"><span class="hljs-string">&#x27;/&#x27;</span></span>)</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">hello_world</span>():
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;Hello, World!&#x27;</span></code></pre><p>Flaskは人気のフレームワークの一つなので、入門サイトはたくさんあります。</p><p>今回は公式サイトのドキュメントを参考にしました。（<a class="tc-tiddlylink-external" href="https://flask.palletsprojects.com/en/1.1.x/quickstart/" rel="noopener noreferrer" target="_blank">公式サイトのクイックスタート</a>）英語が苦手な方はGoggle翻訳などを利用してください。</p><p>Pythonにインストールしていない場合は、</p><pre><code>python -m pip install Flask</code></pre><h2 class=""><u>Pythonスクリプト</u></h2><p>今回の機能を実現するスクリプトは以下の通りです。スクリプト名は<code>ai2-test-post.py</code>です。</p><pre class="hljs"><code class="python hljs"><span class="hljs-comment">#-*-coding:utf-8;-*-</span>
+
+<span class="hljs-keyword">import</span> base64
+<span class="hljs-keyword">from</span> flask <span class="hljs-keyword">import</span> Flask, request
+
+app = Flask(__name__)
+
+<span class="hljs-meta">@app.route(<span class="hljs-params"><span class="hljs-string">&#x27;/&#x27;</span></span>)</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">index</span>():
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;Hello World!&#x27;</span>
+
+<span class="hljs-meta">@app.route(<span class="hljs-params"><span class="hljs-string">&#x27;/post&#x27;</span>, methods=[<span class="hljs-string">&quot;POST&quot;</span>]</span>)</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">test_post</span>():
+    <span class="hljs-built_in">print</span>(request.headers)
+    str_enc = request.json[<span class="hljs-string">&#x27;image&#x27;</span>]
+    bin_dec = base64.urlsafe_b64decode(
+        str_enc + <span class="hljs-string">&#x27;=&#x27;</span> * (-<span class="hljs-built_in">len</span>(str_enc)%<span class="hljs-number">4</span>))
+    fnm = <span class="hljs-string">&#x27;C:/tmp/flsk-test-post/tmp000.jpg&#x27;</span>
+    <span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(fnm, <span class="hljs-string">&quot;wb&quot;</span>) <span class="hljs-keyword">as</span> f:
+        f.write(bin_dec)
+    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;{&quot;json&quot;:{&quot;image&quot;:&quot;&#x27;</span> + str_enc + <span class="hljs-string">&#x27;&quot;}}&#x27;</span></code></pre><p><a class="tc-tiddlylink-external" href="https://flask.palletsprojects.com/en/1.1.x/quickstart/" rel="noopener noreferrer" target="_blank">こちら</a>の「A Minimal Application」、「Routing」、「HTTP Methods」などを参考にしました。</p><p>さて、<code>test_post()</code>のポイントを説明します。</p><p>受信データは以下のようになっていますので、</p><pre><code>{"image":"★★★Base64の文字列★★★"}</code></pre><p>以下のようにimageキーから画像のテキストデータを取得します。<code>request.get_json()</code>でいったん変数に代入しても構いません。</p><pre class="hljs"><code class="python hljs">    str_enc = request.json[<span class="hljs-string">&#x27;image&#x27;</span>]</code></pre><p>次の行も重要です。単純に<code>bin_dec = base64.urlsafe_b64decode(str_enc)</code>としても正常にデコードされない場合があります。</p><pre class="hljs"><code class="python hljs">    bin_dec = base64.urlsafe_b64decode(
+        str_enc + <span class="hljs-string">&#x27;=&#x27;</span> * (-<span class="hljs-built_in">len</span>(str_enc)%<span class="hljs-number">4</span>))</code></pre><p>これは、「<a class="tc-tiddlylink-external" href="https://www.lisz-works.com/entry/python-base64-incorrect-padding" rel="noopener noreferrer" target="_blank">base64.pyでbinascii.Error: Incorrect paddingを解決してみた</a>」にあるように、base64モジュールが4文字づつで処理しているからです。4文字区切りになるように「=」を追加する必要があります。</p><p>そして、下のように画像ファイルを保存します。<code>C:/tmp/flsk-test-post/</code>に保存していますので、フォルダを作成しておいてください。</p><pre><code>    fnm = 'C:/tmp/flsk-test-post/tmp000.jpg'
+    with open(fnm, "wb") as f:
+        f.write(bin_dec)</code></pre><p>最後に、<a class="tc-tiddlylink-external" href="https://httpbin.org/" rel="noopener noreferrer" target="_blank">httpbin.org</a> に似せたフォーマットで返信します。</p><pre><code>    return '{"json":{"image":"' + str_enc + '"}}'</code></pre><h2 class=""><u>スクリプトの実行</u></h2><p>スクリプトの実行は、<code>ai2-test-post.py</code>をPythonの<code>Lib</code>フォルダにコピーし、DOSプロンプト上で以下を実行します。私の環境では、<code>C:\WinPython3\python-3.7.4.amd64</code>に<code>python.exe</code>があります。</p><pre><code>set FLASK_APP=ai2-test-post.py
+set FLASK_DEBUG=0
+
+cd C:\WinPython3\python-3.7.4.amd64
+python -m flask run --host=0.0.0.0</code></pre><p><a class="tc-tiddlylink-external" href="https://flask.palletsprojects.com/en/1.1.x/quickstart/" rel="noopener noreferrer" target="_blank">こちら</a>の「Externally Visible Server」、「Debug Mode」などを参考にしました。</p><p>特に、<code>--host=0.0.0.0</code>を忘れないようにしてください、デフォルトでは自分のコンピューターからのみアクセスでき、ネットワーク内の他のコンピューターからはアクセスできない仕様になっています。</p><h2 class=""><u>実行画面の例</u></h2><p>スマホとPCを同一のWiFi環境で繋げました。私の環境では、PCのアドレスは「192.168.10.8」でした。</p><p>スクリプト実行後の画面。</p><p><img class=" tc-image-loading" src="img/ai-test-post-001.jpg"><br><small><u>画像1</u></small></p><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="AI2%25E3%2581%25A7%25E7%2594%25BB%25E5%2583%258F%25E3%2581%25AE%25E9%2580%2581%25E4%25BF%25A1%25E3%2581%25A8%25E5%258F%2597%25E4%25BF%25A1%25EF%25BC%2588HTTP%25E9%2580%259A%25E4%25BF%25A1%25EF%25BC%2589.html">AI2で画像の送信と受信（HTTP通信）</a>で作成した「SampleHttpPost2」を起動します。<br>
+URLに<code>http://192.168.10.8:5000/post</code>を入力し、「Select a image.」ボタンで画像を選択します。</p><p><img class=" tc-image-loading" src="img/ai-test-post-002.jpg"><br><small><u>画像2</u></small></p><p>そして、「Send」ボタンを押します。</p><p><img class=" tc-image-loading" src="img/ai-test-post-003.jpg"><br><small><u>画像3</u></small></p><p>以下は、「SampleHttpPost2」での結果画面です。</p><p><img class=" tc-image-loading" src="img/ai-test-post-004.jpg"><br><small><u>画像4</u></small></p><p>ちゃんと画像が戻ってきました！</p><hr><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="index.html"><svg class="tc-image-home-button tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M112.985 119.502c.01-.165.015-.331.015-.499V67.568c3.137 2.948 8.076 2.884 11.134-.174a7.999 7.999 0 00-.002-11.316L70.396 2.343A7.978 7.978 0 0064.734 0a7.957 7.957 0 00-5.656 2.343L33 28.42V8.007C33 3.585 29.41 0 25 0c-4.418 0-8 3.59-8 8.007V44.42L5.342 56.078c-3.125 3.125-3.12 8.198-.002 11.316a7.999 7.999 0 0011.316-.003l.344-.343v52.945a8.11 8.11 0 000 .007c0 4.418 3.588 8 8 8h80c4.419 0 8-3.59 8-8a8.11 8.11 0 00-.015-.498zM97 112V51.574L64.737 19.31 33 51.048V112h64z" fill-rule="evenodd"></path></svg>Homeへ</a><svg class="tc-image-blank tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"></svg><a class="tc-tiddlylink tc-tiddlylink-resolves" href="AppInventor.html"><svg class="tc-image-up-arrow tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M63.892.281c2.027 0 4.054.77 5.6 2.316l55.98 55.98a7.92 7.92 0 010 11.196c-3.086 3.085-8.104 3.092-11.196 0L63.894 19.393 13.513 69.774a7.92 7.92 0 01-11.196 0c-3.085-3.086-3.092-8.105 0-11.196l55.98-55.98A7.892 7.892 0 0163.893.28z"></path></svg>App Inventorの記事Topへ</a></p></div>
+</div></p>
+</section>
+</body>
+</html>
+
