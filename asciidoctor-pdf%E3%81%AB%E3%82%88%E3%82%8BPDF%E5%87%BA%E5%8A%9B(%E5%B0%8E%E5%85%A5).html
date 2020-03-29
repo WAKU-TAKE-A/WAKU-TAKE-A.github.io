@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="generator" content="TiddlyWiki" />
+<meta name="tiddlywiki-version" content="5.1.21" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="format-detection" content="telephone=no">
+<link id="faviconLink" rel="shortcut icon" href="favicon.ico">
+<link rel="stylesheet" href="static.css">
+<title>asciidoctor-pdfによるPDF出力(導入): WAKU-TAKE-A  PROGRAM</title>
+</head>
+<body class="tc-body">
+
+<section class="tc-story-river">
+<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists  tc-tagged-AsciiDoc" data-tags="AsciiDoc" data-tiddler-title="asciidoctor-pdfによるPDF出力(導入)"><div class="tc-tiddler-title">
+<div class="tc-titlebar">
+<span class="tc-tiddler-controls">
+<span class=" tc-reveal"><button aria-label="more" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fmore-tiddler-actions" title="More actions"></button><div class=" tc-reveal" hidden="true"></div></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal"><button aria-label="edit" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fedit" title="Edit this tiddler"></button></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal"><button aria-label="close" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fclose" title="Close this tiddler"></button></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span>
+</span>
+
+<span>
+
+<span class="tc-tiddler-title-icon" style="fill:;">
+
+</span>
+
+
+
+<h2 class="tc-title">
+asciidoctor-pdfによるPDF出力(導入)
+</h2>
+
+</span>
+
+</div>
+
+<div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div>
+</div><div class=" tc-reveal" hidden="true"></div>
+<div class=" tc-reveal">
+<div class="tc-subtitle">
+<a class="tc-tiddlylink tc-tiddlylink-missing" href=".html">
+
+</a> 13th December 2019 at 8:52pm
+</div>
+</div>
+<div class=" tc-reveal">
+<div class="tc-tags-wrapper"><span class="tc-tag-list-item">
+<span class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">
+ AsciiDoc
+</span>
+<span class="tc-drop-down tc-reveal" hidden="true"></span></span></div>
+</div>
+<div class="tc-tiddler-body tc-reveal"><p>AsciiDoc形式の文書ファイルは、Rubyの「asciidoctor」を利用してHTMLに変換することができます。</p><blockquote><p>Asciidoctorは 高速な テキストプロセッサで AsciiDoc をHTML 5, DocBook 5や他のフォーマットに変換するツールチェインを配布しています. AsciidoctorはRubyで書かれており, RubyGemとしてパッケージされ, RubyGems.org で配布されています. gemはいくつかのLinuxディストリビューション, Fedora, Debian, Ubuntuにも含まれています. Asciidoctorはオープンソース hosted on GitHub で the MIT licenceのもとに配布されます.</p><p><a class="tc-tiddlylink-external" href="https://github.com/asciidoctor/asciidoctor/blob/master/README-jp.adoc" rel="noopener noreferrer" target="_blank">asciidoctor/README-jp.adoc より</a></p></blockquote><p>また、「<a class="tc-tiddlylink-external" href="https://github.com/asciidoctor/asciidoctor-pdf" rel="noopener noreferrer" target="_blank">asciidoctor-pdf</a>」を利用してPDFに変換することができます。「asciidoctor-pdf」は、前述の「asciidoctor」とPDFを生成する「<a class="tc-tiddlylink-external" href="https://github.com/prawnpdf/prawn" rel="noopener noreferrer" target="_blank">prawn</a>」を使ってPDFに変換します。</p><p>「asciidoctor-pdf」の導入方法を以下に説明します。</p><h2 class="">Rubyとライブラリのインストール</h2><p>ここでは、Windows10 64bit のOSで説明します。Rubyをインストールしますが、Ruby自体を使うことはあまりありませんので、初心者でも大丈夫です。</p><p><a class="tc-tiddlylink-external" href="https://rubyinstaller.org/downloads/" rel="noopener noreferrer" target="_blank">こちら</a>からインストーラをダウンロードします。ここでは最新の「Ruby+Devkit 2.6.1-1 (x64)」をダウンロードし、インストールしました。</p><p><img src="img/asciidoctor_001.jpg"></p><p>スタート ⇒ Ruby 2.6.1-1-x64 with MSYS2 ⇒ Start Command Prompt with Ruby を起動します。</p><p>まず、RubyGemsを最新にします。</p><p>Rubyにおけるライブラリは、gemという形式で公開されています。RubyGemsは、ライブラリの作成や公開、インストールを助けるシステムです。</p><p>Proxyを通して実行したい場合は、以下のように<code>set http_proxy・・・</code>を行ってから実行してください。必要の無い場合は省略してください。</p><pre><code>set http_proxy=http://プロキシのアドレス:ポート番号
+set https_proxy=http://プロキシのアドレス:ポート番号
+gem update --system
+gem -v</code></pre><p>次に、gem専用のパッケージ管理システム Bundlerを更新します。</p><p>Bundlerは、依存関係のあるライブラリもまとめてインストールしてくれるライブラリです。最近のバージョンでは標準で入っているようです。</p><pre><code>gem update bundler
+bundle -v</code></pre><p>Bundlerで使用する「Gemfile」を生成します。</p><pre><code>bundle init</code></pre><p>C:/Users/ユーザー名/ に「Gemfile」ファイルが作成されたはずです。以下のように編集します。</p><pre><code># frozen_string_literal: true
+
+source &quot;https://rubygems.org&quot;
+
+git_source(:github) {|repo_name| &quot;https://github.com/#{repo_name}&quot; }
+
+gem &quot;asciidoctor&quot;
+gem &quot;asciidoctor-pdf&quot;
+gem &quot;asciidoctor-pdf-cjk&quot;
+gem &quot;asciidoctor-rouge&quot;
+gem &quot;concurrent-ruby&quot;</code></pre><p>インストールを実行します。</p><pre><code>bundle install</code></pre><p>これでOKです。</p><h2 class="">PDFの出力方法</h2><p>「Start Command Prompt with Ruby」を再起動します。「Untitled-1.adoc」というAsciiDoc形式のファイルを用意します。DOSプロンプトを開き、以下のコマンドを実行するとPDFが作成されます。</p><pre><code>cd /d [Untitled-1.adocのあるディレクトリ]
+asciidoctor-pdf -r asciidoctor-pdf-cjk Untitled-1.adoc</code></pre><p>日本語含む文書の場合、<code>-r asciidoctor-pdf-cjk</code>というオプションを付けるのが良いようです。</p><p>最近知ったのですが、「asciidoctor-pdf-linewrap-ja」というライブラリもあります。<a class="tc-tiddlylink-external" href="https://backport.net/blog/2018/03/21/asciidoctor_pdf_linewrap_ja/" rel="noopener noreferrer" target="_blank">こちら</a>にその記事があります。使いたい場合は、「Gemfile」に<code>gem &quot;asciidoctor-pdf-linewrap-ja&quot;</code>を追加して、<code>bundle install</code>してください。</p><p>「Untitled-1.adoc」の内容。</p><pre><code>= Introduction to AsciiDoc
+Doc Writer &lt;doc@example.com&gt;
+
+A preface about https://asciidoc.org[AsciiDoc].
+
+== First Section
+
+* item 1
+* item 2
+
+[source,ruby]
+puts &quot;Hello, World!&quot;</code></pre><p>出力されたPDFの内容。（ちなみに<code>=</code>の1個は、表紙となります。）</p><p><img src="img/asciidoctor_002.jpg"></p><p><img src="img/asciidoctor_003.jpg"></p><p>今回は、コマンドを多用しましたが、「<a class="tc-tiddlylink tc-tiddlylink-resolves" href="Visual%2520Studio%2520Code%25E3%2581%258B%25E3%2582%2589PDF%25E3%2582%2592%25E5%2587%25BA%25E5%258A%259B%25E3%2581%2599%25E3%2582%258B.html">Visual Studio CodeからPDFを出力する</a>」のような工夫で、ほとんどRubyを意識せずに使うことができるようになります。</p><h2 class="">注意点</h2><pre><code>asciidoctor: WARNING: gem '★★★' is not installed. This gem is recommended when registering custom converters.</code></pre><p>と表示された場合は、「Gemfile」に<code>gem &quot;★★★&quot;</code>を追記して再度、<code>bundle install</code> してください。</p><hr><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="index.html"><svg class="tc-image-home-button tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt">
+    <g fill-rule="evenodd">
+        <path d="M112.9847,119.501583 C112.99485,119.336814 113,119.170705 113,119.003406 L113,67.56802 C116.137461,70.5156358 121.076014,70.4518569 124.133985,67.3938855 C127.25818,64.2696912 127.260618,59.2068102 124.131541,56.0777326 L70.3963143,2.34250601 C68.8331348,0.779326498 66.7828947,-0.000743167069 64.7337457,1.61675364e-05 C62.691312,-0.00409949529 60.6426632,0.777559815 59.077717,2.34250601 L33,28.420223 L33,28.420223 L33,8.00697327 C33,3.58484404 29.4092877,0 25,0 C20.581722,0 17,3.59075293 17,8.00697327 L17,44.420223 L5.3424904,56.0777326 C2.21694607,59.2032769 2.22220878,64.2760483 5.34004601,67.3938855 C8.46424034,70.5180798 13.5271213,70.5205187 16.6561989,67.3914411 L17,67.04764 L17,119.993027 C17,119.994189 17.0000002,119.995351 17.0000007,119.996514 C17.0000002,119.997675 17,119.998838 17,120 C17,124.418278 20.5881049,128 24.9992458,128 L105.000754,128 C109.418616,128 113,124.409288 113,120 C113,119.832611 112.99485,119.666422 112.9847,119.501583 Z M97,112 L97,51.5736087 L97,51.5736087 L64.7370156,19.3106244 L33,51.04764 L33,112 L97,112 Z"></path>
+    </g>
+</svg>Homeへ</a><svg class="tc-image-blank tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"></svg><a class="tc-tiddlylink tc-tiddlylink-resolves" href="AsciiDoc.html"><svg class="tc-image-up-arrow tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt">
+<path d="m109.07576,109.35336c-1.43248,1.43361 -3.41136,2.32182 -5.59717,2.32182l-79.16816,0c-4.36519,0 -7.91592,-3.5444 -7.91592,-7.91666c0,-4.36337 3.54408,-7.91667 7.91592,-7.91667l71.25075,0l0,-71.25074c0,-4.3652 3.54442,-7.91592 7.91667,-7.91592c4.36336,0 7.91667,3.54408 7.91667,7.91592l0,79.16815c0,2.1825 -0.88602,4.16136 -2.3185,5.59467l-0.00027,-0.00056l0.00001,-0.00001z" transform="rotate(-135, 63.8945, 64.1752)"></path>
+</svg>
+ 
+AsciiDocの記事Topへ</a></p><p><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><!-- responsive_ja --><ins class="adsbygoogle"     style="display:block"     data-ad-client="ca-pub-6163695023100481"     data-ad-slot="5149997050"     data-ad-format="horizontal"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></p></div>
+
+
+
+</div>
+
+</p>
+</section>
+</body>
+</html>

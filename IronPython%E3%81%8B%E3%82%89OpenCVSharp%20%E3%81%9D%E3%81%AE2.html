@@ -1,0 +1,138 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="generator" content="TiddlyWiki" />
+<meta name="tiddlywiki-version" content="5.1.21" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="format-detection" content="telephone=no">
+<link id="faviconLink" rel="shortcut icon" href="favicon.ico">
+<link rel="stylesheet" href="static.css">
+<title>IronPythonからOpenCVSharp その2: WAKU-TAKE-A  PROGRAM</title>
+</head>
+<body class="tc-body">
+
+<section class="tc-story-river">
+<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists  tc-tagged-IronPython" data-tags="IronPython" data-tiddler-title="IronPythonからOpenCVSharp その2"><div class="tc-tiddler-title">
+<div class="tc-titlebar">
+<span class="tc-tiddler-controls">
+<span class=" tc-reveal"><button aria-label="more" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fmore-tiddler-actions" title="More actions"></button><div class=" tc-reveal" hidden="true"></div></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal"><button aria-label="edit" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fedit" title="Edit this tiddler"></button></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal"><button aria-label="close" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fclose" title="Close this tiddler"></button></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span>
+</span>
+
+<span>
+
+<span class="tc-tiddler-title-icon" style="fill:;">
+
+</span>
+
+
+
+<h2 class="tc-title">
+IronPythonからOpenCVSharp その2
+</h2>
+
+</span>
+
+</div>
+
+<div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div>
+</div><div class=" tc-reveal" hidden="true"></div>
+<div class=" tc-reveal">
+<div class="tc-subtitle">
+<a class="tc-tiddlylink tc-tiddlylink-missing" href=".html">
+
+</a> 13th December 2019 at 8:52pm
+</div>
+</div>
+<div class=" tc-reveal">
+<div class="tc-tags-wrapper"><span class="tc-tag-list-item">
+<span class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">
+ IronPython
+</span>
+<span class="tc-drop-down tc-reveal" hidden="true"></span></span></div>
+</div>
+<div class="tc-tiddler-body tc-reveal"><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="IronPython%25E3%2581%258B%25E3%2582%2589OpenCVSharp%2520%25E3%2581%259D%25E3%2581%25AE1.html">IronPythonからOpenCVSharp その1</a> で、IronPythonからOpenCVを使う事ができるようになりました。</p><p>しかし、個人的に欲しいなあ、という機能がいくつかあったのでC++/CLIで作成しました。以下にヘッダーファイルをあげます。</p><pre class="cs hljs"><code>// wk_util_opencvsharp.h
+
+#pragma once
+
+using namespace System;
+using namespace OpenCvSharp;
+using namespace System::Drawing;
+using namespace System::Drawing::Imaging;
+using namespace System::Windows::Threading;
+
+namespace wk_util_opencvsharp
+{
+    public ref class Cv2Util
+    {
+    public:
+        static IntPtr GetIntPtrFromMat(Mat^ mat);
+        static void Memcopy(IntPtr src, IntPtr dst, int num);
+        static Byte GetByteValue(Mat^ mat, int index);
+        static void SetByteValue(Mat^ mat, int index, Byte value);
+        static void GrayscalePalette(Bitmap^ bmp);
+        static int SizeOfSbyte();
+        static int SizeOfByte();
+        static int SizeOfShort();
+        static int SizeOfUshort();
+        static int SizeOfInt();
+        static int SizeOfUint();
+        static int SizeOfLong();
+        static int SizeOfUlong();
+        static int SizeOfChar();
+        static int SizeOfFloat();
+        static int SizeOfDouble();
+        static int SizeOfDecimal();
+        static int SizeOfBool();
+        static void DoEvents();
+    };
+
+    public ref class LockBitmap
+    {
+    private:
+        System::Drawing::Bitmap^ _src;
+        System::Drawing::Imaging::BitmapData^ _srcData;
+        System::Drawing::Imaging::PixelFormat _pf;
+        int _w;
+        int _h;
+        int _st;
+        IntPtr _ip;
+
+    public:
+        LockBitmap(System::Drawing::Bitmap^ ini);
+
+        void Free();
+
+        property IntPtr Ptr
+        {
+            IntPtr get()
+            {
+                return _ip;
+            }
+        }
+    };
+}
+
+</code></pre><p>簡単に関数やクラスを説明します。</p><ul><li><strong><code>IntPtr GetIntPtrFromMat(Mat^ mat)</code></strong><ul><li>本格的な画像処理を行い始めると、画像データ（バイト配列）のポインタを取得して操作したくなることがあります。OpenCvSharpでは、<code>Mat.DataPointer</code> でポインタを取得できます。しかし戻り値が、<code>unsigned char*</code> なのでIronPython上では扱えません。</li><li>Matからポインタを<code>IntPtr</code>で取得する関数です。<br><br></li></ul></li><li><strong><code>void Memcopy(IntPtr src, IntPtr dst, int num)</code></strong><ul><li>C#の<code>Marshal.Copy()</code>は、<code>IntPtr</code>同士のコピーできません。C++の<code>memcpy</code>を利用しました。まさにC++/CLIのマネージ拡張機能です。<br><br></li></ul></li><li><strong><code>Byte GetByteValue(Mat^ mat, int index)</code> と <code>void SetByteValue(Mat^ mat, int index, Byte value)</code></strong><ul><li>IronPythonから、<code>Mat.At&lt;T&gt;()</code>、<code>Get&lt;T&gt;()</code>、<code>GetArray()</code> などで、画像データであるMatの要素にうまくアクセスすることができませんでした。（Set系もです。）勉強不足です。。。</li><li>代りに<code>Mat.DataPointer</code> を利用した簡単な関数を作成しました。<br><br></li></ul></li><li><strong><code>void GrayscalePalette(Bitmap^ bmp)</code></strong><ul><li>Bitmapクラスを <code>PixelFormat.Format8bppIndexed</code> で新規作成した時、カラーパレットはグレイスケールになっていません。</li><li>カラーパレットをグレイスケールにする関数です。<br><br></li></ul></li><li><strong><code>int SizeOf***()</code></strong> <ul><li>C++の <code>sizeof</code>関数です。<br><br></li></ul></li><li><strong><code>LockBitmapクラス</code></strong><ul><li>Bitmapクラスから先頭ポインタを取得するためのクラスです。使い方は以下の通りです。<br><img src="img/IronPython_opencvsharp_013.jpg"></li></ul></li></ul><p>詳細は <code>wk_util_opencvsharp.cpp</code> を見てください。そんなに難しいことはしていません。</p><hr><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="index.html"><svg class="tc-image-home-button tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt">
+    <g fill-rule="evenodd">
+        <path d="M112.9847,119.501583 C112.99485,119.336814 113,119.170705 113,119.003406 L113,67.56802 C116.137461,70.5156358 121.076014,70.4518569 124.133985,67.3938855 C127.25818,64.2696912 127.260618,59.2068102 124.131541,56.0777326 L70.3963143,2.34250601 C68.8331348,0.779326498 66.7828947,-0.000743167069 64.7337457,1.61675364e-05 C62.691312,-0.00409949529 60.6426632,0.777559815 59.077717,2.34250601 L33,28.420223 L33,28.420223 L33,8.00697327 C33,3.58484404 29.4092877,0 25,0 C20.581722,0 17,3.59075293 17,8.00697327 L17,44.420223 L5.3424904,56.0777326 C2.21694607,59.2032769 2.22220878,64.2760483 5.34004601,67.3938855 C8.46424034,70.5180798 13.5271213,70.5205187 16.6561989,67.3914411 L17,67.04764 L17,119.993027 C17,119.994189 17.0000002,119.995351 17.0000007,119.996514 C17.0000002,119.997675 17,119.998838 17,120 C17,124.418278 20.5881049,128 24.9992458,128 L105.000754,128 C109.418616,128 113,124.409288 113,120 C113,119.832611 112.99485,119.666422 112.9847,119.501583 Z M97,112 L97,51.5736087 L97,51.5736087 L64.7370156,19.3106244 L33,51.04764 L33,112 L97,112 Z"></path>
+    </g>
+</svg>Homeへ</a><svg class="tc-image-blank tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"></svg><a class="tc-tiddlylink tc-tiddlylink-resolves" href="IronPython.html"><svg class="tc-image-up-arrow tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt">
+<path d="m109.07576,109.35336c-1.43248,1.43361 -3.41136,2.32182 -5.59717,2.32182l-79.16816,0c-4.36519,0 -7.91592,-3.5444 -7.91592,-7.91666c0,-4.36337 3.54408,-7.91667 7.91592,-7.91667l71.25075,0l0,-71.25074c0,-4.3652 3.54442,-7.91592 7.91667,-7.91592c4.36336,0 7.91667,3.54408 7.91667,7.91592l0,79.16815c0,2.1825 -0.88602,4.16136 -2.3185,5.59467l-0.00027,-0.00056l0.00001,-0.00001z" transform="rotate(-135, 63.8945, 64.1752)"></path>
+</svg>
+ 
+IronPythonの記事Topへ</a></p><p><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><!-- responsive_ja --><ins class="adsbygoogle"     style="display:block"     data-ad-client="ca-pub-6163695023100481"     data-ad-slot="5149997050"     data-ad-format="horizontal"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></p></div>
+
+
+
+</div>
+
+</p>
+</section>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="generator" content="TiddlyWiki" />
+<meta name="tiddlywiki-version" content="5.1.21" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="format-detection" content="telephone=no">
+<link id="faviconLink" rel="shortcut icon" href="favicon.ico">
+<link rel="stylesheet" href="static.css">
+<title>背景除去について: WAKU-TAKE-A  PROGRAM</title>
+</head>
+<body class="tc-body">
+
+<section class="tc-story-river">
+<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists  tc-tagged-AboutImage" data-tags="AboutImage" data-tiddler-title="背景除去について"><div class="tc-tiddler-title">
+<div class="tc-titlebar">
+<span class="tc-tiddler-controls">
+<span class=" tc-reveal"><button aria-label="more" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fmore-tiddler-actions" title="More actions"></button><div class=" tc-reveal" hidden="true"></div></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal"><button aria-label="edit" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fedit" title="Edit this tiddler"></button></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal"><button aria-label="close" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fclose" title="Close this tiddler"></button></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span>
+</span>
+
+<span>
+
+<span class="tc-tiddler-title-icon" style="fill:;">
+
+</span>
+
+
+
+<h2 class="tc-title">
+背景除去について
+</h2>
+
+</span>
+
+</div>
+
+<div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div>
+</div><div class=" tc-reveal" hidden="true"></div>
+<div class=" tc-reveal">
+<div class="tc-subtitle">
+<a class="tc-tiddlylink tc-tiddlylink-missing" href=".html">
+
+</a> 13th December 2019 at 8:52pm
+</div>
+</div>
+<div class=" tc-reveal">
+<div class="tc-tags-wrapper"><span class="tc-tag-list-item">
+<span class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">
+ AboutImage
+</span>
+<span class="tc-drop-down tc-reveal" hidden="true"></span></span></div>
+</div>
+<div class="tc-tiddler-body tc-reveal"><h1 class="">背景除去について</h1><p>特徴抽出する前準備として、適切な背景除去（Substract Backgraound）を行うことは重要です。</p><p>ここでは、ノイズを消すとか、背景の画像自体を消す（背景のビルや山を消す）というより、以下のようなものを消すことを目的とします。（※1）</p><ul><li>周期の非常に大きなムラ</li><li>縞状のムラ</li></ul><p>元画像<br>
+<img src="img/samp_Gradation1.bmp"></p><h1 class="">Meanフィルタを利用した背景除去1</h1><dl><dt>処理方法</dt><dd><code>元画像 － Meanフィルタ後の画像 ＋ 平均輝度※2</code><br>差分を取るので、事前にunsigned⇒signedにしておかないとデータが欠損します。<br>ImageJの場合は32bitで出力するか、または、<a class="tc-tiddlylink-external" href="https://imagej.nih.gov/ij/plugins/calculator-plus.html" rel="noopener noreferrer" target="_blank">Calculator Plus</a>のようなプラグインを使うと良いと思います。 </dd></dl><p>元画像にMeanフィルタ処理をした画像（フィルタのレンジは40）<br>
+<img src="img/SubBack01.bmp"></p><p>処理後の画像<br>
+<img src="img/SubBack02.bmp"></p><h1 class="">Meanフィルタを利用した背景除去2</h1><p>「Flat Field Correction（フラットフィールド補正）」による方法です。こちらは撮像後の画像処理というより、撮像時での補正を対象にしている手法のようです。1と違って割ります。</p><dl><dt>処理方法</dt><dd><code>元画像 ／ Meanフィルタ後の画像 × 平均輝度</code><br>最後に平均輝度をかけています。</dd></dl><p>元画像にMeanフィルタ処理をした画像（フィルタのレンジは40）<br>
+<img src="img/SubBack01.bmp"></p><p>処理後の画像<br>
+<img src="img/SubBack03.bmp"></p><p>「Meanフィルタを利用した背景除去」の1を使うか、2を使うかは、背景ノイズの種類によって変わるのだと思います。背景ノイズが加算的なら1だし、乗算的（CCDのムラ）なら2を使えば良いのでしょう。</p><p>ただし、2は割り算がメインの処理なので、1より処理時間は多くかかります。</p><p><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><!-- responsive_ja --><ins class="adsbygoogle"     style="display:block"     data-ad-client="ca-pub-6163695023100481"     data-ad-slot="5149997050"     data-ad-format="horizontal"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></p><h1 class="">FFTを利用したバンドパスフィルタ</h1><dl><dt>処理方法</dt><dd><code>FFT -&gt; FFTデータに対してバンドパスフィルタ -&gt; 逆FFT</code></dd></dl><p>FFTデータ<br>
+<img src="img/SubBack04.bmp"></p><p>バンドパスフィルタ（ImageJにて作成）<br>
+<img src="img/SubBack05.bmp"></p><p>逆FFT後<br>
+<img src="img/SubBack06.bmp"></p><p>上の逆FFT後の画像には、平均値フィルタを利用したものと比べてムラが残っています。これはラップアラウンド効果によるものです。</p><p>これを防止する方法としては、FFT処理前に、ゼロパディング(<a class="tc-tiddlylink tc-tiddlylink-resolves" href="%25E3%2582%25BC%25E3%2583%25AD%25E3%2583%2591%25E3%2583%2587%25E3%2582%25A3%25E3%2583%25B3%25E3%2582%25B0.html">参考</a>)や画像をタイル状に並べたり（<a class="tc-tiddlylink tc-tiddlylink-resolves" href="%25E3%2582%25BF%25E3%2582%25A4%25E3%2583%25AB%25E3%2583%259F%25E3%2583%25A9%25E3%2583%25BC.html">参考</a>）する前処理を行う方法があります。</p><p>以下は画像をタイル状に並べる前処理を行ったものです。<br>
+<img src="img/SubBack07.bmp"></p><p>端の方もムラが無くなっています。</p><p>さらにFFTにおいては、フィルタにうまい細工を加えると縞状のムラを消すことも可能です。</p><p>縦線を付与したバンドパスフィルタ（ImageJにて作成）<br>
+<img src="img/SubBack11.bmp"></p><p>逆FFT後<br>
+<img src="img/SubBack10.bmp"></p><p>縞状のノイズを消すことができました。</p><p>FFTは奥が深いです。ただし、注意点としては、</p><ul><li>万能ではありません</li><li>FFT自体の処理は時間がかかります。さらにパディングなんかしたら処理時間はさらにup。</li></ul><p><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><!-- responsive_ja --><ins class="adsbygoogle"     style="display:block"     data-ad-client="ca-pub-6163695023100481"     data-ad-slot="5149997050"     data-ad-format="horizontal"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></p><h1 class="">Rolling Ball Algorithm</h1><dl><dt>処理方法</dt><dd><a class="tc-tiddlylink-external" href="http://imagejdocu.tudor.lu/doku.php?id=gui:process:subtract_background" rel="noopener noreferrer" target="_blank">Rolling Ball Algorithm </a><br>ImageJの背景除去コマンドで採用されている方法です。</dd></dl><p>アルゴリズムは、、、未勉強です。論文を読むか、<a class="tc-tiddlylink-external" href="http://rsbweb.nih.gov/ij/plugins/rolling-ball.html" rel="noopener noreferrer" target="_blank">http://rsbweb.nih.gov/ij/plugins/rolling-ball.html</a> のコードを参考にすれば分かるはず。。。</p><p>アルゴリズムについて、すこしだけ分かった部分を以下に説明します。</p><p><img src="img/SubBack13.bmp"></p><p>輝度を高さとする3D表面を考えます。所望の径のボールを3D表面の下側を転がして、ボール外面の描く面を導き、除算します。Medianフィルタと同様に鋭いスパイク状のノイズを無視する効果が期待できます。</p><p>処理後（最後に平均輝度を乗算しています）<br>
+<img src="img/SubBack12.bmp"></p><p>※1<br>
+移動体を抽出するような場合は、背景の画像を完全に除去することを目的にする場合だってあります。
+この場合、背景除去のアルゴリズムはまったく異なるものになります。</p><p>※2<br>
+画像の輝度平均を128など固定の数値になるように、照明を制御すれば処理速度はより速くなります。</p><hr><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="index.html"><svg class="tc-image-home-button tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt">
+    <g fill-rule="evenodd">
+        <path d="M112.9847,119.501583 C112.99485,119.336814 113,119.170705 113,119.003406 L113,67.56802 C116.137461,70.5156358 121.076014,70.4518569 124.133985,67.3938855 C127.25818,64.2696912 127.260618,59.2068102 124.131541,56.0777326 L70.3963143,2.34250601 C68.8331348,0.779326498 66.7828947,-0.000743167069 64.7337457,1.61675364e-05 C62.691312,-0.00409949529 60.6426632,0.777559815 59.077717,2.34250601 L33,28.420223 L33,28.420223 L33,8.00697327 C33,3.58484404 29.4092877,0 25,0 C20.581722,0 17,3.59075293 17,8.00697327 L17,44.420223 L5.3424904,56.0777326 C2.21694607,59.2032769 2.22220878,64.2760483 5.34004601,67.3938855 C8.46424034,70.5180798 13.5271213,70.5205187 16.6561989,67.3914411 L17,67.04764 L17,119.993027 C17,119.994189 17.0000002,119.995351 17.0000007,119.996514 C17.0000002,119.997675 17,119.998838 17,120 C17,124.418278 20.5881049,128 24.9992458,128 L105.000754,128 C109.418616,128 113,124.409288 113,120 C113,119.832611 112.99485,119.666422 112.9847,119.501583 Z M97,112 L97,51.5736087 L97,51.5736087 L64.7370156,19.3106244 L33,51.04764 L33,112 L97,112 Z"></path>
+    </g>
+</svg>Homeへ</a><svg class="tc-image-blank tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"></svg><a class="tc-tiddlylink tc-tiddlylink-resolves" href="ImageJ.html"><svg class="tc-image-up-arrow tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt">
+<path d="m109.07576,109.35336c-1.43248,1.43361 -3.41136,2.32182 -5.59717,2.32182l-79.16816,0c-4.36519,0 -7.91592,-3.5444 -7.91592,-7.91666c0,-4.36337 3.54408,-7.91667 7.91592,-7.91667l71.25075,0l0,-71.25074c0,-4.3652 3.54442,-7.91592 7.91667,-7.91592c4.36336,0 7.91667,3.54408 7.91667,7.91592l0,79.16815c0,2.1825 -0.88602,4.16136 -2.3185,5.59467l-0.00027,-0.00056l0.00001,-0.00001z" transform="rotate(-135, 63.8945, 64.1752)"></path>
+</svg>
+ 
+ImageJの記事Topへ</a></p><p><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><!-- responsive_ja --><ins class="adsbygoogle"     style="display:block"     data-ad-client="ca-pub-6163695023100481"     data-ad-slot="5149997050"     data-ad-format="horizontal"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></p></div>
+
+
+
+</div>
+
+</p>
+</section>
+</body>
+</html>

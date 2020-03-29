@@ -1,0 +1,136 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="generator" content="TiddlyWiki" />
+<meta name="tiddlywiki-version" content="5.1.21" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="format-detection" content="telephone=no">
+<link id="faviconLink" rel="shortcut icon" href="favicon.ico">
+<link rel="stylesheet" href="static.css">
+<title>画像処理とブロブ解析の一例: WAKU-TAKE-A  PROGRAM</title>
+</head>
+<body class="tc-body">
+
+<section class="tc-story-river">
+<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists  tc-tagged-AboutImage" data-tags="AboutImage" data-tiddler-title="画像処理とブロブ解析の一例"><div class="tc-tiddler-title">
+<div class="tc-titlebar">
+<span class="tc-tiddler-controls">
+<span class=" tc-reveal"><button aria-label="more" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fmore-tiddler-actions" title="More actions"></button><div class=" tc-reveal" hidden="true"></div></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal"><button aria-label="edit" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fedit" title="Edit this tiddler"></button></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal"><button aria-label="close" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fclose" title="Close this tiddler"></button></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span>
+</span>
+
+<span>
+
+<span class="tc-tiddler-title-icon" style="fill:;">
+
+</span>
+
+
+
+<h2 class="tc-title">
+画像処理とブロブ解析の一例
+</h2>
+
+</span>
+
+</div>
+
+<div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div>
+</div><div class=" tc-reveal" hidden="true"></div>
+<div class=" tc-reveal">
+<div class="tc-subtitle">
+<a class="tc-tiddlylink tc-tiddlylink-missing" href=".html">
+
+</a> 13th December 2019 at 8:52pm
+</div>
+</div>
+<div class=" tc-reveal">
+<div class="tc-tags-wrapper"><span class="tc-tag-list-item">
+<span class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">
+ AboutImage
+</span>
+<span class="tc-drop-down tc-reveal" hidden="true"></span></span></div>
+</div>
+<div class="tc-tiddler-body tc-reveal"><p>画像処理とは、</p><blockquote><p>電子工学的（主に情報工学的）に画像を処理して、別の画像に変形したり、画像から何らかの情報を取り出すために行われる処理全般を指す。</p><p>（Wikipediaの<a class="tc-tiddlylink-external" href="https://ja.wikipedia.org/wiki/%E7%94%BB%E5%83%8F%E5%87%A6%E7%90%86" rel="noopener noreferrer" target="_blank">画像処理</a>より）</p></blockquote><p>ブロブ（Blob）とは塊のことです。</p><p>画像を2値化した後、ラべリングを行い、ラベル付けされた塊の面積、位置、長さなどの特徴量を解析することをブロブ解析と言います。</p><p>本記事では、ImageJのサイトにある以下のサンプル画像に対して、画像処理を行い、ブロブ解析し、丸いドット（28個）の位置と面積を調べたいと思います。</p><p>ポイントは、右上の薄いドットをどう抽出するかです。</p><p><img src="./img/Dot_Blot.jpg" title="Dot_Blot.jpg"></p><p>画像は自分のPCに保存してください。</p><h2 class="">準備</h2><p>ImageJに、<a class="tc-tiddlylink-external" href="https://imagej.nih.gov/ij/plugins/calculator-plus.html" rel="noopener noreferrer" target="_blank">Calculator Plus</a>（<a class="tc-tiddlylink-external" href="http://imagej.net/plugins/calculator-plus.html" rel="noopener noreferrer" target="_blank">ミラー</a>）をインストールします。</p><p>方法は、リンク先に移動し、「Calculator_Plus.class」を「pluginsフォルダ」にコピーし、ImageJを再起動します。</p><h2 class="">まず画像を調べてみます</h2><p>以下の手順を行ってください。</p><p>ImageJで、自分のPCに保存した「Dot_Blot.jpg」を開きます。</p><p>メニューの <code>Image</code> ⇒ <code>Adjust</code> ⇒ <code>Threshold</code> を実行します。上下のスライダーで挟まれた範囲は赤色で、それ以外はグレイで表示されます。</p><p><img src="./img/ImgProc_001.jpg" title="ImgProc_001.jpg"></p><p>下のスライダーを右にスライドさせて、右上のドットを赤くしようとすると、左側は赤く塗りつぶされてしまいます。</p><p><img src="./img/ImgProc_002.jpg" title="ImgProc_002.jpg"></p><p>単純な2値化処理では、全てのドットを抽出することはできないようです。</p><h2 class="">今回の画像処理の例</h2><p>「Dot_Blot.jpg」の背景は、左と右で背景の輝度が違うようです。</p><p>今回は、Meanフィルタを利用した背景除去を行います。<a class="tc-tiddlylink tc-tiddlylink-resolves" href="%25E8%2583%258C%25E6%2599%25AF%25E9%2599%25A4%25E5%258E%25BB%25E3%2581%25AB%25E3%2581%25A4%25E3%2581%2584%25E3%2581%25A6.html">こちら</a>を参考にしてください。</p><p>画像処理のフローとしては、以下を行います。基本的なフローの一つだと思います。</p><ol><li>背景除去</li><li>2値化処理</li><li>ノイズ除去（収縮 ＋ 膨張）</li></ol><p>では、以下の手順で行ってください。</p><p>「Dot_Blot.jpg」ウィンドウを選択して、<br>
+メニューの <code>Image</code> ⇒ <code>Duplicate</code> ⇒ <code>Title</code>に「Dot_Blot.jpg_Mean」を入力して実行します。</p><p>「Dot_Blot.jpg_Mean」ウィンドウを選択して、<br>
+メニューの <code>Plugins</code> ⇒ <code>Filters</code> ⇒ <code>Fast Filters</code> を実行します。</p><p><code>Filter Type</code> = mean<br>
+<code>xRadius</code> = 31<br>
+<code>yRadius</code> = 31<br>
+<img src="./img/ImgProc_003.jpg" title="ImgProc_003.jpg"></p><p>平滑化の結果<br>
+<img src="./img/ImgProc_004.jpg" title="ImgProc_004.jpg"></p><p>次に、差分を実行します。メニューの <code>Plugins</code> ⇒ <code>Calculator Plus</code>  を実行します。</p><p><code>i1</code> = Dot_Blot.jpg<br>
+<code>i2</code> = Dot_Blot.jpg_Mean<br>
+<code>Operation</code> = Substruct<br>
+<code>k1</code> = 1.0<br>
+<code>k2</code> = 194.0（「Dot_Blot.jpg」の平均輝度）<br>
+<img src="./img/ImgProc_015.jpg" title="ImgProc_015.jpg"></p><p>差分の結果<br>
+<img src="./img/ImgProc_005.jpg" title="ImgProc_005.jpg"></p><p>メニューの <code>Image</code> ⇒ <code>Adjust</code> ⇒ <code>Threshold</code> を実行し、下のスライダーを右にスライドさせて、値を <code>192</code> にします。</p><p><img src="./img/ImgProc_006.jpg" title="ImgProc_006.jpg"></p><p>次に2値化の準備をします。</p><p>メニューの <code>Process</code> ⇒ <code>Binary</code> ⇒ <code>Options</code> ⇒ <code>Black background</code> をONにします。</p><p><img src="./img/ImgProc_012.jpg" title="ImgProc_012.jpg"></p><p>メニューの <code>Process</code> ⇒ <code>Binary</code> ⇒ <code>Convert to Mask</code> で2値化します。</p><p>2値化処理の結果<br>
+<img src="./img/ImgProc_007.jpg" title="ImgProc_007.jpg"></p><p>メニューの <code>Plugins</code> ⇒ <code>Filters</code> ⇒ <code>Fast Filters</code> を実行します。</p><p><code>Filter Type</code> = minimum<br>
+<code>xRadius</code> = 5<br>
+<code>yRadius</code> = 5<br>
+<img src="./img/ImgProc_010.jpg" title="ImgProc_010.jpg"></p><p>収縮処理の結果<br>
+<img src="./img/ImgProc_011.jpg" title="ImgProc_011.jpg"></p><p>メニューの <code>Plugins</code> ⇒ <code>Filters</code> ⇒ <code>Fast Filters</code> を実行します。</p><p><code>Filter Type</code> = maximum <br>
+<code>xRadius</code> = 5<br>
+<code>yRadius</code> = 5<br>
+<img src="./img/ImgProc_008.jpg" title="ImgProc_008.jpg"></p><p>膨張処理の結果<br> 
+<img src="./img/ImgProc_009.jpg" title="ImgProc_009.jpg"></p><p><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><!-- responsive_ja --><ins class="adsbygoogle"     style="display:block"     data-ad-client="ca-pub-6163695023100481"     data-ad-slot="5149997050"     data-ad-format="horizontal"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></p><h2 class="">ブロブ解析</h2><p>ImageJには、<code>Analize Particles</code>というブロブ解析用のコマンドがありますので使います。</p><p>「Result」ウィンドウを選択して、<br>
+メニューの <code>Analize</code> ⇒ <code>Analize Particles</code> を実行します。</p><p>下のように設定して、実行します。<br>
+<img src="./img/ImgProc_013.jpg" title="ImgProc_013.jpg"></p><p><img src="./img/ImgProc_014.jpg" title="ImgProc_014.jpg"></p><p>ドットを抽出することができました。位置（X、Y）や大まかな面積（Area）などを調べることができます。</p><p>計測する特徴量を変えたい時には、メニューの <code>Analize</code> ⇒ <code>Set Measurements</code> で設定してください。</p><p>今回はブロブ解析の対象が白になっていると思いますが、黒にしたい場合は、メニューの <code>Process</code> ⇒ <code>Binary</code> ⇒ <code>Options</code> ⇒ <code>Black background</code> をOFFにします。</p><h2 class="">マクロ</h2><p>以上の処理をマクロにしてみました。</p><pre><code>title = getTitle();
+title_mean = title + &quot;_Mean&quot;;
+title_result = title + &quot;_Result&quot;;
+
+// Duplicate
+selectWindow(title);
+run(&quot;Duplicate...&quot;, &quot; &quot;);
+rename(title_mean);
+
+// Mean
+selectWindow(title_mean);
+run(&quot;Fast Filters&quot;, &quot;link filter=mean x=31 y=31 preprocessing=none offset=128&quot;);
+
+// Substruct
+selectWindow(title_mean);
+run(&quot;Calculator Plus&quot;, &quot;i1=&quot; + title + &quot; i2=&quot; + title_mean + &quot; operation=[Subtract: i2 = (i1-i2) x k1 + k2] k1=1 k2=194 create&quot;);
+rename(title_result);
+
+// Binarize
+selectWindow(title_result);
+setThreshold(0, 192);
+setOption(&quot;BlackBackground&quot;, true);
+run(&quot;Convert to Mask&quot;);
+
+// Minimum filter
+selectWindow(title_result);
+run(&quot;Fast Filters&quot;, &quot;link filter=minimum x=5 y=5 preprocessing=none offset=128&quot;);
+
+// Maximum filter
+selectWindow(title_result);
+run(&quot;Fast Filters&quot;, &quot;link filter=maximum x=5 y=5 preprocessing=none offset=128&quot;);
+
+// Analyze Particles
+selectWindow(title_result);
+run(&quot;Analyze Particles...&quot;, &quot;display clear add&quot;);</code></pre><p>メニューの <code>Plugins</code> ⇒ <code>New</code> ⇒ <code>Macro</code>  を実行します。上のマクロをコピー＆ペーストしてください。
+ 
+「Dot_Blot.jpg」ウィンドウを選択して、<br>
+<code>Macros</code> ⇒ <code>Run Macro</code> を実行してください。</p><p><img src="./img/ImgProc_016.jpg" title="ImgProc_016.jpg"></p><hr><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="index.html"><svg class="tc-image-home-button tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt">
+    <g fill-rule="evenodd">
+        <path d="M112.9847,119.501583 C112.99485,119.336814 113,119.170705 113,119.003406 L113,67.56802 C116.137461,70.5156358 121.076014,70.4518569 124.133985,67.3938855 C127.25818,64.2696912 127.260618,59.2068102 124.131541,56.0777326 L70.3963143,2.34250601 C68.8331348,0.779326498 66.7828947,-0.000743167069 64.7337457,1.61675364e-05 C62.691312,-0.00409949529 60.6426632,0.777559815 59.077717,2.34250601 L33,28.420223 L33,28.420223 L33,8.00697327 C33,3.58484404 29.4092877,0 25,0 C20.581722,0 17,3.59075293 17,8.00697327 L17,44.420223 L5.3424904,56.0777326 C2.21694607,59.2032769 2.22220878,64.2760483 5.34004601,67.3938855 C8.46424034,70.5180798 13.5271213,70.5205187 16.6561989,67.3914411 L17,67.04764 L17,119.993027 C17,119.994189 17.0000002,119.995351 17.0000007,119.996514 C17.0000002,119.997675 17,119.998838 17,120 C17,124.418278 20.5881049,128 24.9992458,128 L105.000754,128 C109.418616,128 113,124.409288 113,120 C113,119.832611 112.99485,119.666422 112.9847,119.501583 Z M97,112 L97,51.5736087 L97,51.5736087 L64.7370156,19.3106244 L33,51.04764 L33,112 L97,112 Z"></path>
+    </g>
+</svg>Homeへ</a><svg class="tc-image-blank tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"></svg><a class="tc-tiddlylink tc-tiddlylink-resolves" href="ImageJ.html"><svg class="tc-image-up-arrow tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt">
+<path d="m109.07576,109.35336c-1.43248,1.43361 -3.41136,2.32182 -5.59717,2.32182l-79.16816,0c-4.36519,0 -7.91592,-3.5444 -7.91592,-7.91666c0,-4.36337 3.54408,-7.91667 7.91592,-7.91667l71.25075,0l0,-71.25074c0,-4.3652 3.54442,-7.91592 7.91667,-7.91592c4.36336,0 7.91667,3.54408 7.91667,7.91592l0,79.16815c0,2.1825 -0.88602,4.16136 -2.3185,5.59467l-0.00027,-0.00056l0.00001,-0.00001z" transform="rotate(-135, 63.8945, 64.1752)"></path>
+</svg>
+ 
+ImageJの記事Topへ</a></p><p><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><!-- responsive_ja --><ins class="adsbygoogle"     style="display:block"     data-ad-client="ca-pub-6163695023100481"     data-ad-slot="5149997050"     data-ad-format="horizontal"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></p></div>
+
+
+
+</div>
+
+</p>
+</section>
+</body>
+</html>

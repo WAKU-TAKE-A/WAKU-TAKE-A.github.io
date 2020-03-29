@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="generator" content="TiddlyWiki" />
+<meta name="tiddlywiki-version" content="5.1.21" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="format-detection" content="telephone=no">
+<link id="faviconLink" rel="shortcut icon" href="favicon.ico">
+<link rel="stylesheet" href="static.css">
+<title>（05）C#から、C++の関数の実行（いろいろな例）: WAKU-TAKE-A  PROGRAM</title>
+</head>
+<body class="tc-body">
+
+<section class="tc-story-river">
+<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists  tc-tagged-ClrWrapper" data-tags="ClrWrapper" data-tiddler-title="（05）C#から、C++の関数の実行（いろいろな例）"><div class="tc-tiddler-title">
+<div class="tc-titlebar">
+<span class="tc-tiddler-controls">
+<span class=" tc-reveal"><button aria-label="more" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fmore-tiddler-actions" title="More actions"></button><div class=" tc-reveal" hidden="true"></div></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal"><button aria-label="edit" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fedit" title="Edit this tiddler"></button></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal"><button aria-label="close" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fclose" title="Close this tiddler"></button></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span>
+</span>
+
+<span>
+
+<span class="tc-tiddler-title-icon" style="fill:;">
+
+</span>
+
+
+
+<h2 class="tc-title">
+（05）C#から、C++の関数の実行（いろいろな例）
+</h2>
+
+</span>
+
+</div>
+
+<div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div>
+</div><div class=" tc-reveal" hidden="true"></div>
+<div class=" tc-reveal">
+<div class="tc-subtitle">
+<a class="tc-tiddlylink tc-tiddlylink-missing" href=".html">
+
+</a> 13th December 2019 at 8:52pm
+</div>
+</div>
+<div class=" tc-reveal">
+<div class="tc-tags-wrapper"><span class="tc-tag-list-item">
+<span class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">
+ ClrWrapper
+</span>
+<span class="tc-drop-down tc-reveal" hidden="true"></span></span></div>
+</div>
+<div class="tc-tiddler-body tc-reveal"><h1 class="">概要</h1><ul><li><a class="tc-tiddlylink tc-tiddlylink-resolves" href="%25EF%25BC%258802%25EF%25BC%2589C%2523%25E3%2581%258B%25E3%2582%2589%25E3%2580%2581C%252B%252B%25E3%2581%25AE%25E9%2596%25A2%25E6%2595%25B0%25E3%2581%25AE%25E5%25AE%259F%25E8%25A1%258C%25EF%25BC%2588%25E7%25B0%25A1%25E5%258D%2598%25E3%2581%25AA%25E4%25BE%258B%25EF%25BC%2589.html">（02）C#から、C++の関数の実行（簡単な例）</a></li><li><a class="tc-tiddlylink tc-tiddlylink-resolves" href="%25EF%25BC%258803%25EF%25BC%2589C%2523%25E3%2581%258B%25E3%2582%2589%25E3%2580%2581C%252B%252B%25E3%2581%25AE%25E9%2596%25A2%25E6%2595%25B0%25E3%2581%25AE%25E5%25AE%259F%25E8%25A1%258C%25EF%25BC%2588%25E9%2596%25A2%25E6%2595%25B0%25EF%25BC%2589.html">（03）C#から、C++の関数の実行（関数）</a></li><li><a class="tc-tiddlylink tc-tiddlylink-resolves" href="%25EF%25BC%258804%25EF%25BC%2589C%2523%25E3%2581%258B%25E3%2582%2589%25E3%2580%2581C%252B%252B%25E3%2581%25AE%25E9%2596%25A2%25E6%2595%25B0%25E3%2581%25AE%25E5%25AE%259F%25E8%25A1%258C%25EF%25BC%2588%25E3%2582%25AF%25E3%2583%25A9%25E3%2582%25B9%25EF%25BC%2589.html">（04）C#から、C++の関数の実行（クラス）</a></li></ul><p>において、C#から、C++の標準関数、自作関数、自作クラスを利用する例を説明しました。</p><p>以下の模式図を見てください。C++のクラス「NativeClass」の「NativeFunction」メソッドをC#で利用する例の模式図です。</p><p><img src="img/Wrapper04.png"></p><p>ポイントになるのは、</p><p><code>「様々な引数を、どのようにC#とC++間で橋渡し（マーシャリング）をするのか？」</code></p><p>です。</p><h1 class="">いろいろな例</h1><p>以下のような引数の橋渡し方法を考えてみます。</p><ol><li>基本型</li><li>基本型のポインタ参照</li><li>基本型1次元配列</li><li>基本型の配列の配列</li><li>構造体型のポインタ参照</li><li>構造体型1次元配列</li><li>構造体型の配列の配列</li><li>文字列（<a class="tc-tiddlylink tc-tiddlylink-resolves" href="%25EF%25BC%258806%25EF%25BC%2589C%2523%25E3%2581%258B%25E3%2582%2589%25E3%2580%2581C%252B%252B%25E3%2581%25AE%25E9%2596%25A2%25E6%2595%25B0%25E3%2581%25AE%25E5%25AE%259F%25E8%25A1%258C%25EF%25BC%2588%25E6%2596%2587%25E5%25AD%2597%25E5%2588%2597%25E3%2581%25AE%25E3%2583%259E%25E3%2583%25BC%25E3%2582%25B7%25E3%2583%25A3%25E3%2583%25AA%25E3%2583%25B3%25E3%2582%25B0%25EF%25BC%2589.html">こちら</a>も読んでみてください）</li></ol><p>なるべくポインタを駆使することを心がけて、橋渡し方法を考えました。当然、これ以外にもいろいろ方法があると思います。</p><p><img src="img/marshalling_method_01.png"></p><p><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><!-- responsive_ja --><ins class="adsbygoogle"     style="display:block"     data-ad-client="ca-pub-6163695023100481"     data-ad-slot="5149997050"     data-ad-format="horizontal"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></p><h3 class=""><u>注意点</u></h3><ul><li>上の表では省略していますが、pin_ptr、GCHandleはロック解除を忘れないでください</li></ul><pre><code>pin_ptrの場合、
+    pin_op = nullptr;
+GCHandleの場合、
+    pin_op.Free();</code></pre><ul><li>配列の配列からポインタを取り出すイメージ。<br><img src="img/DoublePointer01.png"></li><li>構造体は、「C++」と「C#／C++/CLI」のパッキングのサイズを一致させることを忘れないようにしてください。</li></ul><pre><code>例：
+C++の構造体：
+    #pragma pack(4)
+    typedef struct tagStruct
+    {
+	int a;
+	int b;
+    }Struct;
+    #pragma pack()
+
+C++/CLIの構造体：
+    [StructLayoutAttribute(LayoutKind::Sequential, Pack = 4)]
+    public value struct WrStruct
+    {
+        int a;
+        int b;
+    };
+
+C#の構造体：
+    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    unsafe public struct WrStruct
+    {
+        public int a;
+        public int b;
+    };</code></pre><ul><li>配列を要素に持つ構造体を扱う場合は、マーシャリングはさらに難しくなります。<ul><li>配列を要素に持つ構造体を扱う場合、<br><a class="tc-tiddlylink-external" href="http://social.msdn.microsoft.com/Forums/ja/vcgeneralja/thread/26516067-fb42-4939-9aeb-bcf6d62e68da" rel="noopener noreferrer" target="_blank">[C++/CLI]配列を含む構造体のpin_ptrによるメモリ受け渡し</a><br>を参照してください。<br>C++/CLIでは実現できません。C#のクラスライブラリを作成し、C++/CLIで読み込みます。</li></ul></li></ul><hr><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="index.html"><svg class="tc-image-home-button tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt">
+    <g fill-rule="evenodd">
+        <path d="M112.9847,119.501583 C112.99485,119.336814 113,119.170705 113,119.003406 L113,67.56802 C116.137461,70.5156358 121.076014,70.4518569 124.133985,67.3938855 C127.25818,64.2696912 127.260618,59.2068102 124.131541,56.0777326 L70.3963143,2.34250601 C68.8331348,0.779326498 66.7828947,-0.000743167069 64.7337457,1.61675364e-05 C62.691312,-0.00409949529 60.6426632,0.777559815 59.077717,2.34250601 L33,28.420223 L33,28.420223 L33,8.00697327 C33,3.58484404 29.4092877,0 25,0 C20.581722,0 17,3.59075293 17,8.00697327 L17,44.420223 L5.3424904,56.0777326 C2.21694607,59.2032769 2.22220878,64.2760483 5.34004601,67.3938855 C8.46424034,70.5180798 13.5271213,70.5205187 16.6561989,67.3914411 L17,67.04764 L17,119.993027 C17,119.994189 17.0000002,119.995351 17.0000007,119.996514 C17.0000002,119.997675 17,119.998838 17,120 C17,124.418278 20.5881049,128 24.9992458,128 L105.000754,128 C109.418616,128 113,124.409288 113,120 C113,119.832611 112.99485,119.666422 112.9847,119.501583 Z M97,112 L97,51.5736087 L97,51.5736087 L64.7370156,19.3106244 L33,51.04764 L33,112 L97,112 Z"></path>
+    </g>
+</svg>Homeへ</a><svg class="tc-image-blank tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"></svg><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Programming.html"><svg class="tc-image-up-arrow tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt">
+<path d="m109.07576,109.35336c-1.43248,1.43361 -3.41136,2.32182 -5.59717,2.32182l-79.16816,0c-4.36519,0 -7.91592,-3.5444 -7.91592,-7.91666c0,-4.36337 3.54408,-7.91667 7.91592,-7.91667l71.25075,0l0,-71.25074c0,-4.3652 3.54442,-7.91592 7.91667,-7.91592c4.36336,0 7.91667,3.54408 7.91667,7.91592l0,79.16815c0,2.1825 -0.88602,4.16136 -2.3185,5.59467l-0.00027,-0.00056l0.00001,-0.00001z" transform="rotate(-135, 63.8945, 64.1752)"></path>
+</svg>
+ 
+プログラミングの記事Topへ</a></p><p><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><!-- responsive_ja --><ins class="adsbygoogle"     style="display:block"     data-ad-client="ca-pub-6163695023100481"     data-ad-slot="5149997050"     data-ad-format="horizontal"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></p></div>
+
+
+
+</div>
+
+</p>
+</section>
+</body>
+</html>
