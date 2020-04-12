@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="generator" content="TiddlyWiki" />
+<meta name="tiddlywiki-version" content="5.1.21" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="format-detection" content="telephone=no">
+<link id="faviconLink" rel="shortcut icon" href="favicon.ico">
+<link rel="stylesheet" href="static.css">
+<title>AI2で画像の送信と受信（HTTP通信）: WAKU-TAKE-A  PROGRAM</title>
+</head>
+<body class="tc-body">
+
+<section class="tc-story-river">
+<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists  tc-tagged-AppInv" data-tags="AppInv" data-tiddler-title="AI2で画像の送信と受信（HTTP通信）"><div class="tc-tiddler-title">
+<div class="tc-titlebar">
+<span class="tc-tiddler-controls">
+<span class=" tc-reveal"><button aria-label="more" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fmore-tiddler-actions" title="More actions"></button><div class=" tc-reveal" hidden="true"></div></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal"><button aria-label="edit" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fedit" title="Edit this tiddler"></button></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal"><button aria-label="close" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fclose" title="Close this tiddler"></button></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span>
+</span>
+
+<span>
+
+<span class="tc-tiddler-title-icon" style="fill:;">
+
+</span>
+
+
+
+<h2 class="tc-title">
+AI2で画像の送信と受信（HTTP通信）
+</h2>
+
+</span>
+
+</div>
+
+<div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div>
+</div><div class=" tc-reveal" hidden="true"></div>
+<div class=" tc-reveal">
+<div class="tc-subtitle">
+<a class="tc-tiddlylink tc-tiddlylink-missing" href=".html">
+
+</a> 12th April 2020 at 11:02am
+</div>
+</div>
+<div class=" tc-reveal">
+<div class="tc-tags-wrapper"><span class="tc-tag-list-item">
+<span class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">
+ AppInv
+</span>
+<span class="tc-drop-down tc-reveal" hidden="true"></span></span></div>
+</div>
+<div class="tc-tiddler-body tc-reveal"><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="AI2%25E3%2581%25A7%25E3%2583%2586%25E3%2582%25AD%25E3%2582%25B9%25E3%2583%2588%25E3%2581%25AE%25E9%2580%2581%25E4%25BF%25A1%25E3%2581%25A8%25E5%258F%2597%25E4%25BF%25A1%25EF%25BC%2588HTTP%25E9%2580%259A%25E4%25BF%25A1%25EF%25BC%2589.html">前回</a>、テキストの送受信をApp Inventor2（以降AI2）で行いました。</p><p>今回は、画像でそれを行いたいと思います。</p><p>ポイントは、画像（バイナリーデータ）をテキスト（文字列）データに変換してから送信し、受信したデータを再び画像に変換する処理を追加する点です。</p><p>前回と同様に、作成したプロジェクトは<a class="tc-tiddlylink-external" href="https://github.com/WAKU-TAKE-A/AI2_SampleHttpPost2" rel="noopener noreferrer" target="_blank">こちら</a>に置いておきます。本ページではポイントを説明します。</p><h2 class=""><u>拡張機能（Extension）の導入</u></h2><p><a class="tc-tiddlylink-external" href="http://kio4.com/appinventor/277_extension_imagen_string.htm" rel="noopener noreferrer" target="_blank">こちらに</a> に「KIO4_File2String」というAI2の拡張機能が公開されています。ファイルをbase64の文字列に変換し、base64の文字列をファイルに変換する機能です。</p><p>作者は「Juan Antonio」さんです。ライセンスはMITです。機能とライセンスともに、非常に使い勝手の良い拡張機能です。</p><p><code>com.KIO4_File2String.aix</code> をダウンロードしてください。</p><p><img src="img/ai_httppost2_001.jpg"><br><small><u>画像1</u></small></p><p>パレットの一番下Extension → Import extension でダウンロードした<code>com.KIO4_File2String.aix</code>を選択します。 </p><p><img src="img/ai_httppost2_002.jpg"><br><small><u>画像2</u></small></p><p><img src="img/ai_httppost2_003.jpg"><br><small><u>画像3</u></small></p><p>画像3のように拡張機能が追加されます。あとはドラッグ＆ドロップで機能をアプリケーションに追加することができます。</p><p><img src="img/ai_httppost2_004.jpg"><br><small><u>画像4</u></small></p><p><code>call KIO4_File2String.File2String</code>は、<code>pathFile</code>で指定したファイルから、文字列の作成を実行します。</p><p><code>call KIO4_File2String.String2File</code>は、<code>string</code>に文字列を指定すると、文字列からファイルを作成し、<code>pathSave</code>で指定したファイルに保存します。</p><p><code>when KIO4_File2String.GetString</code>は、<code>call KIO4_File2String.File2String</code>による文字列作成が完了した後に、実行したい処理を設定します。</p><h2 class=""><u>デザイナーでの作業</u></h2><p>デザイナーで以下のように、コンポーネントを配置していきます。</p><p><img src="img/ai_httppost2_005.jpg"><br><small><u>画像5</u></small></p><p>強いてポイントをあげるなら、画像ファイルから変換したテキストの表示に時間がかかるので、スイッチを使って表示ＯＮ／ＯＦＦの切り替え機能を付加しています。</p><h2 class=""><u>ブロック エディターでの作業</u></h2><p>ブロック エディターで以下のように、コンポーネントを配置していきます。</p><p><img src="img/ai_httppost2_006.jpg"><br><small><u>画像6</u></small></p><p>まずは、ユーザー定義関数を設定していきます。</p><p>画像から作成された文字列を、以下のようなJSON形式で送信します。（Gerate_JSON(img_string) 関数）</p><pre><code>{&quot;image&quot;:&quot;★★★Base64の文字列★★★&quot;}</code></pre><p>今回もエコーサーバーには、<a class="tc-tiddlylink-external" href="https://httpbin.org/" rel="noopener noreferrer" target="_blank">httpbin.org</a> を利用しますので、受信したレスポンスからデータを取得する際は、”json”というキーの値を取り出します。（Get_json_Key(ResponseContent) 関数）</p><p><img src="img/ai_httppost2_007.jpg"><br><small><u>画像7</u></small></p><p>アプリケーション開始時や初期化ボタンが押された時の処理を設定します。（画像7）</p><p><img src="img/ai_httppost2_008.jpg"><br><small><u>画像8</u></small></p><p>（画像）ファイル選択ボタン後の処理を設定します。（画像8）</p><p><img src="img/ai_httppost2_009.jpg"><br><small><u>画像9</u></small></p><p>送信ボタンが押された時の処理と、ファイルをテキストに変換してからの処理を指定しています。ここで、「KIO4_File2String」を使用していますが難しいポイントはないと思います。</p><p><code>when Web1.GotTexT</code>については、<a class="tc-tiddlylink tc-tiddlylink-resolves" href="AI2%25E3%2581%25A7%25E3%2583%2586%25E3%2582%25AD%25E3%2582%25B9%25E3%2583%2588%25E3%2581%25AE%25E9%2580%2581%25E4%25BF%25A1%25E3%2581%25A8%25E5%258F%2597%25E4%25BF%25A1%25EF%25BC%2588HTTP%25E9%2580%259A%25E4%25BF%25A1%25EF%25BC%2589.html">前回</a>と同様です。</p><h2 class=""><u>実行画面の例</u></h2><p>以下は実行画面の例です。処理時間もかかりますし、エコーサーバーにも負荷をかけますので、画像は極力小さいものを使用してください。</p><p><img src="img/ai_httppost2_010.jpg"><br><small><u>画像10</u></small></p><hr><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="index.html"><svg class="tc-image-home-button tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt">
+    <g fill-rule="evenodd">
+        <path d="M112.9847,119.501583 C112.99485,119.336814 113,119.170705 113,119.003406 L113,67.56802 C116.137461,70.5156358 121.076014,70.4518569 124.133985,67.3938855 C127.25818,64.2696912 127.260618,59.2068102 124.131541,56.0777326 L70.3963143,2.34250601 C68.8331348,0.779326498 66.7828947,-0.000743167069 64.7337457,1.61675364e-05 C62.691312,-0.00409949529 60.6426632,0.777559815 59.077717,2.34250601 L33,28.420223 L33,28.420223 L33,8.00697327 C33,3.58484404 29.4092877,0 25,0 C20.581722,0 17,3.59075293 17,8.00697327 L17,44.420223 L5.3424904,56.0777326 C2.21694607,59.2032769 2.22220878,64.2760483 5.34004601,67.3938855 C8.46424034,70.5180798 13.5271213,70.5205187 16.6561989,67.3914411 L17,67.04764 L17,119.993027 C17,119.994189 17.0000002,119.995351 17.0000007,119.996514 C17.0000002,119.997675 17,119.998838 17,120 C17,124.418278 20.5881049,128 24.9992458,128 L105.000754,128 C109.418616,128 113,124.409288 113,120 C113,119.832611 112.99485,119.666422 112.9847,119.501583 Z M97,112 L97,51.5736087 L97,51.5736087 L64.7370156,19.3106244 L33,51.04764 L33,112 L97,112 Z"></path>
+    </g>
+</svg>Homeへ</a><svg class="tc-image-blank tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"></svg><a class="tc-tiddlylink tc-tiddlylink-resolves" href="AppInventor.html"><svg class="tc-image-up-arrow tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt">
+<path d="m109.07576,109.35336c-1.43248,1.43361 -3.41136,2.32182 -5.59717,2.32182l-79.16816,0c-4.36519,0 -7.91592,-3.5444 -7.91592,-7.91666c0,-4.36337 3.54408,-7.91667 7.91592,-7.91667l71.25075,0l0,-71.25074c0,-4.3652 3.54442,-7.91592 7.91667,-7.91592c4.36336,0 7.91667,3.54408 7.91667,7.91592l0,79.16815c0,2.1825 -0.88602,4.16136 -2.3185,5.59467l-0.00027,-0.00056l0.00001,-0.00001z" transform="rotate(-135, 63.8945, 64.1752)"></path>
+</svg>
+ 
+App Inventorの記事Topへ</a></p><p><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><!-- responsive_ja --><ins class="adsbygoogle"     style="display:block"     data-ad-client="ca-pub-6163695023100481"     data-ad-slot="5149997050"     data-ad-format="horizontal"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></p></div>
+
+
+
+</div>
+
+</p>
+</section>
+</body>
+</html>
