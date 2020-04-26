@@ -1,0 +1,131 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="generator" content="TiddlyWiki" />
+<meta name="tiddlywiki-version" content="5.1.21" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="format-detection" content="telephone=no">
+<link id="faviconLink" rel="shortcut icon" href="favicon.ico">
+<link rel="stylesheet" href="static.css">
+<title>AI2とPythonの連携 その2: WAKU-TAKE-A  PROGRAM</title>
+</head>
+<body class="tc-body">
+
+<section class="tc-story-river">
+<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists  tc-tagged-AppInv" data-tags="AppInv" data-tiddler-title="AI2とPythonの連携 その2"><div class="tc-tiddler-title">
+<div class="tc-titlebar">
+<span class="tc-tiddler-controls">
+<span class=" tc-reveal"><button aria-label="more" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fmore-tiddler-actions" title="More actions"></button><div class=" tc-reveal" hidden="true"></div></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal"><button aria-label="edit" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fedit" title="Edit this tiddler"></button></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal"><button aria-label="close" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fclose" title="Close this tiddler"></button></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span><span class=" tc-reveal" hidden="true"></span>
+</span>
+
+<span>
+
+<span class="tc-tiddler-title-icon" style="fill:;">
+
+</span>
+
+
+
+<h2 class="tc-title">
+AI2とPythonの連携 その2
+</h2>
+
+</span>
+
+</div>
+
+<div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div>
+</div><div class=" tc-reveal" hidden="true"></div>
+<div class=" tc-reveal">
+<div class="tc-subtitle">
+<a class="tc-tiddlylink tc-tiddlylink-missing" href=".html">
+
+</a> 26th April 2020 at 3:59pm
+</div>
+</div>
+<div class=" tc-reveal">
+<div class="tc-tags-wrapper"><span class="tc-tag-list-item">
+<span class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+fill:#333333;
+color:#333333;">
+ AppInv
+</span>
+<span class="tc-drop-down tc-reveal" hidden="true"></span></span></div>
+</div>
+<div class="tc-tiddler-body tc-reveal"><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="AI2%25E3%2581%25A8Python%25E3%2581%25AE%25E9%2580%25A3%25E6%2590%25BA.html">AI2とPythonの連携</a>で、App Inventor2（以降AI2）とPythonでの簡単なやり取りを行いました。</p><p>今回は、Pythonで受け取った画像データをOpenCVでぼかし処理（cv2.blur）を行ってから返信します。</p><p>簡単そうに見えて、変換部分にポイント満載です。コード自体は難しくありませんので安心してください。</p><p>前回と同様に、作成したプログラム（今回はPythonスクリプトなど）は<a class="tc-tiddlylink-external" href="https://github.com/WAKU-TAKE-A/ai2-test-post2" rel="noopener noreferrer" target="_blank">こちら</a>に置いておきます。本ページではポイントを説明します。</p><h2 class=""><u>バイナリーデータとOpenCVのMAT形式の相互変換</u></h2><p>Python上で「OpenCV」と「Numpy」を使いますので、インストールしていない場合は以下をDOSプロンプトで実行してください。<code>python.exe</code>のあるディレクトリに移動してから実行してください。</p><pre><code>python -m pip install opencv-python
+python -m pip install numpy</code></pre><p>まず、「Base64の文字列 ⇒ バイナリーデータ」の変換は前回説明しましたので、省略します。</p><p>「バイナリーデータ ⇒ OpenCVのMAT形式」の変換は、「OpenCV」のライブラリにはありません。「Numpy」を利用します。</p><pre><code>import numpy as np
+import cv2
+
+nparr = np.fromstring([バイナリーデータ], np.uint8)
+[OpenCVのMAT形式] = cv2.imdecode(nparr, cv2.IMREAD_COLOR)</code></pre><p>「OpenCVのMAT形式 ⇒ バイナリーデータ」の変換は、「OpenCV」のライブラリにあります。</p><pre><code>import cv2
+
+ret, [バイナリーデータ] = cv2.imencode('.jpg', [OpenCVのMAT形式])</code></pre><p>上の例はJPG形式でエンコードしています。</p><h2 class=""><u>バイナリーデータをBase64の文字列に変換</u></h2><p>これは、そんなに難しくありません。以下の通りです。</p><pre><code>[Base64の文字列] = base64.b64encode([バイナリーデータ]).decode('utf-8')</code></pre><h2 class=""><u>Pythonスクリプト</u></h2><p>今回の機能を実現するスクリプトは以下の通りです。スクリプト名は<code>ai2-test-post2.py</code>です。</p><pre class="python hljs"><code><span class="hljs-comment">#-*-coding:utf-8;-*-</span>
+
+<span class="hljs-keyword">import</span> base64
+<span class="hljs-keyword">from</span> flask <span class="hljs-keyword">import</span> Flask, request
+<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+<span class="hljs-keyword">import</span> cv2
+
+app = Flask(__name__)
+
+<span class="hljs-meta">@app.route('/')</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">index</span><span class="hljs-params">()</span>:</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-string">'Hello World!'</span>
+
+<span class="hljs-meta">@app.route('/post',methods=["POST"])</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">test_post</span><span class="hljs-params">()</span>:</span>
+    print(request.headers)
+    str_enc = request.json[<span class="hljs-string">'image'</span>]
+    bin_dec = base64.urlsafe_b64decode(
+        str_enc + <span class="hljs-string">'='</span> * (-len(str_enc) % <span class="hljs-number">4</span>))
+    fnm = <span class="hljs-string">'C:/tmp/flsk-test-post/tmp000.jpg'</span>
+    <span class="hljs-keyword">with</span> open(fnm, <span class="hljs-string">"wb"</span>) <span class="hljs-keyword">as</span> f:
+        f.write(bin_dec)
+    <span class="hljs-keyword">return</span> <span class="hljs-string">'{"json":{"image":"'</span> + str_enc + <span class="hljs-string">'"}}'</span>
+
+<span class="hljs-meta">@app.route('/blur',methods=["POST"])</span>
+<span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">test_blur</span><span class="hljs-params">()</span>:</span>
+    print(<span class="hljs-string">'OpenCV version is {0}'</span>.format(cv2.__version__))
+    size = request.args.get(<span class="hljs-string">'size'</span>, default=<span class="hljs-number">3</span>, type=int)
+    str_enc = request.json[<span class="hljs-string">'image'</span>]
+    bin_dec = base64.urlsafe_b64decode(
+        str_enc + <span class="hljs-string">'='</span> * (-len(str_enc) % <span class="hljs-number">4</span>))
+    nparr = np.fromstring(bin_dec, np.uint8)
+    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    img_blur = cv2.blur(img, (size, size))
+    ret, img_enc = cv2.imencode(<span class="hljs-string">'.jpg'</span>, img_blur)
+    str_enc_blur = base64.b64encode(img_enc).decode(<span class="hljs-string">'utf-8'</span>)
+    <span class="hljs-keyword">return</span> <span class="hljs-string">'{"json":{"image":"'</span> + str_enc_blur + <span class="hljs-string">'"}}'</span></code></pre><p><code>test_blur()</code>におけるデータ変換は以下の部分です。</p><pre><code>【Base64の文字列 ⇒ バイナリーデータ】
+    bin_dec = base64.urlsafe_b64decode(
+        str_enc + '=' * (-len(str_enc) % 4))
+
+【バイナリーデータ ⇒ OpenCVのMAT形式】
+    nparr = np.fromstring(bin_dec, np.uint8)
+    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+
+【OpenCVのMAT形式 ⇒ バイナリーデータ】
+    ret, img_enc = cv2.imencode('.jpg', img_blur)
+
+【バイナリーデータ ⇒ Base64の文字列】
+    str_enc_blur = base64.b64encode(img_enc).decode('utf-8')</code></pre><p>ぼかし処理は以下の部分です。</p><pre><code>    img_blur = cv2.blur(img, (size, size))</code></pre><p><code>size</code>は以下の部分でURLから取得しています。</p><pre><code>    size = request.args.get('size', default=3, type=int)</code></pre><p>ちなみにURLはこんな感じです。<code>http://[アドレス]:[ポート番号]/blur?size=★</code>。★にぼかし処理のサイズを入力します。「?」以降を省略した場合は、デフォルトの3になります。</p><h2 class=""><u>実行画面の例</u></h2><p>スマホとPCを同一のWiFi環境で繋げました。私の環境では、PCのアドレスは「192.168.10.8」でした。</p><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="AI2%25E3%2581%25A8Python%25E3%2581%25AE%25E9%2580%25A3%25E6%2590%25BA.html">前回</a>と同様に、PC上でスクリプト実行します。そして、スマホ上で<a class="tc-tiddlylink tc-tiddlylink-resolves" href="AI2%25E3%2581%25A7%25E7%2594%25BB%25E5%2583%258F%25E3%2581%25AE%25E9%2580%2581%25E4%25BF%25A1%25E3%2581%25A8%25E5%258F%2597%25E4%25BF%25A1%25EF%25BC%2588HTTP%25E9%2580%259A%25E4%25BF%25A1%25EF%25BC%2589.html">SampleHttpPost2</a>を起動し、画像を選択し、URLは以下のように設定します。（sizeはデフォルト値3になります）</p><p><img src="img/ai-test-post_2-001.jpg"><br><small><u>画像1</u></small></p><p>そして、「Send」ボタンを押します。</p><p><img src="img/ai-test-post_2-002.jpg"><br><small><u>画像2</u></small></p><p>少しボケた画像が返ってきます。次に、以下のようにURLを設定します。</p><p><img src="img/ai-test-post_2-003.jpg"><br><small><u>画像3</u></small></p><p>再度、「Send」ボタンを押します。</p><p><img src="img/ai-test-post_2-004.jpg"><br><small><u>画像4</u></small></p><p>さらに、広範囲でボケます。簡易なIoTのシステムを作成できそうな気がしませんか？</p><hr><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="index.html"><svg class="tc-image-home-button tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt">
+    <g fill-rule="evenodd">
+        <path d="M112.9847,119.501583 C112.99485,119.336814 113,119.170705 113,119.003406 L113,67.56802 C116.137461,70.5156358 121.076014,70.4518569 124.133985,67.3938855 C127.25818,64.2696912 127.260618,59.2068102 124.131541,56.0777326 L70.3963143,2.34250601 C68.8331348,0.779326498 66.7828947,-0.000743167069 64.7337457,1.61675364e-05 C62.691312,-0.00409949529 60.6426632,0.777559815 59.077717,2.34250601 L33,28.420223 L33,28.420223 L33,8.00697327 C33,3.58484404 29.4092877,0 25,0 C20.581722,0 17,3.59075293 17,8.00697327 L17,44.420223 L5.3424904,56.0777326 C2.21694607,59.2032769 2.22220878,64.2760483 5.34004601,67.3938855 C8.46424034,70.5180798 13.5271213,70.5205187 16.6561989,67.3914411 L17,67.04764 L17,119.993027 C17,119.994189 17.0000002,119.995351 17.0000007,119.996514 C17.0000002,119.997675 17,119.998838 17,120 C17,124.418278 20.5881049,128 24.9992458,128 L105.000754,128 C109.418616,128 113,124.409288 113,120 C113,119.832611 112.99485,119.666422 112.9847,119.501583 Z M97,112 L97,51.5736087 L97,51.5736087 L64.7370156,19.3106244 L33,51.04764 L33,112 L97,112 Z"></path>
+    </g>
+</svg>Homeへ</a><svg class="tc-image-blank tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"></svg><a class="tc-tiddlylink tc-tiddlylink-resolves" href="AppInventor.html"><svg class="tc-image-up-arrow tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt">
+<path d="m109.07576,109.35336c-1.43248,1.43361 -3.41136,2.32182 -5.59717,2.32182l-79.16816,0c-4.36519,0 -7.91592,-3.5444 -7.91592,-7.91666c0,-4.36337 3.54408,-7.91667 7.91592,-7.91667l71.25075,0l0,-71.25074c0,-4.3652 3.54442,-7.91592 7.91667,-7.91592c4.36336,0 7.91667,3.54408 7.91667,7.91592l0,79.16815c0,2.1825 -0.88602,4.16136 -2.3185,5.59467l-0.00027,-0.00056l0.00001,-0.00001z" transform="rotate(-135, 63.8945, 64.1752)"></path>
+</svg>
+ 
+App Inventorの記事Topへ</a></p><p><script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><!-- responsive_ja --><ins class="adsbygoogle"     style="display:block"     data-ad-client="ca-pub-6163695023100481"     data-ad-slot="5149997050"     data-ad-format="horizontal"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></p></div>
+
+
+
+</div>
+
+</p>
+</section>
+</body>
+</html>
