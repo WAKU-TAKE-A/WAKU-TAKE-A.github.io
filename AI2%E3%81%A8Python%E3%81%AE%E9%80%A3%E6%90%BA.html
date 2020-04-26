@@ -11,7 +11,7 @@
 <meta name="format-detection" content="telephone=no">
 <link id="faviconLink" rel="shortcut icon" href="favicon.ico">
 <link rel="stylesheet" href="static.css">
-<title>AI2とPythonの連携: WAKU-TAKE-A  PROGRAM</title>
+<title>AI2とPythonの連携: WAKU-TAKE-A  PROGRAM — Tips of ImageJ, TiddlyWiki, Programing and so on</title>
 </head>
 <body class="tc-body">
 
@@ -44,7 +44,7 @@ AI2とPythonの連携
 <div class="tc-subtitle">
 <a class="tc-tiddlylink tc-tiddlylink-missing" href=".html">
 
-</a> 25th April 2020 at 3:11pm
+</a> 26th April 2020 at 3:59pm
 </div>
 </div>
 <div class=" tc-reveal">
@@ -62,7 +62,7 @@ app = Flask(__name__)
 
 <span class="hljs-meta">@app.route('/')</span>
 <span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">hello_world</span><span class="hljs-params">()</span>:</span>
-    <span class="hljs-keyword">return</span> <span class="hljs-string">'Hello, World!'</span></code></pre><p>Flaskは人気のフレームワークの一つなので、入門サイトはたくさんあります。</p><p>今回は公式サイトのドキュメントを参考にしました。（<a class="tc-tiddlylink-external" href="https://flask.palletsprojects.com/en/1.1.x/quickstart/" rel="noopener noreferrer" target="_blank">公式サイトのクイックスタート</a>）英語が苦手な方はGoggle翻訳などを利用してください。</p><p>Pythonにインストールしていない場合は、DOSプロンプト上で以下を実行してください。</p><pre><code>python -m pip install Flask</code></pre><h2 class=""><u>Pythonスクリプト</u></h2><p>今回の機能を実現するスクリプトは以下の通りです。スクリプト名は<code>ai2-test-post.py</code>です。</p><pre class="python hljs"><code><span class="hljs-comment">#-*-coding:utf-8;-*-</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-string">'Hello, World!'</span></code></pre><p>Flaskは人気のフレームワークの一つなので、入門サイトはたくさんあります。</p><p>今回は公式サイトのドキュメントを参考にしました。（<a class="tc-tiddlylink-external" href="https://flask.palletsprojects.com/en/1.1.x/quickstart/" rel="noopener noreferrer" target="_blank">公式サイトのクイックスタート</a>）英語が苦手な方はGoggle翻訳などを利用してください。</p><p>Pythonにインストールしていない場合は、</p><pre><code>python -m pip install Flask</code></pre><h2 class=""><u>Pythonスクリプト</u></h2><p>今回の機能を実現するスクリプトは以下の通りです。スクリプト名は<code>ai2-test-post.py</code>です。</p><pre class="python hljs"><code><span class="hljs-comment">#-*-coding:utf-8;-*-</span>
 
 <span class="hljs-keyword">import</span> base64
 <span class="hljs-keyword">from</span> flask <span class="hljs-keyword">import</span> Flask, request
