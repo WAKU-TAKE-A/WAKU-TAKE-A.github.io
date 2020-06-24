@@ -44,7 +44,7 @@ ImageJの便利なインターフェースについて
 <div class="tc-subtitle">
 <a class="tc-tiddlylink tc-tiddlylink-missing" href=".html">
 
-</a> 13th December 2019 at 8:52pm
+</a> 24th June 2020 at 11:44pm
 </div>
 </div>
 <div class=" tc-reveal">
@@ -56,13 +56,13 @@ color:#333333;">
 </span>
 <span class="tc-drop-down tc-reveal" hidden="true"></span></span></div>
 </div>
-<div class="tc-tiddler-body tc-reveal"><p>ImageJプラグインを作成する際に、以下の3つの重要なインターフェースがあります。</p><ul><li>ij.pugin.Plugin</li><li>ij.plugin.filter.PluginFilter</li><li>ij.plugin.filter.ExtendedPluginFilter</li></ul><p>Javaにおけるインターフェースは、強制力の強いテンプレートのようなものです。</p><p>ImageJにおいて、上の3つのインターフェースを実装したクラスで作成されたプラグインは、実行時に、ある決まったメソッドが自動的に実行されます。</p><p>インターフェースを実装する時には、ある決まったメソッドをユーザーが定義する必要があります。</p><h3 class=""><u>ij.pugin.Plugin</u></h3><p>単純に実行するだけのプラグインです。</p><pre class="java hljs"><code><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ABCD</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">PlugIn</span>
+<div class="tc-tiddler-body tc-reveal"><p>ImageJプラグインを作成する際に、以下の3つの重要なインターフェースがあります。</p><ul><li>ij.pugin.PlugIn</li><li>ij.plugin.filter.PlugInFilter</li><li>ij.plugin.filter.ExtendedPlugInFilter</li></ul><p>Javaにおけるインターフェースは、強制力の強いテンプレートのようなものです。</p><p>ImageJにおいて、上の3つのインターフェースを実装したクラスで作成されたプラグインは、実行時に、ある決まったメソッドが自動的に実行されます。</p><p>インターフェースを実装する時には、ある決まったメソッドをユーザーが定義する必要があります。</p><h3 class=""><u>ij.pugin.PlugIn</u></h3><p>単純に実行するだけのプラグインです。</p><pre class="java hljs"><code><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ABCD</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">PlugIn</span>
 </span>{
     <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">run</span><span class="hljs-params">(ImageProcessor ip)</span>
     </span>{
         ～
     }
-}</code></pre><h3 class=""><u>ij.plugin.filter.PluginFilter</u></h3><p>実行前に、画像のチェックを行います。</p><pre class="java hljs"><code><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ABCD</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">PlugInFilter</span>
+}</code></pre><h3 class=""><u>ij.plugin.filter.PlugInFilter</u></h3><p>実行前に、画像のチェックを行います。</p><pre class="java hljs"><code><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ABCD</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">PlugInFilter</span>
 </span>{
     <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">setup</span><span class="hljs-params">(String arg, ImagePlus imp)</span>
     </span>{
@@ -73,7 +73,7 @@ color:#333333;">
     </span>{
         ～
     }
-}</code></pre><h3 class=""><u>ij.plugin.filter.ExtendedPluginFilter</u></h3><p>実行前に、画像のチェック、パラメータ入力用ダイアログの表示などを行います。</p><pre class="java hljs"><code><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ABCD</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">ExtendedPlugInFilter</span>
+}</code></pre><h3 class=""><u>ij.plugin.filter.ExtendedPlugInFilter</u></h3><p>実行前に、画像のチェック、パラメータ入力用ダイアログの表示などを行います。</p><pre class="java hljs"><code><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ABCD</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">ExtendedPlugInFilter</span>
 </span>{
     <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">setup</span><span class="hljs-params">(String arg, ImagePlus imp)</span>
     </span>{
