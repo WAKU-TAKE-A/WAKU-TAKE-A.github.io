@@ -3,7 +3,7 @@
 <head><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-80755908-2"></script><script>  window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-80755908-2');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6163695023100481" crossorigin="anonymous"></script>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="generator" content="TiddlyWiki" />
-<meta name="tiddlywiki-version" content="5.2.5" />
+<meta name="tiddlywiki-version" content="5.3.1" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -16,44 +16,28 @@
 <body class="tc-body">
 
 <section class="tc-story-river tc-static-story-river">
-<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists  tc-tagged-Node-RED" data-tags="Node-RED" data-tiddler-title="node-red_opencv_001" role="article"><div class="tc-tiddler-title"><div class="tc-titlebar"><span class="tc-tiddler-controls"><button aria-expanded="false" aria-label="more" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fmore-tiddler-actions" title="More actions"></button><div class=" tc-reveal" hidden="true"></div><button aria-label="edit" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fedit" title="Edit this tiddler"></button><button aria-label="close" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fclose" title="Close this tiddler"></button></span><span><h2 class="tc-title">Node-REDで画像処理(opencv4nodejs) その1</h2></span></div><div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div></div><div class="tc-reveal"></div><div class=" tc-reveal"><div class="tc-subtitle"><a class="tc-tiddlylink tc-tiddlylink-missing" href=".html"></a> 26th February 2023 at 10:20pm</div></div><div class=" tc-reveal"><div class="tc-tags-wrapper"><span class="tc-tag-list-item" data-tag-title="Node-RED"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
+<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists  tc-tagged-Node-RED" data-tags="Node-RED" data-tiddler-title="node-red_opencv_001" role="article"><div class="tc-tiddler-title"><div class="tc-titlebar"><span class="tc-tiddler-controls"><button aria-expanded="false" aria-label="more" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fmore-tiddler-actions" title="More actions"></button><div class=" tc-reveal" hidden="true"></div><button aria-label="edit" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fedit" title="Edit this tiddler"></button><button aria-label="close" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fclose" title="Close this tiddler"></button></span><span><h2 class="tc-title">Node-REDで画像処理(opencv4nodejs) その1</h2></span></div><div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div></div><div class="tc-reveal"></div><div class=" tc-reveal"><div class="tc-subtitle"><a class="tc-tiddlylink tc-tiddlylink-missing" href=".html"></a> 8th March 2023 at 11:02pm</div></div><div class=" tc-reveal"><div class="tc-tags-wrapper"><span class="tc-tag-list-item" data-tag-title="Node-RED"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="background-color:;
 fill:#333333;
-color:#333333;">Node-RED</span><span class="tc-drop-down tc-reveal" hidden="true"></span></span></div></div><div class="tc-tiddler-body tc-reveal"><p>「<a class="tc-tiddlylink-external" href="https://github.com/justadudewhohacks/opencv4nodejs" rel="noopener noreferrer" target="_blank">opencv4nodejs</a>」はNode.js上で画像処理ライブラリ「OpenCV」を利用するためのモジュールです。</p><p>Node-REDから「opencv4nodejs」を利用する手順を説明します。今回は「opencv4nodejs」のインストール手順について説明します。</p><p>以下は、Windows10 64bit + Node.jsバージョン14系での手順です。</p><h2 class=""><u>インストール手順</u></h2><p>「opencv4nodejs」はバイナリーでは提供されていません。自PCでビルドする必要があります。</p><p>ビルド自体は「npm install ～」で実行してくれるので難しくはないのですが、ビルド環境の準備をする必要があります。</p><p>まず、Node.jsのネイティブアドオンモジュール（C++で作成したモジュール）をコンパイルするためツール「<a class="tc-tiddlylink-external" href="https://github.com/nodejs/node-gyp" rel="noopener noreferrer" target="_blank">node-gyp</a>」をインストールします。</p><p>PowerShellを管理者権限で起動し以下を実行します。</p><pre class="hljs"><code class="shell hljs"><span class="hljs-meta">&gt; </span><span class="language-bash">npm install -g node-gyp</span></code></pre><p>次に、「windows-build-tools」をインストールします。</p><pre class="hljs"><code class="shell hljs"><span class="hljs-meta">&gt; </span><span class="language-bash">npm install -g --production windows-build-tools</span></code></pre><p>「windows-build-tools」のインストールは曲者です。私の環境では何時間も固まったようになり「Build Tools for Visual Studio」のインストールが失敗します。</p><p>何時間待っても終了しない時は、インストール中のPowerShellを閉じ、<code>C:\Users\[YOUR ACCOUNT]\.windows-build-tools</code>内の<code>vs_BuildTools.exe</code>を直接実行してみるのも手かもしれません。</p><p><img class=" tc-image-loading" src="img/opencv4nodejs_inst_003.jpg"></p><p>以下のような画面が表示されます。</p><p><img class=" tc-image-loading" src="img/opencv4nodejs_inst_001.jpg"></p><p><img class=" tc-image-loading" src="img/opencv4nodejs_inst_002.jpg"></p><p>下の方は「セットアップが一時停止されました」と表示されていますが、これが何時間も固まった時の状態だと思われます。私は最新のものをインストールしました。（上の方）</p><p>「node-gyp」はPythonを利用します。2021/8において、推奨はPython v3.6、v3.7、v3.8、v3.9のようです。</p><p>今回は「windows-build-tools」に入っているPython v2.7は使わずに、Python v3.9をインストールして使います。(※1)</p><p><a class="tc-tiddlylink-external" href="https://www.python.org/downloads/" rel="noopener noreferrer" target="_blank">こちら</a>からv3.9系をダウンロードししました。インストール時にPathの追加する設定を忘れないようにしてください。</p><p>インストール後に以下を実行してください。</p><pre><code>&gt; python --version</code></pre><p>Pythonのバージョンが適切なバージョンであることを確認してください。</p><p>次に、<a class="tc-tiddlylink-external" href="https://cmake.org/download/" rel="noopener noreferrer" target="_blank">CMake</a>をインストールします。途中でPathを追加（add）するかを質問されるので、追加してください。デフォルトは追加しないになっていますので注意してください。</p><p>インストール後に以下を実行してください。</p><pre class="hljs"><code class="shell hljs"><span class="hljs-meta">&gt; </span><span class="language-bash">cmake --version</span></code></pre><p>CMakeのバージョンが表示されることを確認してください。</p><p>さらにに、<a class="tc-tiddlylink-external" href="https://gitforwindows.org/" rel="noopener noreferrer" target="_blank">Git for Windows</a>をインストールします。基本、デフォルト設定でインストールして問題ありませんが、エクスプローラの右クリックメニューにGitのコマンドを表示したくない場合は、コンポーネント選択画面で「Windows Explorer Integration」をOFFにしてください。</p><p><img class=" tc-image-loading" src="img/opencv4nodejs_inst_012.jpg"></p><p>インストール後に以下を実行してください。</p><pre class="hljs"><code class="shell hljs"><span class="hljs-meta">&gt; </span><span class="language-bash">git --version</span></code></pre><p>Gitのバージョンが表示されることを確認してください。</p><p>Python、Cmake、GitのPathが通っていな時は、<a class="tc-tiddlylink tc-tiddlylink-resolves" href="about_environment_variable_path.html">こちら</a>を参考にして追加してください。</p><p>そして、最後に以下を実行してください。</p><pre class="hljs"><code class="shell hljs"><span class="hljs-meta">&gt; </span><span class="language-bash">npm install -g opencv4nodejs</span></code></pre><pre class="hljs"><code class="shell hljs"><span class="hljs-meta">&gt; </span><span class="language-bash">opencv-build@0.1.9 install C:\Users\[YOUR ACCOUNT]\opencv4nodejs\node_modules\opencv-build</span>
-<span class="hljs-meta">&gt; </span><span class="language-bash">node ./install.js</span>
+color:#333333;">Node-RED</span><span class="tc-drop-down tc-reveal" hidden="true"></span></span></div></div><div class="tc-tiddler-body tc-reveal"><p>「<a class="tc-tiddlylink-external" href="https://github.com/justadudewhohacks/opencv4nodejs" rel="noopener noreferrer" target="_blank">opencv4nodejs</a>」はNode.js上で画像処理ライブラリ「OpenCV」を利用するためのモジュールです。</p><p>Node-REDから「opencv4nodejs」を利用する手順を説明します。今回は「opencv4nodejs」のインストール手順について説明します。</p><p>以下は、Windows10 64bit + Node.jsバージョン16系での手順です。</p><p>各ソフトのインストーラの準備やバージョンの管理などは大変なので、Windowsのパッケージ マネージャである「Chocolatey」を使うことにします。「Chocolatey」の導入については、<a class="tc-tiddlylink tc-tiddlylink-resolves" href="install_chocolatey.html">こちら</a>をご覧ください。</p><p>すでに「Chocolatey」がインストールされていることを前提に説明を続けます。</p><h2 class=""><u>インストール手順</u></h2><p>「opencv4nodejs」はバイナリーでは提供されていません。自PCでOpenCVをビルドすることもできますが、様々なPC環境の不具合でエラーが発生します。</p><p>本説明では「Chocolatey」でOpenCVのバイナリーを準備します。</p><p>自PCでビルドする方法は、<a class="tc-tiddlylink tc-tiddlylink-resolves" href="node-red_opencv_001_old.html">古い説明</a>をご覧ください。</p><p>まず、Node.jsのネイティブアドオンモジュール（C++で作成したモジュール）をコンパイルするためツール「<a class="tc-tiddlylink-external" href="https://github.com/nodejs/node-gyp" rel="noopener noreferrer" target="_blank">node-gyp</a>」をインストールします。</p><p>コマンド プロンプトを管理者権限で起動し以下を実行します。</p><pre class="hljs"><code class="shell hljs"><span class="hljs-meta">&gt; </span><span class="language-bash">npm install -g node-gyp</span></code></pre><p>「node-gyp」はPythonを利用します。2023/3において、推奨はPython v3.6、v3.7、v3.8、v3.9のようです。</p><p>Python／CMake／Git／Visual Studio Build Tools 2017／OpenCVをインストールします。</p><pre class="hljs"><code class="shell hljs"><span class="hljs-meta">&gt; </span><span class="language-bash">choco install cmake --installargs <span class="hljs-string">&#x27;ADD_CMAKE_TO_PATH=System&#x27;</span></span>
+<span class="hljs-meta">
+&gt; </span><span class="language-bash">choco install git</span>
+<span class="hljs-meta">
+&gt; </span><span class="language-bash">choco install python39</span></code></pre><p>システム環境変数Pathに、「c:\Python39」を追加しておきましょう。</p><pre class="hljs"><code class="shell hljs"><span class="hljs-meta">&gt; </span><span class="language-bash">choco install OpenCV</span></code></pre><p>以下の環境変数を追加します。（デフォルトの設定では「C:\tools」にインストールされます）</p><dl><dt>OPENCV_INCLUDE_DIR</dt><dd>C:\tools\opencv\build\include</dd><dt>OPENCV_LIB_DIR</dt><dd>C:\tools\opencv\build\x64\vc15\lib</dd><dt>OPENCV_BIN_DIR</dt><dd>C:\tools\opencv\build\x64\vc15\bin</dd></dl><p>システム環境変数Pathに「%OPENCV_BIN_DIR%」を追加します。</p><p>コマンドプロンプトを再起動し、パスが通っていることを確認します。</p><pre class="hljs"><code class="shell hljs"><span class="hljs-meta">&gt; </span><span class="language-bash">python --version</span>
+Python 3.9.13
+<span class="hljs-meta">
+&gt; </span><span class="language-bash">cmake --version</span>
+cmake version 3.25.2
 
-info install if you want to use an own OpenCV installation set OPENCV4NODEJS_DISABLE_AUTOBUILD
-info readAutoBuildFile file does not exists: C:\Users\[YOUR ACCOUNT]\opencv4nodejs\node_modules\opencv-build\opencv\auto-build.json C:\Users\[YOUR ACCOUNT]\opencv4nodejs\node_modules\opencv-build\opencv\auto-build.json
-info install failed to find auto-build.json: C:\Users\[YOUR ACCOUNT]\opencv4nodejs\node_modules\opencv-build\opencv\auto-build.json
-info install
-info install running install script...
-info install
-info install opencv version: 3.4.6
-info install with opencv contrib: yes
-info install custom build flags:
-info install
-info install executing: git --version
-info install git --version: git version 2.32.0.windows.2
-info install
-info install executing: cmake --version
-info install cmake --version: cmake version 3.21.1
-info install
-info install CMake suite maintained and supported by Kitware (kitware.com/cmake).
-info install
-info install using msbuild: {
-info install   path: &#x27;C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\15.0\\Bin\\MSBuild.exe&#x27;,
-info install   version: 15
-info install }
-info install installing opencv version 3.4.6 into directory: C:\Users\[YOUR ACCOUNT]\AppData\Roaming\npm\node_modules\opencv4nodejs\node_modules\opencv-build\opencv
+CMake suite maintained and supported by Kitware (kitware.com/cmake).
+<span class="hljs-meta">
+&gt; </span><span class="language-bash">git --version</span>
+git version 2.39.2.windows.1</code></pre><p>バージョン番号は私のPC環境での例なので、ちゃんとバージョン番号が表示されればOKです。</p><p>Python、Cmake、Gitのパスが通っていな時は、<a class="tc-tiddlylink tc-tiddlylink-resolves" href="about_environment_variable_path.html">こちら</a>を参考にして追加してください。</p><p>自動ビルド スクリプトが実行されないように環境変数を設定した後、
+opencv4nodejsのインストールを実行します。</p><pre class="hljs"><code class="shell hljs"><span class="hljs-meta">&gt; </span><span class="language-bash"><span class="hljs-built_in">set</span> OPENCV4NODEJS_DISABLE_AUTOBUILD=1</span>
+<span class="hljs-meta">&gt; </span><span class="language-bash">npm install -g opencv4nodejs</span>
 
-・・・
+changed 30 packages, and audited 31 packages in 8m
 
-info install spawning node gyp process: node-gyp rebuild --jobs max
-
-・・・
-</code></pre><p>途中で、<code>git --version</code>と<code>cmake --version</code>、<code>MSBuild.exeの有無</code>のチェックをしているようです。また、PythonのPathが通っていないと<code>node-gyp rebuild --jobs max</code>の部分で失敗します。</p><p>うまくいけば、以下のような感じで終了します。私の環境ではずいぶん時間がかかりました。</p><pre class="hljs"><code class="shell hljs">・・・
-
-+ opencv4nodejs@5.6.0
-added 29 packages from 60 contributors and updated 1 package in 2382.262s</code></pre><blockquote><div><svg class="tc-image-tmd-message-reply-text-outline tc-image-button" height="22pt" viewBox="0 0 24 24" width="22pt"><path d="M9 11H18V13H9V11M18 7H6V9H18V7M22 4V22L18 18H4C2.9 18 2 17.11 2 16V4C2 2.9 2.9 2 4 2H20C21.1 2 22 2.89 22 4M20 4H4V16H18.83L20 17.17V4Z"></path></svg></div><div>2021/8  : </div><div>「windows-build-tools」に入っているPython v2.7で成功しました。</div><div>2021/10 : </div><div>他のPCにインストールの際に「windows-build-tools」に入っているPython v2.7で失敗しました。Python v3.9をインストールし、<code>C:\Users\[YOUR ACCOUNT]\.windows-build-tools\python27</code>をPathから削除し、Python v3.9をPathに追加し成功しました。</div></blockquote><h2 class=""><u>正常にインストールされた場合</u></h2><p>スタートメニュー -&gt; Node.js -&gt; Node.js を実行してください。</p><p>以下のように、<code>const cv = require("opencv4nodejs")</code>を実行した後、<code>cv</code>を実行してください。</p><pre class="hljs"><code class="shell hljs"><span class="hljs-meta">&gt; </span><span class="language-bash">const cv = require(<span class="hljs-string">&quot;opencv4nodejs&quot;</span>)</span>
+found 0 vulnerabilities</code></pre><h2 class=""><u>正常にインストールされた場合</u></h2><p>スタートメニュー -&gt; Node.js -&gt; Node.js を実行してください。</p><p>以下のように、<code>const cv = require("opencv4nodejs")</code>を実行した後、<code>cv</code>を実行してください。</p><pre class="hljs"><code class="shell hljs"><span class="hljs-meta">&gt; </span><span class="language-bash">const cv = require(<span class="hljs-string">&quot;opencv4nodejs&quot;</span>)</span>
 undefined
 <span class="hljs-meta">&gt; </span><span class="language-bash">cv</span>
 {

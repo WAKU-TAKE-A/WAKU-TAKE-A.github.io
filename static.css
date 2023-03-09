@@ -70,6 +70,325 @@ Error message and password prompt
 .tc-password-wrapper input {
 	width: 100%;
 }
+.commander-alert{padding:.75rem 1.25rem;margin-bottom:1rem;border:1px dotted gray;border-radius:.25rem;color:#0c5460;background-color:#d1ecf1;border-color:#bee5eb}.cmd-btn-wd{width:20ch}.cmd-ci-table{border-collapse:collapse}.cmd-ci-table .leftcol{width:20%;vertical-align:top;text-align:right;background-color:#f0f0f0}.cmd-ci-table .rightcol{width:650px}.kk-commander-log-note{font-style:italic;font-size:small}.kk-commander-log-item{color:green}.cmd-txt-area{min-width:25ch}.cmd-txt-area2{min-width:50ch}.kk-cmd-label{display:inline-block;width:85px}.kk-cmd-label2{display:inline-block;width:120px}.cmd-sl{width:8ch}.cmd-select-wd{min-width:25ch}.cmd-snr-row{display:flex;flex-direction:row;flex-wrap:wrap;width:100%}.cmd-snr-column{display:flex;flex-direction:column;flex-basis:100%;flex:1}.cmd-snr-double-column{display:flex;flex-direction:column;flex-basis:100%;flex:2}@media screen and (min-width:800px){.cmd-snr-column{flex:1}.cmd-snr-double-column{flex:2}}.cmd-snr-form{width:100%}.cmd-snr-textbox{width:100%;box-sizing:border-box;max-width:40ch}.cmd-snr-form select,.cmd-snr-form input{margin:.2rem}.cmd-snr-form legend{background:#f5f5f5;padding:3px 6px}.cmd-snr-form{padding:20px}.cmd-snr-form .item{padding:2px;margin:2px}.cmd-snr-form .item label{display:inline-block;width:100px;margin-left:5px}.cmd-snr-form .item input{display:inline-block}.cmd-snr-form .item select{display:inline-block}.cmd-snr-form .item-relink{padding:2px;margin:2px}.kk-commander-tiddler-list{font-size:small;border-left:.5px dotted grey;padding-left:10px;overflow-y:auto;max-width:100%;max-height:$(height)$}.kk-commander-columns1{display:block;column-count:1;column-gap:1em}.kk-commander-columns2{display:block;column-count:2;column-gap:1em}.kk-commander-columns3{display:block;column-count:3;column-gap:1em}.kk-commander-columns4{display:block;column-count:4;column-gap:1em}.kk-commander-columns5{display:block;column-count:5;column-gap:1em}/* Ref: https://developer.mozilla.org/en-US/docs/Web/CSS/CSS3 */ 
+.refnotes-abbr abbr[title] {
+	color: inherit;
+	font-style: normal;
+	text-decoration: none;
+	border-bottom: 1px dotted #aaa;
+	cursor: help;
+}
+
+.refnotes-abbr-term-not-found{
+/*	color:red;*/
+	font-style: oblique;
+}
+
+.refnotes-abbr-term{
+/*	color:blue;*/
+}
+
+
+/* Ref:https://aarontgrogg.com/lab/
+Show the title for small screen
+*/ 
+/* this works based on the max-width*/
+@media only screen and (max-width: 960px) {
+.refnotes-abbr abbr:hover:after  { content: ' ('attr(title)')'; }
+}
+
+@media (hover: none) {
+/* Push the title attribute into generated content after the abbr. */
+.refnotes-abbr abbr[title]::after { 
+ content: ' ('attr(title)')'; }
+}
+.ref-nonumber{
+/* color:blue;*/
+ font-size:90%;
+ list-style-type:none;
+}.ref-nonumber li{
+  padding-bottom:8px;
+}.ref-list{
+/* color:blue;*/
+ font-size:90%;
+}.link-refcls{
+ font-weight:400;
+/* color:#00008B;*/ /*darkblue*/
+ text-decoration:none;
+ color: #5778d8; 	
+}.refcls{
+/* color:#00008B;*/
+ color: #5778d8; 
+/* text-transform: capitalize;*/
+}.ref-notfound{
+/*  color: #856404 !important;*/
+/*  background-color: #fff3cd !important;*/
+}.ref-author{
+/*  color:#00008B;*/ /*color for author in tooltip*/
+}.refnotes-details > summary{
+	padding-left:0;
+	padding-top:15px;
+	padding-bottom:15px;
+	width: 160px;
+	cursor: pointer;
+	font-weight:bold;
+}
+
+/* used for viewtemplate displaying the bibtex entry */
+.refnotes-bibtex-field{
+	display:table-row
+}
+.refnotes-bibtex-field span{
+	display:table-cell
+}
+.refnotes-bibtex-field span:first-of-type{
+	font-weight:bold;
+	padding-right:10px;
+	white-space: nowrap;
+}.bibtex-dropzone{
+	min-height:30px;
+	max-width:100%;
+	margin:4px auto;
+	border:2px dotted green;
+	text-align:center;
+}
+
+.bibtex-dropzone:focus {
+	background: #fffedd;
+}/*automatic counter for fnote macro. The counter resets at the begining of each tiddler*/
+.tc-tiddler-frame {
+  counter-reset: fnote-count;
+}
+.refnotes-footnote {
+  counter-increment: fnote-count;
+}
+.refnotes-footnote:after {
+  content: counter(fnote-count);
+  font-size:small;
+ /* color:#0000ee;*/
+  vertical-align: super;
+  line-height: 1.5;
+  margin-left: -0.1em;
+}
+/* in folding-editor*/
+.refnotes-library button svg{
+	font-size:0.8em;
+	vertical-align: middle;
+	margin-right:0;
+	margin-left:0;
+
+}
+
+/* Footnote class*/
+
+.fnote-list{
+/* color:blue;*/
+ font-size:90%;
+}
+
+.fnote-pretty{
+ display: block;
+  margin: 0.5em;
+  margin-right: auto;
+  width: 100% !important;
+  border-collapse: collapse;
+  padding: 15px 15px 15px 25px; /*left padding=25px*/
+  border-width:  0px;
+  border-style: solid;
+  border-left-width: 1px;
+  background-color:  rgb(255,248,220);
+  color: rgb(91,49,7);
+  line-height: 1.2em; 
+  font-size:0.9em;
+}
+/*Borderless table*/
+.refnotes-table-borderless, 
+.refnotes-table-borderless th, 
+.refnotes-table-borderless tr, 
+.refnotes-table-borderless td{
+  border:0;
+}/* tooltip class used for ref, fnote and other macros */
+.refnotes-tooltip {
+	position: relative;
+	display: inline-block;
+	cursor: pointer; 
+}
+
+.refnotes-tooltip .refnotes-tooltiptext{
+	font-size: 0.90em; /* change if it is too small */
+}
+
+.refnotes-tooltip .refnotes-tooltiptext {
+	visibility: hidden;
+	background-color: #fff;
+	color: #222222; 
+	text-align: left;
+	border-radius: 2px;
+	padding: 5px 10px;
+	max-width: 30vw;
+	max-height:20em;
+	overflow-y: auto;
+	cursor: auto;
+	width: max-content;
+	width: -moz-max-content;
+	width: -webkit-max-content;
+	width: -o-max-content;
+
+	/* Position the tooltip */
+	position: absolute;
+	z-index: 1;
+	bottom: 100%;
+	left: 50%;
+	margin-left: -40px;
+	box-shadow:0 4px 10px 0 rgba(0,0,0,0.2),0 4px 20px 0 rgba(0,0,0,0.19);
+}
+
+.refnotes-tooltip:hover .refnotes-tooltiptext {
+	visibility: visible;
+	/*opacity: 0.9;*/
+}
+
+/* for small screens */
+
+@media screen and (max-width: 960px) {
+.refnotes-tooltip .refnotes-tooltiptext {
+    /* Position the tooltip */
+  	position:fixed;
+    top:0;
+    left: 0;
+    margin-left: 0px;
+    bottom: unset;
+    width:100%;
+    max-width: 100vw;
+    z-index: 9999;
+}  
+
+.refnotes-tooltip:hover .refnotes-tooltiptext {
+   opacity: 1;
+}  
+  
+}/*!
+  Theme: Default
+  Description: Original highlight.js style
+  Author: (c) Ivan Sagalaev <maniac@softwaremaniacs.org>
+  Maintainer: @highlightjs/core-team
+  Website: https://highlightjs.org/
+  License: see project LICENSE
+  Touched: 2021
+*/pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{background:#f3f3f3;color:#444}.hljs-comment{color:#697070}.hljs-punctuation,.hljs-tag{color:#444a}.hljs-tag .hljs-attr,.hljs-tag .hljs-name{color:#444}.hljs-attribute,.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-name,.hljs-selector-tag{font-weight:700}.hljs-deletion,.hljs-number,.hljs-quote,.hljs-selector-class,.hljs-selector-id,.hljs-string,.hljs-template-tag,.hljs-type{color:#800}.hljs-section,.hljs-title{color:#800;font-weight:700}.hljs-link,.hljs-operator,.hljs-regexp,.hljs-selector-attr,.hljs-selector-pseudo,.hljs-symbol,.hljs-template-variable,.hljs-variable{color:#ab5656}.hljs-literal{color:#695}.hljs-addition,.hljs-built_in,.hljs-bullet,.hljs-code{color:#397300}.hljs-meta{color:#1f7199}.hljs-meta .hljs-string{color:#38a}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}pre.hljs {
+  padding: 0;
+}pre code.hljs {
+  padding: 0.5em;
+}.hljs {
+  background: #f8f8f8;
+  color: #333333;
+  -webkit-text-size-adjust:none;
+}.hljs-comment,
+.hljs-quote {
+  color: #93a1a1;
+}/* Solarized Green */
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-addition {
+  color: #859900;
+}/* Solarized Cyan */
+.hljs-number,
+.hljs-string,
+.hljs-meta .hljs-string,
+.hljs-literal,
+.hljs-doctag,
+.hljs-regexp {
+  color: #2aa198;
+}/* Solarized Blue */
+.hljs-title,
+.hljs-section,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class {
+  color: #268bd2;
+}/* Solarized Yellow */
+.hljs-attribute,
+.hljs-attr,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-class .hljs-title,
+.hljs-type {
+  color: #b58900;
+}/* Solarized Orange */
+.hljs-symbol,
+.hljs-bullet,
+.hljs-subst,
+.hljs-meta,
+.hljs-meta .hljs-keyword,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-link {
+  color: #cb4b16;
+}/* Solarized Red */
+.hljs-built_in,
+.hljs-deletion {
+  color: #dc322f;
+}.hljs-formula {
+  background: #eee8d5;
+}.hljs-emphasis {
+  font-style: italic;
+}.hljs-strong {
+  font-weight: bold;
+}
+.tc-powered-by-tiddlywiki-banner {
+	position: fixed;
+	right: 1em;
+	bottom: 0;
+    z-index: 2000;
+}
+button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fclone, .tc-drop-down button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fclone, div.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fclone,
+button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fdelete, .tc-drop-down button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fdelete, div.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fdelete,
+button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fedit, .tc-drop-down button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fedit, div.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fedit,
+button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fnew-here, .tc-drop-down button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fnew-here, div.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fnew-here,
+button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fnew-journal-here, .tc-drop-down button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fnew-journal-here, div.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fnew-journal-here,
+button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fimport, .tc-drop-down button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fimport, div.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fimport,
+button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fmanager, .tc-drop-down button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fmanager, div.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fmanager,
+button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fnew-image, .tc-drop-down button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fnew-image, div.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fnew-image,
+button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fnew-journal, .tc-drop-down button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fnew-journal, div.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fnew-journal,
+button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fnew-tiddler, .tc-drop-down button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fnew-tiddler, div.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fnew-tiddler {
+	display: none;
+}
+body.tc-dirty span.tc-dirty-indicator svg {
+	transition: fill 250ms ease-in-out;
+}body .tc-image-cloud-idle {
+	fill: #ffffff;
+	transition: opacity 250ms ease-in-out;
+	opacity: 1;
+	display: unset;
+}body.tc-dirty .tc-image-cloud-idle {
+	opacity: 0;
+	display: none;
+}body .tc-image-cloud-progress {
+	transition: opacity 250ms ease-in-out;
+	transform-origin: 50% 50%;
+	transform: rotate(359deg);
+	animation: animation-rotate-slow 2s infinite linear;
+	fill: #ffffff;
+	display: none;
+	opacity: 0;
+}body.tc-dirty .tc-image-cloud-progress {
+	opacity: 1;
+	display: unset;
+}@keyframes animation-rotate-slow {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: scale(359deg);
+	}
+}
+.classic-image-left{
+     float: left;
+}
+
+.classic-image-right{
+     float: right;
+}
 .tc-sidebar-header {
 	text-shadow: 0 1px 0 rgba(255,255,255, 0.8);
 }.tc-tiddler-info {
@@ -564,7 +883,7 @@ html button {
 	display: block;
 	margin-top: 1em;
 	margin-bottom: 1em;
-	word-break: break-word;
+	word-break: normal;
 	word-wrap: break-word;
 	white-space: pre-wrap;
 	background-color: #f5f5f5;
@@ -858,7 +1177,7 @@ a.tc-tiddlylink:hover {
 	color: #333333;
 	fill: #333333;
 }button:disabled.tc-btn-invisible  {
-	cursor: default; 
+	cursor: default;
 	color: #bbb;
 }.tc-btn-boxed {
 	font-size: 0.6em;
@@ -1013,9 +1332,6 @@ a.tc-tiddlylink:hover {
 }.tc-sidebar-scrollable .tc-tag-label {
 	text-shadow: none;
 }.tc-untagged-separator {
-	width: 10em;
-	left: 0;
-	margin-left: 0;
 	border: 0;
 	height: 1px;
 	background: #d8d8d8;
@@ -1195,19 +1511,6 @@ a.tc-tiddlylink:hover {
 	}.tc-tiddler-info {
 		margin: 0 -42px 0 -42px;
 	}
-}/* prevent overflow for table content for small screens*/
-@media (max-width: 700px) {
-	.tc-tiddler-frame tr {
-		word-wrap: anywhere;
-	}.tc-tiddler-frame table blockquote {
-		margin-left: 12.5px;
-		margin-right: 12.5px; 
-	}.tc-tiddler-frame table dd {
-		margin-left: 12.5px;
-	}.tc-tiddler-frame table ol,
-	.tc-tiddler-frame table ul {
-		padding-left: 20px;
-	}
 }.tc-site-title,
 .tc-titlebar {
 	font-weight: normal;
@@ -1220,6 +1523,9 @@ a.tc-tiddlylink:hover {
 }.tc-tiddler-title-icon {
 	vertical-align: middle;
 	margin-right: .1em;
+}.tc-tiddler-title-icon svg {
+	width: 0.9em;
+	height: 0.9em;
 }.tc-system-title-prefix {
 	color: #bbb;
 }.tc-titlebar h2 {
@@ -1356,6 +1662,8 @@ a.tc-tiddlylink:hover {
 }.tc-editor-toolbar button svg {
 	width: 1.6em;
 	height: 1.2em;
+}.tc-editor-toolbar .tc-drop-down button.tc-btn-mini {
+	padding: 2px 4px;
 }.tc-editor-toolbar button:hover {
 	background-color: #444444;
 	fill: #ffffff;
@@ -1389,7 +1697,7 @@ a.tc-tiddlylink:hover {
 		bottom: 0;
 		right: 0;
 		width: 300px;
-	}body.tc-body .tc-storyview-zoomin-tiddler {
+	}body.tc-body .tc-page-container.tc-page-view-zoomin .tc-tiddler-frame {
 		width: 100%;
 		width: calc(100% - 42px);
 	}}/*
@@ -1532,11 +1840,11 @@ a.tc-tiddlylink:hover {
 ** Storyview Classes
 */.tc-viewswitcher .tc-image-button {
 	margin-right: .3em;
-}.tc-storyview-zoomin-tiddler {
+}.tc-page-container.tc-page-view-zoomin .tc-tiddler-frame {
 	position: absolute;
 	display: block;
 	width: 100%;
-}@media (min-width: 700px) {.tc-storyview-zoomin-tiddler {
+}@media (min-width: 700px) {.tc-page-container.tc-page-view-zoomin .tc-tiddler-frame {
 		width: calc(100% - 84px);
 	}}/*
 ** Dropdowns
@@ -2210,7 +2518,8 @@ a.tc-tiddlylink:hover {
 ** Table of contents
 */.tc-sidebar-lists .tc-table-of-contents {
 	white-space: nowrap;
-}.tc-table-of-contents button {
+}.tc-table-of-contents button,
+.tc-table-of-contents .toc-item-muted {
 	color: #acacac;
 }.tc-table-of-contents svg {
 	width: 0.7em;
@@ -2286,7 +2595,15 @@ a.tc-tiddlylink:hover {
 	flex: 1 0 50%;
 }/*
 ** Dirty indicator
-*/html body.tc-dirty span.tc-dirty-indicator, html body.tc-dirty span.tc-dirty-indicator svg {
+*/html body svg.tc-image-save-button-dynamic .tc-image-save-button-dynamic-clean {
+	visibility: visible;
+}html body svg.tc-image-save-button-dynamic .tc-image-save-button-dynamic-dirty {
+	visibility: hidden;
+}html body.tc-dirty svg.tc-image-save-button-dynamic .tc-image-save-button-dynamic-clean {
+	visibility: hidden;
+}html body.tc-dirty svg.tc-image-save-button-dynamic .tc-image-save-button-dynamic-dirty {
+	visibility: visible;
+}html body.tc-dirty span.tc-dirty-indicator, html body.tc-dirty span.tc-dirty-indicator svg {
 	fill: #ff0000;
 	color: #ff0000;
 }/*
@@ -2438,9 +2755,43 @@ a.tc-tiddlylink:hover {
 	color: ;
 	background: ;
 }/*
+** Translink macro
+*/.tc-translink {
+	background-color: #f5f5f5;
+	border: 1px solid #cccccc;
+	padding: 0 3px;
+	border-radius: 3px;
+}div.tc-translink > div {
+	margin: 1em;
+}div.tc-translink > div > a:first-child > h1 {
+	font-size: 1.2em;
+	font-weight: bold;
+}span.tc-translink > a:first-child {
+	font-weight: bold;
+}/*
+** Classes for displaying globals
+*/.tc-global-tiddler-body {
+	padding: 0.25em;
+	border: 1px solid #333333;
+	background-color: #bbb;
+	border-radius: 3px;
+}.tc-global-tiddler-body-heading {
+	margin: 0 0 0.25em 0;
+	font-weight: normal;
+}.tc-global-tiddler-body-type {
+	margin: 0 0 0.25em 0;
+	border-bottom: 1px solid #333333;
+}.tc-global-tiddler-body-details {
+	background-color: #ffffff;
+}.tc-global-tiddler-body pre {
+	margin: 0;
+	border: 1px solid #333333;
+}/*
 ** Utility classes for SVG icons
 */.tc-fill-background {
 	fill: #ffffff;
+}.tc-network-activity-background {
+	fill: #448844;
 }/*
 ** Flexbox utility classes
 */.tc-flex {
@@ -2456,7 +2807,7 @@ a.tc-tiddlylink:hover {
 	flex-grow: 2;
 }/*
 ** Other utility classes
-*/.tc-tiny-gap {
+*//* Horizontal gaps */.tc-tiny-gap {
 	margin-left: .25em;
 	margin-right: .25em;
 }.tc-tiny-gap-left {
@@ -2479,323 +2830,6 @@ a.tc-tiddlylink:hover {
 	margin-right: 1em;
 }.tc-word-break {
 	word-break: break-all;
-}
-
-button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fclone, .tc-drop-down button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fclone, div.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fclone,
-button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fdelete, .tc-drop-down button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fdelete, div.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fdelete,
-button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fedit, .tc-drop-down button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fedit, div.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fedit,
-button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fnew-here, .tc-drop-down button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fnew-here, div.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fnew-here,
-button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fnew-journal-here, .tc-drop-down button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fnew-journal-here, div.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fnew-journal-here,
-button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fimport, .tc-drop-down button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fimport, div.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fimport,
-button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fmanager, .tc-drop-down button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fmanager, div.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fmanager,
-button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fnew-image, .tc-drop-down button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fnew-image, div.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fnew-image,
-button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fnew-journal, .tc-drop-down button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fnew-journal, div.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fnew-journal,
-button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fnew-tiddler, .tc-drop-down button.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fnew-tiddler, div.tc-btn-\%24\%3A\%2Fcore\%2Fui\%2FButtons\%2Fnew-tiddler {
-	display: none;
-}
-body.tc-dirty span.tc-dirty-indicator svg {
-	transition: fill 250ms ease-in-out;
-}body .tc-image-cloud-idle {
-	fill: #ffffff;
-	transition: opacity 250ms ease-in-out;
-	opacity: 1;
-	display: unset;
-}body.tc-dirty .tc-image-cloud-idle {
-	opacity: 0;
-	display: none;
-}body .tc-image-cloud-progress {
-	transition: opacity 250ms ease-in-out;
-	transform-origin: 50% 50%;
-	transform: rotate(359deg);
-	animation: animation-rotate-slow 2s infinite linear;
-	fill: #ffffff;
-	display: none;
-	opacity: 0;
-}body.tc-dirty .tc-image-cloud-progress {
-	opacity: 1;
-	display: unset;
-}@keyframes animation-rotate-slow {
-	from {
-		transform: rotate(0deg);
-	}
-	to {
-		transform: scale(359deg);
-	}
-}
-.commander-alert{padding:.75rem 1.25rem;margin-bottom:1rem;border:1px dotted gray;border-radius:.25rem;color:#0c5460;background-color:#d1ecf1;border-color:#bee5eb}.cmd-btn-wd{width:20ch}.cmd-ci-table{border-collapse:collapse}.cmd-ci-table .leftcol{width:20%;vertical-align:top;text-align:right;background-color:#f0f0f0}.cmd-ci-table .rightcol{width:650px}.kk-commander-log-note{font-style:italic;font-size:small}.kk-commander-log-item{color:green}.cmd-txt-area{min-width:25ch}.cmd-txt-area2{min-width:50ch}.kk-cmd-label{display:inline-block;width:85px}.kk-cmd-label2{display:inline-block;width:120px}.cmd-sl{width:8ch}.cmd-select-wd{min-width:25ch}.cmd-snr-row{display:flex;flex-direction:row;flex-wrap:wrap;width:100%}.cmd-snr-column{display:flex;flex-direction:column;flex-basis:100%;flex:1}.cmd-snr-double-column{display:flex;flex-direction:column;flex-basis:100%;flex:2}@media screen and (min-width:800px){.cmd-snr-column{flex:1}.cmd-snr-double-column{flex:2}}.cmd-snr-form{width:100%}.cmd-snr-textbox{width:100%;box-sizing:border-box;max-width:40ch}.cmd-snr-form select,.cmd-snr-form input{margin:.2rem}.cmd-snr-form legend{background:#f5f5f5;padding:3px 6px}.cmd-snr-form{padding:20px}.cmd-snr-form .item{padding:2px;margin:2px}.cmd-snr-form .item label{display:inline-block;width:100px;margin-left:5px}.cmd-snr-form .item input{display:inline-block}.cmd-snr-form .item select{display:inline-block}.cmd-snr-form .item-relink{padding:2px;margin:2px}.kk-commander-tiddler-list{font-size:small;border-left:.5px dotted grey;padding-left:10px;overflow-y:auto;max-width:100%;max-height:$(height)$}.kk-commander-columns1{display:block;column-count:1;column-gap:1em}.kk-commander-columns2{display:block;column-count:2;column-gap:1em}.kk-commander-columns3{display:block;column-count:3;column-gap:1em}.kk-commander-columns4{display:block;column-count:4;column-gap:1em}.kk-commander-columns5{display:block;column-count:5;column-gap:1em}/* Ref: https://developer.mozilla.org/en-US/docs/Web/CSS/CSS3 */ 
-.refnotes-abbr abbr[title] {
-	color: inherit;
-	font-style: normal;
-	text-decoration: none;
-	border-bottom: 1px dotted #aaa;
-	cursor: help;
-}
-
-.refnotes-abbr-term-not-found{
-/*	color:red;*/
-	font-style: oblique;
-}
-
-.refnotes-abbr-term{
-/*	color:blue;*/
-}
-
-
-/* Ref:https://aarontgrogg.com/lab/
-Show the title for small screen
-*/ 
-/* this works based on the max-width*/
-@media only screen and (max-width: 960px) {
-.refnotes-abbr abbr:hover:after  { content: ' ('attr(title)')'; }
-}
-
-@media (hover: none) {
-/* Push the title attribute into generated content after the abbr. */
-.refnotes-abbr abbr[title]::after { 
- content: ' ('attr(title)')'; }
-}
-.refnotes-details > summary{
-	padding-left:0;
-	padding-top:15px;
-	padding-bottom:15px;
-	width: 160px;
-	cursor: pointer;
-	font-weight:bold;
-}
-
-/* used for viewtemplate displaying the bibtex entry */
-.refnotes-bibtex-field{
-	display:table-row
-}
-.refnotes-bibtex-field span{
-	display:table-cell
-}
-.refnotes-bibtex-field span:first-of-type{
-	font-weight:bold;
-	padding-right:10px;
-	white-space: nowrap;
-}.ref-nonumber{
-/* color:blue;*/
- font-size:90%;
- list-style-type:none;
-}.ref-nonumber li{
-  padding-bottom:8px;
-}.ref-list{
-/* color:blue;*/
- font-size:90%;
-}.link-refcls{
- font-weight:400;
-/* color:#00008B;*/ /*darkblue*/
- text-decoration:none;
- color: #5778d8; 	
-}.refcls{
-/* color:#00008B;*/
- color: #5778d8; 
-/* text-transform: capitalize;*/
-}.ref-notfound{
-/*  color: #856404 !important;*/
-/*  background-color: #fff3cd !important;*/
-}.ref-author{
-/*  color:#00008B;*/ /*color for author in tooltip*/
-}.bibtex-dropzone{
-	min-height:30px;
-	max-width:100%;
-	margin:4px auto;
-	border:2px dotted green;
-	text-align:center;
-}
-
-.bibtex-dropzone:focus {
-	background: #fffedd;
-}/*automatic counter for fnote macro. The counter resets at the begining of each tiddler*/
-.tc-tiddler-frame {
-  counter-reset: fnote-count;
-}
-.refnotes-footnote {
-  counter-increment: fnote-count;
-}
-.refnotes-footnote:after {
-  content: counter(fnote-count);
-  font-size:small;
- /* color:#0000ee;*/
-  vertical-align: super;
-  line-height: 1.5;
-  margin-left: -0.1em;
-}
-/* in folding-editor*/
-.refnotes-library button svg{
-	font-size:0.8em;
-	vertical-align: middle;
-	margin-right:0;
-	margin-left:0;
-
-}
-
-/* Footnote class*/
-
-.fnote-list{
-/* color:blue;*/
- font-size:90%;
-}
-
-.fnote-pretty{
- display: block;
-  margin: 0.5em;
-  margin-right: auto;
-  width: 100% !important;
-  border-collapse: collapse;
-  padding: 15px 15px 15px 25px; /*left padding=25px*/
-  border-width:  0px;
-  border-style: solid;
-  border-left-width: 1px;
-  background-color:  rgb(255,248,220);
-  color: rgb(91,49,7);
-  line-height: 1.2em; 
-  font-size:0.9em;
-}
-/*Borderless table*/
-.refnotes-table-borderless, 
-.refnotes-table-borderless th, 
-.refnotes-table-borderless tr, 
-.refnotes-table-borderless td{
-  border:0;
-}/* tooltip class used for ref, fnote and other macros */
-.refnotes-tooltip {
-	position: relative;
-	display: inline-block;
-	cursor: pointer; 
-}
-
-.refnotes-tooltip .refnotes-tooltiptext{
-	font-size: 0.90em; /* change if it is too small */
-}
-
-.refnotes-tooltip .refnotes-tooltiptext {
-	visibility: hidden;
-	background-color: #fff;
-	color: #222222; 
-	text-align: left;
-	border-radius: 2px;
-	padding: 5px 10px;
-	max-width: 30vw;
-	max-height:20em;
-	overflow-y: auto;
-	cursor: auto;
-	width: max-content;
-	width: -moz-max-content;
-	width: -webkit-max-content;
-	width: -o-max-content;
-
-	/* Position the tooltip */
-	position: absolute;
-	z-index: 1;
-	bottom: 100%;
-	left: 50%;
-	margin-left: -40px;
-	box-shadow:0 4px 10px 0 rgba(0,0,0,0.2),0 4px 20px 0 rgba(0,0,0,0.19);
-}
-
-.refnotes-tooltip:hover .refnotes-tooltiptext {
-	visibility: visible;
-	/*opacity: 0.9;*/
-}
-
-/* for small screens */
-
-@media screen and (max-width: 960px) {
-.refnotes-tooltip .refnotes-tooltiptext {
-    /* Position the tooltip */
-  	position:fixed;
-    top:0;
-    left: 0;
-    margin-left: 0px;
-    bottom: unset;
-    width:100%;
-    max-width: 100vw;
-    z-index: 9999;
-}  
-
-.refnotes-tooltip:hover .refnotes-tooltiptext {
-   opacity: 1;
-}  
-  
-}/*!
-  Theme: Default
-  Description: Original highlight.js style
-  Author: (c) Ivan Sagalaev <maniac@softwaremaniacs.org>
-  Maintainer: @highlightjs/core-team
-  Website: https://highlightjs.org/
-  License: see project LICENSE
-  Touched: 2021
-*/pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{background:#f3f3f3;color:#444}.hljs-comment{color:#697070}.hljs-punctuation,.hljs-tag{color:#444a}.hljs-tag .hljs-attr,.hljs-tag .hljs-name{color:#444}.hljs-attribute,.hljs-doctag,.hljs-keyword,.hljs-meta .hljs-keyword,.hljs-name,.hljs-selector-tag{font-weight:700}.hljs-deletion,.hljs-number,.hljs-quote,.hljs-selector-class,.hljs-selector-id,.hljs-string,.hljs-template-tag,.hljs-type{color:#800}.hljs-section,.hljs-title{color:#800;font-weight:700}.hljs-link,.hljs-operator,.hljs-regexp,.hljs-selector-attr,.hljs-selector-pseudo,.hljs-symbol,.hljs-template-variable,.hljs-variable{color:#ab5656}.hljs-literal{color:#695}.hljs-addition,.hljs-built_in,.hljs-bullet,.hljs-code{color:#397300}.hljs-meta{color:#1f7199}.hljs-meta .hljs-string{color:#38a}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}pre.hljs {
-  padding: 0;
-}pre code.hljs {
-  padding: 0.5em;
-}.hljs {
-  background: #f8f8f8;
-  color: #333333;
-  -webkit-text-size-adjust:none;
-}.hljs-comment,
-.hljs-quote {
-  color: #93a1a1;
-}/* Solarized Green */
-.hljs-keyword,
-.hljs-selector-tag,
-.hljs-addition {
-  color: #859900;
-}/* Solarized Cyan */
-.hljs-number,
-.hljs-string,
-.hljs-meta .hljs-string,
-.hljs-literal,
-.hljs-doctag,
-.hljs-regexp {
-  color: #2aa198;
-}/* Solarized Blue */
-.hljs-title,
-.hljs-section,
-.hljs-name,
-.hljs-selector-id,
-.hljs-selector-class {
-  color: #268bd2;
-}/* Solarized Yellow */
-.hljs-attribute,
-.hljs-attr,
-.hljs-variable,
-.hljs-template-variable,
-.hljs-class .hljs-title,
-.hljs-type {
-  color: #b58900;
-}/* Solarized Orange */
-.hljs-symbol,
-.hljs-bullet,
-.hljs-subst,
-.hljs-meta,
-.hljs-meta .hljs-keyword,
-.hljs-selector-attr,
-.hljs-selector-pseudo,
-.hljs-link {
-  color: #cb4b16;
-}/* Solarized Red */
-.hljs-built_in,
-.hljs-deletion {
-  color: #dc322f;
-}.hljs-formula {
-  background: #eee8d5;
-}.hljs-emphasis {
-  font-style: italic;
-}.hljs-strong {
-  font-weight: bold;
-}
-.tc-powered-by-tiddlywiki-banner {
-	position: fixed;
-	right: 1em;
-	bottom: 0;
-    z-index: 2000;
-}.classic-image-left{
-     float: left;
-}
-
-.classic-image-right{
-     float: right;
+}/* Vertical gaps */.tc-tiny-v-gap-bottom {
+	margin-bottom: 3px;
 }
