@@ -3,7 +3,7 @@
 <head><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-80755908-2"></script><script>  window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-80755908-2');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6163695023100481" crossorigin="anonymous"></script>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="generator" content="TiddlyWiki" />
-<meta name="tiddlywiki-version" content="5.3.3" />
+<meta name="tiddlywiki-version" content="5.3.6" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -16,28 +16,100 @@
 <body class="tc-body">
 
 <section class="tc-story-river tc-static-story-river">
-<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists " data-tags="" data-tiddler-title="dashboard_template_001" role="article"><div class="tc-tiddler-title"><div class="tc-titlebar"><span class="tc-tiddler-controls"><button aria-expanded="false" aria-label="more" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fmore-tiddler-actions" title="More actions"></button><div class=" tc-reveal" hidden="true"></div><button aria-label="edit" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fedit" title="Edit this tiddler"></button><button aria-label="close" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fclose" title="Close this tiddler"></button></span><span><h2 class="tc-title">ダッシュボードのtemplateについて その1</h2></span></div><div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div></div><div class="tc-reveal"></div><div class=" tc-reveal"><div class="tc-subtitle"><a class="tc-tiddlylink tc-tiddlylink-missing" href=".html"></a> 20th October 2023 at 8:28pm</div></div><div class=" tc-reveal"><div class="tc-tags-wrapper"></div></div><div class="tc-tiddler-body tc-reveal"><p>node-red-dashboard（ダッシュボードノード）は、 Angular／Angular Materials／JQueryを使用したWEB UIです。</p><p>ダッシュボードノードの一つであるtemplateノードで、オリジナルなノードを作成することができます。</p><p>オリジナルなノードを作る際に、スクリプト内の関数から次のノードへメッセージを送信したいことがあります。</p><p>WebUI上なら、以下のように簡単に行うことができます。（Angular Materialを使っています）</p><pre class="hljs"><code class="html hljs"><span class="hljs-tag">&lt;<span class="hljs-name">md-button</span> <span class="hljs-attr">ng-click</span>=<span class="hljs-string">&quot;send({payload:&#x27;ABC&#x27;})&quot;</span>&gt;</span>
-    Send
-<span class="hljs-tag">&lt;/<span class="hljs-name">md-button</span>&gt;</span></code></pre><p>しかし、スクリプト上では少し厄介です。</p><p>例を挙げながら説明します。</p><p>まず以下のようにノードを設置し繋げてください。</p><p><img class=" tc-image-loading" src="img/20231018002.jpg"></p><p>「inject」の設定。</p><p><img class=" tc-image-loading" src="img/20231018003.jpg"><br><img class=" tc-image-loading" src="img/20231018004.jpg"></p><p>「template」の設定。</p><p>以下のようにHTMLコードを入力します。下の3つのチェックボックスは全てOFF。</p><pre class="hljs"><code class="html hljs"><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript">
-    scope.<span class="hljs-title function_">send</span>({<span class="hljs-attr">payload</span>: <span class="hljs-string">&quot;preload&quot;</span>});   
-</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre><p><img class=" tc-image-loading" src="img/20231018005.jpg"><br><img class=" tc-image-loading" src="img/20231018006.jpg"></p><p>「debug」の設定。</p><p><img class=" tc-image-loading" src="img/20231018007.jpg"></p><p>デプロイした時orダッシュボードを開いた時に、以下のようにデバッグに表示されると思います。「次のノードにメッセージが送られた」ということが分かります。</p><p><img class=" tc-image-loading" src="img/20231018001.jpg"></p><p>scopeはAngularJSにおいて、WebUIとスクリプト間のデータやイベントのやりとりに利用する特別なオブジェクトです。Node-RED起動時にscopeに対して、send関数のような機能が定義されているようです。</p><p>scopeを使えば今回の目的は達成できそうですが、関数内でscopeをそのまま使ってもうまくいきません。</p><p>例えば、「template」のHTMLコードを以下のようにしてください。</p><pre class="hljs"><code class="html hljs"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;button&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;test001&quot;</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;test001&quot;</span>&gt;</span>
+<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists " data-tags="" data-tiddler-title="dashboard_template_001" role="article"><div class="tc-tiddler-title tc-clearfix"><div class="tc-titlebar"><span class="tc-tiddler-controls"><button aria-expanded="false" aria-label="more" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fmore-tiddler-actions" title="More actions"></button><span class=" tc-reveal" hidden="true"></span><button aria-label="Edit this tiddler" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fedit" title="Edit this tiddler"></button><button aria-label="close" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fclose" title="Close this tiddler"></button></span><span><h2 class="tc-title">ダッシュボードのtemplateについて その1</h2></span></div><div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div></div><div class="tc-reveal"></div><div class=" tc-reveal"><div class="tc-subtitle tc-clearfix">2nd April 2025 at 9:50pm</div></div><div class=" tc-reveal"><div class="tc-tags-wrapper"></div></div><div class="tc-tiddler-body tc-clearfix tc-reveal"><p>従来良く使われていた node-red-dashboard（ダッシュボードノード）は、  Angular を使用した WEB UI です。</p><p>Angular は開発が終了しており、 Dashboard をアップグレードする取り組みの一環として、 FlowFuse によって Dashboard 2.0 が開発されています。</p><p>今後は、 Dashboard 2.0 が標準になっていくと思われます。</p><p>Dashboar 2.0 は、 Vue.js v3.0 ／ Vuetify（マテリアル デザイン コンポーネント フレームワーク）などで作られています。</p><p>インストール方法と「template」ノードについて簡単に説明します。</p><p>他の「button」「text input」「slider」などは直感的に扱えると思いますが、「template」ノードに関しては大幅に記述方法が変わっているからです。</p><h2 class="">インストール方法</h2><p>「.node-red」フォルダで、</p><pre class="hljs"><code class="shell hljs"><span class="hljs-meta">&gt; </span><span class="language-bash">npm install @flowfuse/node-red-dashboard</span></code></pre><p>もしくは、</p><p>Node-RED の右上のバーガーボタン ⇒ 「パレット管理」 ⇒ 「ノードを追加」 ⇒ 「ノードを検索」で「@flowfuse/node-red-dashboard」 ⇒  [ノードを追加]ボタンをクリックしてください。</p><h2 class="">「template」ノードについて</h2><p>カスタムなダッシュボードを作成することができます。</p><p>.vue ファイルの形式でコードを記述します。</p><p>.vue ファイルは、 Vue.js で使われる シングルファイルコンポーネント（SFC: Single File Component）のことで、1つの .vue ファイルに HTML／ CSS／ JavaScript をまとめて書けるのが特徴です。</p><p>Node-REDの「template」ノードとはとても相性が良さそうです。</p><p>「template」ノードを新規作成すると、テンプレートには以下のような例が表示されています。（2025年1月、Version 1.21.0）</p><p><img class=" tc-image-loading" src="img/2025-02-03-220403.jpg"></p><pre class="hljs"><code class="html hljs"><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span>Counter<span class="hljs-tag">&lt;/<span class="hljs-name">h2</span>&gt;</span>
+        <span class="hljs-comment">&lt;!-- Conditional Styling using Attribute Binding (&quot;:&quot;) --&gt;</span>
+        <span class="hljs-comment">&lt;!-- and rendering content inside &lt;tags&gt;&lt;/tags&gt; with {{ }} --&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">:style</span>=<span class="hljs-string">&quot;{&#x27;color&#x27; : (count &gt; 5 ? &#x27;red&#x27; : &#x27;green&#x27; )}&quot;</span>&gt;</span>Current Count: {{ count }}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+        <span class="hljs-comment">&lt;!-- Computed Rendering using Vue Computed Variables --&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">class</span>=<span class="hljs-string">&quot;my-class&quot;</span>&gt;</span>Formatted Count: {{ formattedCount }}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+        <span class="hljs-comment">&lt;!-- Conditional Rendering with &quot;v-if&quot; --&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">b</span> <span class="hljs-attr">v-if</span>=<span class="hljs-string">&quot;count &gt; 5&quot;</span>&gt;</span>Too many!<span class="hljs-tag">&lt;/<span class="hljs-name">b</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">v-btn</span> @<span class="hljs-attr">click</span>=<span class="hljs-string">&quot;increase()&quot;</span>&gt;</span>Increment<span class="hljs-tag">&lt;/<span class="hljs-name">v-btn</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
 
 <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript">
-    scope.<span class="hljs-title function_">send</span>({<span class="hljs-attr">payload</span>: <span class="hljs-string">&quot;preload&quot;</span>});
+    <span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
+        <span class="hljs-title function_">data</span>(<span class="hljs-params"></span>) {
+            <span class="hljs-comment">// define variables available component-wide</span>
+            <span class="hljs-comment">// (in &lt;template&gt; and component functions)</span>
+            <span class="hljs-keyword">return</span> {
+                <span class="hljs-attr">count</span>: <span class="hljs-number">0</span>
+            }
+        },
+        <span class="hljs-attr">watch</span>: {
+            <span class="hljs-comment">// watch for any changes of &quot;count&quot;</span>
+            <span class="hljs-attr">count</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+                <span class="hljs-keyword">if</span> (<span class="hljs-variable language_">this</span>.<span class="hljs-property">count</span> % <span class="hljs-number">5</span> === <span class="hljs-number">0</span>) {
+                    <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">send</span>({<span class="hljs-attr">payload</span>: <span class="hljs-string">&#x27;Multiple of 5&#x27;</span>})
+                }
+            }
+        },
+        <span class="hljs-attr">computed</span>: {
+            <span class="hljs-comment">// automatically compute this variable</span>
+            <span class="hljs-comment">// whenever VueJS deems appropriate</span>
+            <span class="hljs-attr">formattedCount</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+                <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">count</span> + <span class="hljs-string">&#x27; Apples&#x27;</span>
+            }
+        },
+        <span class="hljs-attr">methods</span>: {
+            <span class="hljs-comment">// expose a method to our &lt;template&gt; and Vue Application</span>
+            <span class="hljs-attr">increase</span>: <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) {
+                <span class="hljs-variable language_">this</span>.<span class="hljs-property">count</span>++
+            }
+        },
+        <span class="hljs-title function_">mounted</span>(<span class="hljs-params"></span>) {
+            <span class="hljs-comment">// code here when the component is first loaded</span>
+        },
+        <span class="hljs-title function_">unmounted</span>(<span class="hljs-params"></span>) {
+            <span class="hljs-comment">// code here when the component is removed from the Dashboard</span>
+            <span class="hljs-comment">// i.e. when the user navigates away from the page</span>
+        }
+    }
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">style</span>&gt;</span><span class="language-css">
+    <span class="hljs-comment">/* define any styles here - supports raw CSS */</span>
+    <span class="hljs-selector-class">.my-class</span> {
+        <span class="hljs-attribute">color</span>: red;
+    }
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">style</span>&gt;</span></code></pre><h2 class="">試してみます。</h2><p>「template」ノードは、1ファイル（ .vue）でコンポーネントを作成する形式のコードを採用しているので、ChatGPTで「Vue.jsで～したい」「Vuerifyで～したい」と質問すれば、良さげなコードを教えてくれます。</p><p>Version 1.21.0では「Date Picker」がありません。</p><p>ChatGPTに「VuetifyでDate Pickerを作って」と聞いてみると、以下のようなコードを教えてくれました。</p><pre class="hljs"><code class="html hljs"><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">v-container</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">v-date-picker</span> <span class="hljs-attr">v-model</span>=<span class="hljs-string">&quot;selectedDate&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">v-date-picker</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>選択した日付: {{ selectedDate }}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">v-container</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
 
-    <span class="hljs-keyword">var</span> test002 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&quot;#test001&quot;</span>);
-    test002.<span class="hljs-property">onclick</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">event</span>) {
-        scope.<span class="hljs-title function_">send</span>({<span class="hljs-attr">payload</span>: <span class="hljs-string">&quot;onclick&quot;</span>});
-    }; 
-</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre><p><img class=" tc-image-loading" src="img/20231018009.jpg"></p><p>こんな感じに表示されたと思います。</p><p>コードについて簡単に説明しておきます。</p><p>input要素にidグローバル属性を付与し、さらにJavaScript内で <code>var test002 = document.querySelector("#test001");</code> とすることで、input要素の様々な情報を得ることができます。</p><p>ここでは、<code>test002.onclick = function (event) {}</code> とすることで、クリックイベントを取得しています。</p><p>しかし、実際にボタンを押しても、デバッグには何も追加表示されません。（「onclick」の表示を期待しているのですが）</p><p>私は以下の方法を試してみました。もっと洗練されたやり方があるのかもしれませんが、うーん、分かりませんでした。</p><pre class="hljs"><code class="html hljs"><span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript">
-    scope.<span class="hljs-title function_">send</span>({<span class="hljs-attr">payload</span>: <span class="hljs-string">&quot;preload&quot;</span>});
-    <span class="hljs-keyword">var</span> nodeScope = scope; ★ここ追加
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript">
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
+  <span class="hljs-title function_">data</span>(<span class="hljs-params"></span>) {
+    <span class="hljs-keyword">return</span> {
+      <span class="hljs-attr">selectedDate</span>: <span class="hljs-literal">null</span>
+    };
+  }
+};
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre><p>これを「template」ノードに入力しデプロイすると以下のような Date Picker が表示されました。</p><p><img class=" tc-image-loading" src="img/2025-02-02-173211.jpg"></p><p>更にChatGPTに「selectedDataが選択された時にスクリプトを実行したい時はどうする？」と聞いたら答えてくれました。</p><p><code>&lt;script&gt;</code> 内で、 <code>this.send({payload: [値]})</code> を実行すると次のノードに値を送ることができるのでそれも利用します。</p><pre class="hljs"><code class="html hljs"><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">v-container</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">v-date-picker</span> <span class="hljs-attr">v-model</span>=<span class="hljs-string">&quot;selectedDate&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">v-date-picker</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>選択した日付: {{ selectedDate }}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">v-container</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
 
-    <span class="hljs-keyword">var</span> test002 = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">&quot;#test001&quot;</span>);
-    test002.<span class="hljs-property">onclick</span> = <span class="hljs-keyword">function</span> (<span class="hljs-params">event</span>) {
-        nodeScope.<span class="hljs-title function_">send</span>({<span class="hljs-attr">payload</span>: <span class="hljs-string">&quot;onclick&quot;</span>}); ★scope ⇒ nodeScopeに編集
-    }; 
-</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre><p>ボタンを押すと以下のように「onclick」が転送されます。</p><p><img class=" tc-image-loading" src="img/20231018008.jpg"></p><p>ひとまず関数内でメッセージの送信を実行することができました。</p><hr><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="index.html"><svg class="tc-image-home-button tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M112.985 119.502c.01-.165.015-.331.015-.499V67.568c3.137 2.948 8.076 2.884 11.134-.174a7.999 7.999 0 00-.002-11.316L70.396 2.343A7.978 7.978 0 0064.734 0a7.957 7.957 0 00-5.656 2.343L33 28.42V8.007C33 3.585 29.41 0 25 0c-4.418 0-8 3.59-8 8.007V44.42L5.342 56.078c-3.125 3.125-3.12 8.198-.002 11.316a7.999 7.999 0 0011.316-.003l.344-.343v52.945a8.11 8.11 0 000 .007c0 4.418 3.588 8 8 8h80c4.419 0 8-3.59 8-8a8.11 8.11 0 00-.015-.498zM97 112V51.574L64.737 19.31 33 51.048V112h64z" fill-rule="evenodd"></path></svg>Homeへ</a><svg class="tc-image-blank tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"></svg><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Node-RED.html"><svg class="tc-image-up-arrow tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M63.892.281c2.027 0 4.054.77 5.6 2.316l55.98 55.98a7.92 7.92 0 010 11.196c-3.086 3.085-8.104 3.092-11.196 0L63.894 19.393 13.513 69.774a7.92 7.92 0 01-11.196 0c-3.085-3.086-3.092-8.105 0-11.196l55.98-55.98A7.892 7.892 0 0163.893.28z"></path></svg>Node-REDの記事Topへ</a></p></div>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript">
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
+  <span class="hljs-title function_">data</span>(<span class="hljs-params"></span>) {
+    <span class="hljs-keyword">return</span> {
+      <span class="hljs-attr">selectedDate</span>: <span class="hljs-literal">null</span>
+    };
+  },
+  <span class="hljs-attr">watch</span>: {
+    <span class="hljs-title function_">selectedDate</span>(<span class="hljs-params">newValue, oldValue</span>) {
+       <span class="hljs-variable language_">this</span>.<span class="hljs-title function_">send</span>({<span class="hljs-attr">payload</span>: newValue})
+    }
+  }
+};
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre><p>以下のように、「debug」ノードをつないで試してみるとうまくいきました。</p><p><img class=" tc-image-loading" src="img/2025-02-02-174401.jpg"></p><hr><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="index.html"><svg class="tc-image-home-button tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M112.985 119.502c.01-.165.015-.331.015-.499V67.568c3.137 2.948 8.076 2.884 11.134-.174a7.999 7.999 0 00-.002-11.316L70.396 2.343A7.978 7.978 0 0064.734 0a7.957 7.957 0 00-5.656 2.343L33 28.42V8.007C33 3.585 29.41 0 25 0c-4.418 0-8 3.59-8 8.007V44.42L5.342 56.078c-3.125 3.125-3.12 8.198-.002 11.316a7.999 7.999 0 0011.316-.003l.344-.343v52.945a8.11 8.11 0 000 .007c0 4.418 3.588 8 8 8h80c4.419 0 8-3.59 8-8a8.11 8.11 0 00-.015-.498zM97 112V51.574L64.737 19.31 33 51.048V112h64z" fill-rule="evenodd"></path></svg>Homeへ</a><svg class="tc-image-blank tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"></svg><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Node-RED.html"><svg class="tc-image-up-arrow tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M63.892.281c2.027 0 4.054.77 5.6 2.316l55.98 55.98a7.92 7.92 0 010 11.196c-3.086 3.085-8.104 3.092-11.196 0L63.894 19.393 13.513 69.774a7.92 7.92 0 01-11.196 0c-3.085-3.086-3.092-8.105 0-11.196l55.98-55.98A7.892 7.892 0 0163.893.28z"></path></svg>Node-REDの記事Topへ</a></p></div>
 </div></p>
 </section>
 </body>

@@ -3,7 +3,7 @@
 <head><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-80755908-2"></script><script>  window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-80755908-2');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6163695023100481" crossorigin="anonymous"></script>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="generator" content="TiddlyWiki" />
-<meta name="tiddlywiki-version" content="5.3.3" />
+<meta name="tiddlywiki-version" content="5.3.6" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -16,58 +16,52 @@
 <body class="tc-body">
 
 <section class="tc-story-river tc-static-story-river">
-<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists  tc-tagged-Node-RED" data-tags="Node-RED" data-tiddler-title="node-red_opencv_001" role="article"><div class="tc-tiddler-title"><div class="tc-titlebar"><span class="tc-tiddler-controls"><button aria-expanded="false" aria-label="more" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fmore-tiddler-actions" title="More actions"></button><div class=" tc-reveal" hidden="true"></div><button aria-label="edit" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fedit" title="Edit this tiddler"></button><button aria-label="close" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fclose" title="Close this tiddler"></button></span><span><h2 class="tc-title">Node-REDで画像処理(opencv4nodejs) その1</h2></span></div><div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div></div><div class="tc-reveal"></div><div class=" tc-reveal"><div class="tc-subtitle"><a class="tc-tiddlylink tc-tiddlylink-missing" href=".html"></a> 8th March 2023 at 11:02pm</div></div><div class=" tc-reveal"><div class="tc-tags-wrapper"><span class="tc-tag-list-item" data-tag-title="Node-RED"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="fill:#333333;color:#333333;">Node-RED</span><span class="tc-drop-down tc-reveal" hidden="true"></span></span></div></div><div class="tc-tiddler-body tc-reveal"><p>「<a class="tc-tiddlylink-external" href="https://github.com/justadudewhohacks/opencv4nodejs" rel="noopener noreferrer" target="_blank">opencv4nodejs</a>」はNode.js上で画像処理ライブラリ「OpenCV」を利用するためのモジュールです。</p><p>Node-REDから「opencv4nodejs」を利用する手順を説明します。今回は「opencv4nodejs」のインストール手順について説明します。</p><p>以下は、Windows10 64bit + Node.jsバージョン16系での手順です。</p><p>各ソフトのインストーラの準備やバージョンの管理などは大変なので、Windowsのパッケージ マネージャである「Chocolatey」を使うことにします。「Chocolatey」の導入については、<a class="tc-tiddlylink tc-tiddlylink-resolves" href="install_chocolatey.html">こちら</a>をご覧ください。</p><p>すでに「Chocolatey」がインストールされていることを前提に説明を続けます。</p><h2 class=""><u>インストール手順</u></h2><p>「opencv4nodejs」はバイナリーでは提供されていません。自PCでOpenCVをビルドすることもできますが、様々なPC環境の不具合でエラーが発生します。</p><p>本説明では「Chocolatey」でOpenCVのバイナリーを準備します。</p><p>自PCでビルドする方法は、<a class="tc-tiddlylink tc-tiddlylink-resolves" href="node-red_opencv_001_old.html">古い説明</a>をご覧ください。</p><p>まず、Node.jsのネイティブアドオンモジュール（C++で作成したモジュール）をコンパイルするためツール「<a class="tc-tiddlylink-external" href="https://github.com/nodejs/node-gyp" rel="noopener noreferrer" target="_blank">node-gyp</a>」をインストールします。</p><p>コマンド プロンプトを管理者権限で起動し以下を実行します。</p><pre class="hljs"><code class="shell hljs"><span class="hljs-meta">&gt; </span><span class="language-bash">npm install -g node-gyp</span></code></pre><p>「node-gyp」はPythonを利用します。2023/3において、推奨はPython v3.6、v3.7、v3.8、v3.9のようです。</p><p>Python／CMake／Git／Visual Studio Build Tools 2017／OpenCVをインストールします。</p><pre class="hljs"><code class="shell hljs"><span class="hljs-meta">&gt; </span><span class="language-bash">choco install cmake --installargs <span class="hljs-string">&#x27;ADD_CMAKE_TO_PATH=System&#x27;</span></span>
-<span class="hljs-meta">
-&gt; </span><span class="language-bash">choco install git</span>
-<span class="hljs-meta">
-&gt; </span><span class="language-bash">choco install python39</span></code></pre><p>システム環境変数Pathに、「c:\Python39」を追加しておきましょう。</p><pre class="hljs"><code class="shell hljs"><span class="hljs-meta">&gt; </span><span class="language-bash">choco install OpenCV</span></code></pre><p>以下の環境変数を追加します。（デフォルトの設定では「C:\tools」にインストールされます）</p><dl><dt>OPENCV_INCLUDE_DIR</dt><dd>C:\tools\opencv\build\include</dd><dt>OPENCV_LIB_DIR</dt><dd>C:\tools\opencv\build\x64\vc15\lib</dd><dt>OPENCV_BIN_DIR</dt><dd>C:\tools\opencv\build\x64\vc15\bin</dd></dl><p>システム環境変数Pathに「%OPENCV_BIN_DIR%」を追加します。</p><p>コマンドプロンプトを再起動し、パスが通っていることを確認します。</p><pre class="hljs"><code class="shell hljs"><span class="hljs-meta">&gt; </span><span class="language-bash">python --version</span>
-Python 3.9.13
-<span class="hljs-meta">
-&gt; </span><span class="language-bash">cmake --version</span>
-cmake version 3.25.2
+<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists  tc-tagged-Node-RED" data-tags="Node-RED" data-tiddler-title="node-red_opencv_001" role="article"><div class="tc-tiddler-title tc-clearfix"><div class="tc-titlebar"><span class="tc-tiddler-controls"><button aria-expanded="false" aria-label="more" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fmore-tiddler-actions" title="More actions"></button><span class=" tc-reveal" hidden="true"></span><button aria-label="Edit this tiddler" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fedit" title="Edit this tiddler"></button><button aria-label="close" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fclose" title="Close this tiddler"></button></span><span><h2 class="tc-title">Node-REDで画像処理(opencv4nodejs) その1</h2></span></div><div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div></div><div class="tc-reveal"></div><div class=" tc-reveal"><div class="tc-subtitle tc-clearfix">11th May 2025 at 2:25am</div></div><div class=" tc-reveal"><div class="tc-tags-wrapper"><span class="tc-tag-list-item" data-tag-title="Node-RED"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="fill:#333333;color:#333333;"><span class="tc-tag-exists">Node-RED</span></span><span class="tc-drop-down tc-reveal" hidden="true"></span></span></div></div><div class="tc-tiddler-body tc-clearfix tc-reveal"><p>「<a class="tc-tiddlylink-external" href="https://github.com/justadudewhohacks/opencv4nodejs" rel="noopener noreferrer" target="_blank">opencv4nodejs</a>」はNode.js上で画像処理ライブラリ「OpenCV」を利用するためのモジュールです。</p><p>本ページは、「Node-REDからopencv4nodejsを利用する手順を説明します」のページでしたが、残念ながらopencv4nodejsの更新が2020年で止まっています。</p><p>OpenCVはPython上で扱うのが非常に簡単だと思います。（最新のOpenCVを扱うことができます）Python上でHTTPサーバーやTCPサーバーを立ち上げて、Node-REDとやり取りをした方が効率的だと考えます。</p><p>ChatGPTに以下のような感じで質問すれば、良い感じで答えてくれますよ。</p><pre><code>Python上で、HTTPサーバーをFLASKで立ち上げたい。POSTでBASE64の画像を受け取り、OpenCVで画像をぼかして返信する機能です。受け取るデータは、{"image":[Base64の画像], "kernel_size":[カーネルサイズ]}。kernel_sizeはぼかし量です。出来る？</code></pre><p>出来上がったPythonスクリプト以下の通りです。当然、質問するタイミングでコードは変わってくると思いますので、あくまで例として挙げておきます。</p><pre class="hljs"><code class="python hljs"><span class="hljs-keyword">from</span> flask <span class="hljs-keyword">import</span> Flask, request, jsonify
+<span class="hljs-keyword">import</span> cv2
+<span class="hljs-keyword">import</span> numpy <span class="hljs-keyword">as</span> np
+<span class="hljs-keyword">import</span> base64
 
-CMake suite maintained and supported by Kitware (kitware.com/cmake).
-<span class="hljs-meta">
-&gt; </span><span class="language-bash">git --version</span>
-git version 2.39.2.windows.1</code></pre><p>バージョン番号は私のPC環境での例なので、ちゃんとバージョン番号が表示されればOKです。</p><p>Python、Cmake、Gitのパスが通っていな時は、<a class="tc-tiddlylink tc-tiddlylink-resolves" href="about_environment_variable_path.html">こちら</a>を参考にして追加してください。</p><p>自動ビルド スクリプトが実行されないように環境変数を設定した後、
-opencv4nodejsのインストールを実行します。</p><pre class="hljs"><code class="shell hljs"><span class="hljs-meta">&gt; </span><span class="language-bash"><span class="hljs-built_in">set</span> OPENCV4NODEJS_DISABLE_AUTOBUILD=1</span>
-<span class="hljs-meta">&gt; </span><span class="language-bash">npm install -g opencv4nodejs</span>
+app = Flask(__name__)
 
-changed 30 packages, and audited 31 packages in 8m
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">decode_base64_image</span>(<span class="hljs-params">base64_string</span>):
+    img_data = base64.b64decode(base64_string)
+    np_arr = np.frombuffer(img_data, np.uint8)
+    img = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
+    <span class="hljs-keyword">return</span> img
 
-found 0 vulnerabilities</code></pre><h2 class=""><u>正常にインストールされた場合</u></h2><p>スタートメニュー -&gt; Node.js -&gt; Node.js を実行してください。</p><p>以下のように、<code>const cv = require("opencv4nodejs")</code>を実行した後、<code>cv</code>を実行してください。</p><pre class="hljs"><code class="shell hljs"><span class="hljs-meta">&gt; </span><span class="language-bash">const cv = require(<span class="hljs-string">&quot;opencv4nodejs&quot;</span>)</span>
-undefined
-<span class="hljs-meta">&gt; </span><span class="language-bash">cv</span>
-{
-  isCustomMatAllocatorEnabled: [Function: isCustomMatAllocatorEnabled],
-  dangerousEnableCustomMatAllocator: [Function: dangerousEnableCustomMatAllocator],
-  dangerousDisableCustomMatAllocator: [Function: dangerousDisableCustomMatAllocator],
-  getMemMetrics: [Function: getMemMetrics],
-  version: { major: 3, minor: 4, revision: 6 },
-  modules: {
-    core: true,
-    calib3d: true,
-    dnn: true,
-    face: true,
-    features2d: true,
-    imgproc: true,</code></pre><h2 class=""><u>正常にインストールされなかった場合</u></h2><h3 class="">その1</h3><pre class="hljs"><code class="shell hljs"><span class="hljs-meta">&gt; </span><span class="language-bash">const cv = require(<span class="hljs-string">&quot;opencv4nodejs&quot;</span>)</span>
-Uncaught Error: The specified module could not be found.
-\\?\C:\Users\[YOUR ACCOUNT]\AppData\Roaming\npm\node_modules\opencv4nodejs\build\Release\opencv4nodejs.node
-    at Object.Module._extensions..node (internal/modules/cjs/loader.js:1131:18)
-    at Module.load (internal/modules/cjs/loader.js:937:32)
-    at Function.Module._load (internal/modules/cjs/loader.js:778:12)
-    at Module.require (internal/modules/cjs/loader.js:961:19)
-    at require (internal/modules/cjs/helpers.js:92:18)</code></pre><p>上の場合、必要なdllが読み込めなかったようです。</p><p><code>C:\Users\[YOUR ACCOUNT]\AppData\Roaming\npm\node_modules\opencv4nodejs\node_modules\opencv-build\opencv\build\bin\Release</code>のPathを通すことで問題は解決されました。</p><h3 class="">その2</h3><pre class="hljs"><code class="shell hljs"><span class="hljs-meta">&gt; </span><span class="language-bash">const cv = require(<span class="hljs-string">&quot;opencv4nodejs&quot;</span>)</span>
-Uncaught Error: Cannot find module &#x27;opencv4nodejs&#x27;
-Require stack:
-- &lt;repl&gt;
-    at Function.Module._resolveFilename (internal/modules/cjs/loader.js:889:15)
-    at Function.Module._load (internal/modules/cjs/loader.js:745:27)
-    at Module.require (internal/modules/cjs/loader.js:961:19)
-    at require (internal/modules/cjs/helpers.js:92:18) {
-  code: &#x27;MODULE_NOT_FOUND&#x27;,
-  requireStack: [ &#x27;&lt;repl&gt;&#x27; ]
-}</code></pre><p>この場合、環境変数<code>NODE_PATH</code>を<code>C:\Users\[YOUR ACCOUNT]\AppData\Roaming\npm\node_modules</code>で作成し、環境変数Pathに<code>%NODE_PATH%</code>を追加してください。</p><p>これは、Node.jsのインストール時の忘れでした。</p><h2 class=""><u>最後に</u></h2><p><a class="tc-tiddlylink-external" href="https://github.com/justadudewhohacks/opencv4nodejs#how-to-install" rel="noopener noreferrer" target="_blank">こちら</a>の「How to install」も参考にしてください。</p><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="node-red_opencv_002.html">Node-REDで画像処理(opencv4nodejs) その2</a>で、Node-REDからの利用手順を説明します。</p><hr><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="index.html"><svg class="tc-image-home-button tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M112.985 119.502c.01-.165.015-.331.015-.499V67.568c3.137 2.948 8.076 2.884 11.134-.174a7.999 7.999 0 00-.002-11.316L70.396 2.343A7.978 7.978 0 0064.734 0a7.957 7.957 0 00-5.656 2.343L33 28.42V8.007C33 3.585 29.41 0 25 0c-4.418 0-8 3.59-8 8.007V44.42L5.342 56.078c-3.125 3.125-3.12 8.198-.002 11.316a7.999 7.999 0 0011.316-.003l.344-.343v52.945a8.11 8.11 0 000 .007c0 4.418 3.588 8 8 8h80c4.419 0 8-3.59 8-8a8.11 8.11 0 00-.015-.498zM97 112V51.574L64.737 19.31 33 51.048V112h64z" fill-rule="evenodd"></path></svg>Homeへ</a><svg class="tc-image-blank tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"></svg><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Node-RED.html"><svg class="tc-image-up-arrow tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M63.892.281c2.027 0 4.054.77 5.6 2.316l55.98 55.98a7.92 7.92 0 010 11.196c-3.086 3.085-8.104 3.092-11.196 0L63.894 19.393 13.513 69.774a7.92 7.92 0 01-11.196 0c-3.085-3.086-3.092-8.105 0-11.196l55.98-55.98A7.892 7.892 0 0163.893.28z"></path></svg>Node-REDの記事Topへ</a></p></div>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">encode_image_to_base64</span>(<span class="hljs-params">image</span>):
+    _, buffer = cv2.imencode(<span class="hljs-string">&#x27;.jpg&#x27;</span>, image)
+    img_base64 = base64.b64encode(buffer).decode(<span class="hljs-string">&#x27;utf-8&#x27;</span>)
+    <span class="hljs-keyword">return</span> img_base64
+
+<span class="hljs-meta">@app.route(<span class="hljs-params"><span class="hljs-string">&#x27;/blur&#x27;</span>, methods=[<span class="hljs-string">&#x27;POST&#x27;</span>]</span>)</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">blur_image</span>():
+    data = request.get_json()
+
+    <span class="hljs-keyword">if</span> <span class="hljs-string">&#x27;image&#x27;</span> <span class="hljs-keyword">not</span> <span class="hljs-keyword">in</span> data <span class="hljs-keyword">or</span> <span class="hljs-string">&#x27;kernel_size&#x27;</span> <span class="hljs-keyword">not</span> <span class="hljs-keyword">in</span> data:
+        <span class="hljs-keyword">return</span> jsonify({<span class="hljs-string">&#x27;error&#x27;</span>: <span class="hljs-string">&#x27;Missing image or kernel_size&#x27;</span>}), <span class="hljs-number">400</span>
+
+    <span class="hljs-keyword">try</span>:
+        img = decode_base64_image(data[<span class="hljs-string">&#x27;image&#x27;</span>])
+        k = <span class="hljs-built_in">int</span>(data[<span class="hljs-string">&#x27;kernel_size&#x27;</span>])
+
+        <span class="hljs-comment"># カーネルサイズは奇数である必要がある</span>
+        <span class="hljs-keyword">if</span> k % <span class="hljs-number">2</span> == <span class="hljs-number">0</span>:
+            k += <span class="hljs-number">1</span>
+        <span class="hljs-keyword">if</span> k &lt; <span class="hljs-number">1</span>:
+            k = <span class="hljs-number">1</span>
+
+        blurred = cv2.GaussianBlur(img, (k, k), <span class="hljs-number">0</span>)
+        result_base64 = encode_image_to_base64(blurred)
+
+        <span class="hljs-keyword">return</span> jsonify({<span class="hljs-string">&#x27;image&#x27;</span>: result_base64})
+    <span class="hljs-keyword">except</span> Exception <span class="hljs-keyword">as</span> e:
+        <span class="hljs-keyword">return</span> jsonify({<span class="hljs-string">&#x27;error&#x27;</span>: <span class="hljs-built_in">str</span>(e)}), <span class="hljs-number">500</span>
+
+<span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:
+    app.run(debug=<span class="hljs-literal">True</span>)
+</code></pre><p>ちゃんと動作しましたよ。</p><p><img class=" tc-image-loading" src="img/2025-05-11-020057.jpg"></p><p>function2の内容:</p><pre class="hljs"><code class="javascript hljs">msg.<span class="hljs-property">payload</span>={<span class="hljs-attr">image</span>:msg.<span class="hljs-property">payload</span>, <span class="hljs-attr">kernel_size</span>:<span class="hljs-number">100</span>};
+<span class="hljs-keyword">return</span> msg;</code></pre><p>これをベースに自分でチューニングしたり、ChatGPTに追加仕様を投げかけたりすれば良い感じで出来上がると思います。</p><p>もっと処理速度を上げたい場合は<a class="tc-tiddlylink-external" href="https://flask.palletsprojects.com/" rel="noopener noreferrer" target="_blank">FLASK</a>ではなく、<a class="tc-tiddlylink-external" href="https://fastapi.tiangolo.com/ja/" rel="noopener noreferrer" target="_blank">FastAPI</a>を採用してみるのも良いかもしれません。</p><hr><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="index.html"><svg class="tc-image-home-button tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M112.985 119.502c.01-.165.015-.331.015-.499V67.568c3.137 2.948 8.076 2.884 11.134-.174a7.999 7.999 0 00-.002-11.316L70.396 2.343A7.978 7.978 0 0064.734 0a7.957 7.957 0 00-5.656 2.343L33 28.42V8.007C33 3.585 29.41 0 25 0c-4.418 0-8 3.59-8 8.007V44.42L5.342 56.078c-3.125 3.125-3.12 8.198-.002 11.316a7.999 7.999 0 0011.316-.003l.344-.343v52.945a8.11 8.11 0 000 .007c0 4.418 3.588 8 8 8h80c4.419 0 8-3.59 8-8a8.11 8.11 0 00-.015-.498zM97 112V51.574L64.737 19.31 33 51.048V112h64z" fill-rule="evenodd"></path></svg>Homeへ</a><svg class="tc-image-blank tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"></svg><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Node-RED.html"><svg class="tc-image-up-arrow tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M63.892.281c2.027 0 4.054.77 5.6 2.316l55.98 55.98a7.92 7.92 0 010 11.196c-3.086 3.085-8.104 3.092-11.196 0L63.894 19.393 13.513 69.774a7.92 7.92 0 01-11.196 0c-3.085-3.086-3.092-8.105 0-11.196l55.98-55.98A7.892 7.892 0 0163.893.28z"></path></svg>Node-REDの記事Topへ</a></p></div>
 </div></p>
 </section>
 </body>
