@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-80755908-2"></script><script>  window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-80755908-2');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6163695023100481" crossorigin="anonymous"></script>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="generator" content="TiddlyWiki" />
+<meta name="tiddlywiki-version" content="5.3.6" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="format-detection" content="telephone=no">
+<link id="faviconLink" rel="shortcut icon" href="favicon.ico">
+<link rel="stylesheet" href="static.css">
+<title>RagChatBot001: WAKU-TAKE-A  PROGRAM</title>
+</head>
+<body class="tc-body">
+
+<section class="tc-story-river tc-static-story-river">
+<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists  tc-tagged-Programming tc-tagged-RAG" data-tags="Programming RAG" data-tiddler-title="RagChatBot001" role="article"><div class="tc-tiddler-title tc-clearfix"><div class="tc-titlebar"><span class="tc-tiddler-controls"><button aria-expanded="false" aria-label="more" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fmore-tiddler-actions" title="More actions"></button><span class=" tc-reveal" hidden="true"></span><button aria-label="Edit this tiddler" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fedit" title="Edit this tiddler"></button><button aria-label="close" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fclose" title="Close this tiddler"></button></span><span><h2 class="tc-title">RagChatBot001</h2></span></div><div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div></div><div class="tc-reveal"></div><div class=" tc-reveal"><div class="tc-subtitle tc-clearfix">1st June 2025 at 10:53pm</div></div><div class=" tc-reveal"><div class="tc-tags-wrapper"><span class="tc-tag-list-item" data-tag-title="Programming"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="fill:#333333;color:#333333;"><span class="tc-tag-exists">Programming</span></span><span class="tc-drop-down tc-reveal" hidden="true"></span></span><span class="tc-tag-list-item" data-tag-title="RAG"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="fill:#333333;color:#333333;"><span class="tc-tag-missing">RAG</span></span><span class="tc-drop-down tc-reveal" hidden="true"></span></span></div></div><div class="tc-tiddler-body tc-clearfix tc-reveal"><p>ChatBotは人間のように自然な会話を行うことを目的とした自動応答プログラムです。</p><p>大規模言語モデル型（LLM型） ChatBotとして有名なのは、ChatGpt・Claude・Gemini・Grokなどです。</p><p>FAQ形式やシナリオ形式であらかじめ決まった質問にだけ答える（Aと言われたらBと返す）ようなChatBotとは異なり、ユーザーの質問に対して非常に柔軟に回答してくれます。</p><p>ただし、必ずしも正しい情報とは限らないという弱点があります。これは、ハルシネーション（もっともらしい嘘）と呼ばれています。</p><h2 class=""><u>RAG ChatBotについて</u></h2><p>RAG ChatBotとは、<strong>RAG（Retrieval-Augmented Generation）</strong>という技術を用いて構築されたチャットボットのことです。「大規模言語モデル」に「外部情報検索機能」を組み合わせて、より正確な回答を可能にします。</p><p>RAGを簡単に以下の質問~回答までの流れで説明します。</p><ol><li>ユーザーの質問</li><li>検索（Retrieval-Augmented）<ul><li>ユーザーの質問に関連する文章を、様々な文書（例：社内マニュアル、FAQなど）※1から検索</li></ul></li><li>生成（Generation）<ul><li>ユーザーの質問と検索した文章を大規模言語モデルに渡して自然な回答を生成</li></ul></li></ol><p>※1：これを外部情報と呼びます。</p><p>文書に基づいて回答を生成するので、より質問に対して正確な回答が生成される可能性が高くなります（ハルシネーション対策）。</p><h2 class=""><u>実現方法</u></h2><p>生成AIと議論しまた。以下のようなライブラリがあることが分かってきました。</p><ol><li>ユーザーの質問<ul><li>Flask／FastAPI</li></ul></li><li>検索（Retrieval-Augmented）<ul><li>文章のベクトル化：SentenceTransformer</li><li>ベクトル検索：FAISS／Weaviate／Chroma</li></ul></li><li>生成（Generation）<ul><li>OpenAIなどの生成AI</li><li>ローカルのLLMはまだ敷居が高そう</li></ul></li></ol><p>議論の結果、<code>FastAPI／SentenceTransformer／FAISS／OpenAI</code>を選択することにします。</p><p>議論の方向によっては<code>LangChain</code>という大規模言語モデル（LLM）を活用したアプリケーション開発を支援するためのフレームワークを勧められることがあります。習得するのが大変そうなので今回は選択しませんでした。</p><h2 class=""><u>アルゴリズム</u></h2><p>まず、OpenAIのAPIキーを取得してくだあい。</p><p>方向性が見えてくれば生成AIに、<code>FastAPI／SentenceTransformer／FAISS／OpenAIを使ってRAG ChatBotを作ってください。</code>と頼めばスクリプトを作ってくれます。</p><p>実際に検証して、トライ＆エラーしながら作成していきます。</p><p>生成AIに頼む際には、<code>Python3.11を利用します。</code>、<code>ドキュメントはText、Markdown、AsciiDocを読み込んでください。</code>、<code>ブラウザ上で質問と回答表示を行いたい。</code>などの仕様を入力すればするほど精度の高いスクリプトを作ってくれます。</p><p>私のスクリプトのアルゴリズムは以下のようになりました。</p><p><img class=" tc-image-loading" src="img/ragchatbot001.svg"></p><h2 class=""><u>実装したスクリプト</u></h2><p><code>FastAPI／SentenceTransformer／FAISS／OpenAI</code>を使ったRAG ChatBotサーバーの全コードを、<a class="tc-tiddlylink-external" href="" rel="noopener noreferrer" target="_blank">こちら</a>に置いておきます。参考にしてください。</p><p>ブラウザUI（テキスト入力欄、送信ボタン、回答表示）とデバッグ用のログ機能を備え、Markdownおよびテキストファイル（.md, .txt）を入力として処理する仕様です。</p><p>拡張性を考慮しつつ、30分〜1時間で動作確認まで可能な手軽な実装です。</p><pre><code>ディレクトリ構造
+project/
+├── documents/ # 入力ドキュメント（AsciiDoc、Markdown、Text）
+│ ├── test1.md
+│ ├── test2.adoc
+│ ├── test3.txt
+├── templates/ # HTMLテンプレート
+│ ├── index.html # ブラウザUI
+├── app.py # FastAPIサーバーコード
+├── requirements.txt # 依存ライブラリ
+├── .env # 環境変数（OpenAI APIキー）</code></pre><h2 class=""><u>動作確認までの流れ</u></h2><p><a class="tc-tiddlylink-external" href="" rel="noopener noreferrer" target="_blank">こちら</a>からZIPをダウンロードします。</p><p><img class=" tc-image-loading" src="img/downloadzip01.jpg"></p><p>展開します。</p><p>requirements.txtを使って、以下を実行します。依存ライブラリがインストールされます。</p><pre class="hljs"><code class="shell hljs"><span class="hljs-meta">&gt;</span><span class="language-bash">[python.exeのあるフォルダ]/python.exe -m pip install -r requirements.txt</span></code></pre><p>正常にインストールされたら以下を実行します。</p><pre class="hljs"><code class="shell hljs"><span class="hljs-meta">&gt;</span><span class="language-bash">[python.exeのあるフォルダ]/python.exe app.py</span></code></pre><p>以下のように表示されたら、ブラウザを起動し、<code>http://127.0.0.1:8000</code>を開いてください。</p><pre><code>INFO:__main__:読み込み中: ***
+INFO:__main__:読み込み中: ***
+INFO:__main__:読み込み中: ***
+INFO:sentence_transformers.SentenceTransformer:Use pytorch device_name: cpu
+INFO:sentence_transformers.SentenceTransformer:Load pretrained SentenceTransformer: paraphrase-multilingual-mpnet-base-v2
+Batches: 100%|█████████████████████████████████████████████████████████████| 15/15 [05:57&lt;00:00, 23.82s/it]
+INFO:__main__:FAISSインデックス構築完了
+INFO:     Started server process [5980]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)</code></pre><p><img class=" tc-image-loading" src="img/2025-06-01-175212.jpg"></p><p>質問を入力し、[送信]ボタンを押すと回答が表示されます。</p><h2 class=""><u>スクリプトのポイント</u></h2><p>SentenceTransformerのモデルは軽量の「all-MiniLM-L6-v2」を勧められるかもしれませんが、まずは日本語対応の「paraphrase-multilingual-mpnet-base-v2（文章の意味を広く捉えるが、検索タスク向けの特別な最適化は少ない）」や「multilingual-e5-base（検索や質問応答のようなタスクで高い精度を発揮）」を使いましょう。</p><p>FAISSのインデックス構築においては、「IndexFlatL2」（特徴：すべてのベクトルとの距離を計算して最も近いものを探す）を勧められるかもしれませんが、「ほどよく曖昧で高速、かつ扱いやすい」検索をしたい場合は 「IndexHNSWFlat」（特徴：高速な近似検索）を使うのが最適だと思います。</p><p>ちなみに他にも「IndexHNSWFlat」、「IndexIVFFlat」、「IndexPQ」などがあります。</p><p>OpenAIのモデルは「gpt-4o-mini」を使っています。試行する際に、やはり安くないと怖いです。</p><p>他にもパラメータがいろいろありますが、生成AIに質問しながら設定していくのが良いでしょう。</p><hr><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="index.html"><svg class="tc-image-home-button tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M112.985 119.502c.01-.165.015-.331.015-.499V67.568c3.137 2.948 8.076 2.884 11.134-.174a7.999 7.999 0 00-.002-11.316L70.396 2.343A7.978 7.978 0 0064.734 0a7.957 7.957 0 00-5.656 2.343L33 28.42V8.007C33 3.585 29.41 0 25 0c-4.418 0-8 3.59-8 8.007V44.42L5.342 56.078c-3.125 3.125-3.12 8.198-.002 11.316a7.999 7.999 0 0011.316-.003l.344-.343v52.945a8.11 8.11 0 000 .007c0 4.418 3.588 8 8 8h80c4.419 0 8-3.59 8-8a8.11 8.11 0 00-.015-.498zM97 112V51.574L64.737 19.31 33 51.048V112h64z" fill-rule="evenodd"></path></svg>Homeへ</a><svg class="tc-image-blank tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"></svg><a class="tc-tiddlylink tc-tiddlylink-resolves" href="Programming.html"><svg class="tc-image-up-arrow tc-image-button" height="22pt" viewBox="0 0 128 128" width="22pt"><path d="M63.892.281c2.027 0 4.054.77 5.6 2.316l55.98 55.98a7.92 7.92 0 010 11.196c-3.086 3.085-8.104 3.092-11.196 0L63.894 19.393 13.513 69.774a7.92 7.92 0 01-11.196 0c-3.085-3.086-3.092-8.105 0-11.196l55.98-55.98A7.892 7.892 0 0163.893.28z"></path></svg>プログラミングの記事Topへ</a></p></div>
+</div></p>
+</section>
+</body>
+</html>
+

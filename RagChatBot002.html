@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-80755908-2"></script><script>  window.dataLayer = window.dataLayer || [];  function gtag(){dataLayer.push(arguments);}  gtag('js', new Date());  gtag('config', 'UA-80755908-2');</script><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6163695023100481" crossorigin="anonymous"></script>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="generator" content="TiddlyWiki" />
+<meta name="tiddlywiki-version" content="5.3.6" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="format-detection" content="telephone=no">
+<link id="faviconLink" rel="shortcut icon" href="favicon.ico">
+<link rel="stylesheet" href="static.css">
+<title>RagChatBot002: WAKU-TAKE-A  PROGRAM</title>
+</head>
+<body class="tc-body">
+
+<section class="tc-story-river tc-static-story-river">
+<p><div class="tc-tiddler-frame tc-tiddler-view-frame tc-tiddler-exists  tc-tagged-Programming tc-tagged-RAG" data-tags="Programming RAG" data-tiddler-title="RagChatBot002" role="article"><div class="tc-tiddler-title tc-clearfix"><div class="tc-titlebar"><span class="tc-tiddler-controls"><button aria-expanded="false" aria-label="more" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fmore-tiddler-actions" title="More actions"></button><span class=" tc-reveal" hidden="true"></span><button aria-label="Edit this tiddler" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fedit" title="Edit this tiddler"></button><button aria-label="close" class="tc-btn-invisible tc-btn-%24%3A%2Fcore%2Fui%2FButtons%2Fclose" title="Close this tiddler"></button></span><span><h2 class="tc-title">RagChatBot002</h2></span></div><div class="tc-tiddler-info tc-popup-handle tc-reveal" hidden="true"></div></div><div class="tc-reveal"></div><div class=" tc-reveal"><div class="tc-subtitle tc-clearfix">21st June 2025 at 10:02pm</div></div><div class=" tc-reveal"><div class="tc-tags-wrapper"><span class="tc-tag-list-item" data-tag-title="Programming"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="fill:#333333;color:#333333;"><span class="tc-tag-exists">Programming</span></span><span class="tc-drop-down tc-reveal" hidden="true"></span></span><span class="tc-tag-list-item" data-tag-title="RAG"><span aria-expanded="false" class="tc-tag-label tc-btn-invisible" draggable="true" style="fill:#333333;color:#333333;"><span class="tc-tag-missing">RAG</span></span><span class="tc-drop-down tc-reveal" hidden="true"></span></span></div></div><div class="tc-tiddler-body tc-clearfix tc-reveal"><p><a class="tc-tiddlylink tc-tiddlylink-resolves" href="RagChatBot001.html">(01) RAG ChatBotの実装(簡易版)</a>で作ったRag ChatBotを使って、思いのほか、ちゃんと動作したのですが、キーワードでの質問が今ひとつです。</p><p>「～について教えて」みたいな非常に短い質問は苦手なのです。</p><h2 class=""><u>生成AIに現況を聞いてみたことろ</u></h2><h3 class="">SentenceTransformer + FAISS によるRAGの特性</h3><dl><dt>✅ 得意なこと：</dt><dd>文脈のある質問に対しては、文書の意味をベクトル化して検索するため、関連度の高い文書を引き当てられる。</dd><dt>❌ 苦手なこと：</dt><dd>単語ベース（キーワードベース）の質問。（例：「~とは？」のような短文や、専門用語だけがポツンとあるような質問）</dd></dl><p>なぜなら SentenceTransformerは意味ベースの検索なので、単語そのものと類似する文書ベクトルがあまり無いとヒットしない。</p><h2 class=""><u>生成AIに解決策を聞いてみたところ</u></h2><p>解決アプローチはいくつかあるようです。私のスクリプトでは以下の手法が使えそうです。</p><ol><li>キーワード検索とのハイブリッド<ul><li>意味検索（FAISS）と、キーワード検索（LuceneやElasticsearch/BM25など）を組み合わせる。</li></ul></li><li>SentenceTransformerのモデルの見直し<ul><li>検索や質問応答のようなタスクで高い精度を発揮するモデル（e5系モデル：multilingual-e5-base&lt;small、large&gt;）だとうまくいく場合があります。</li></ul></li></ol><h2 class=""><u>ハイブリッドを選択します</u></h2></div>
+</div></p>
+</section>
+</body>
+</html>
+

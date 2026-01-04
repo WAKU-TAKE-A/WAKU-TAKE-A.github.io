@@ -1,0 +1,36 @@
+name: Broken Link Checker
+
+on:
+  # ファイルがプッシュされたときに実行
+  push:
+    branches: [ main, master ]
+  # 手動で実行したい場合
+  workflow_dispatch:
+  # 外部サイトのリンク切れを検知するため、定期的に実行（例：毎日午前9時）
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+  link-checker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Link Checker
+        id: lychee
+        uses: lycheeverse/lychee-action@v2
+        with:
+          # チェック対象のファイル（あなたのサイトのHTML群を指定）
+          args: --verbose --no-progress './**/*.html' './**/*.md'
+          # エラーがあってもワークフローを失敗させたくない場合は false に設定
+          fail: false
+
+      # チェック結果をIssueとして起票したい場合に有効化（オプション）
+      - name: Create Issue From File
+        if: env.lychee_exit_code != 0
+        uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: Link Checker Report
+          content-filepath: ./lychee/out.md
+          labels: report, automated issue
